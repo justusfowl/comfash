@@ -1,0 +1,28 @@
+
+
+<ion-content no-bounce>
+
+  <ion-buttons class="btn-header">
+    <button ion-button icon-only (click)="navBack()">
+      <ion-icon name="arrow-back"></ion-icon>
+    </button>
+  </ion-buttons>
+
+  <!-- <img class="testImg" *ngFor="let pic of capturedPics;" [src]= "'data:image/jpeg;base64,' + pic + ''"> -->
+
+  {{capturedPics.length}} # pics
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-row >
+      <ion-col col >
+        <div class="btn-footer-capture" (click)="startCapture()" >
+            <ion-icon name="ios-videocam-outline"></ion-icon>
+        </div>
+    </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>
+
+

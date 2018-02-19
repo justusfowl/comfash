@@ -1,0 +1,50 @@
+<ion-header>
+
+  <ion-navbar>
+      <ion-buttons>
+          <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+          </button>
+        </ion-buttons>
+
+    <ion-title>{{ 'CARDS_TITLE' | translate }}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+  <ion-card *ngFor="let item of cardItems">
+
+    <ion-item>
+      <ion-avatar item-start>
+        <img [src]="item.user.avatar">
+      </ion-avatar>
+      <h2>{{item.user.name}}</h2>
+      <p>{{item.date}}</p>
+    </ion-item>
+
+    <div class="session-tile" [style.backgroundImage]="'url(' + item.image + ')'" (click)="openItem(item)">
+        
+      <div class="session-title">
+          <ion-row>
+              <ion-col col-8 class="session-details">
+                  <ion-card-content >
+                      <p>{{item.content}}</p>
+                    </ion-card-content>
+              </ion-col>
+              <ion-col col-4 class="session-details">
+                  <ion-card-content >
+                      12
+                      <ion-icon name='cart'></ion-icon>
+            
+                      4
+                      <ion-icon name='text'></ion-icon>
+                    </ion-card-content>
+              </ion-col>
+            </ion-row>
+          </div>
+    </div>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,45 @@
+<ion-content>
+    
+  
+    <ion-buttons class="btn-header">
+      <button ion-button icon-only (click)="navBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
+
+
+    <ion-row >
+      <ion-col col *ngFor="let item of compareItems;">
+          <div class="compare-item-pic" [style.backgroundImage]="'url(' + getImg(item) + ')'">
+            <div class="tmp-no">
+              img # {{imgNumber}}
+            </div>
+            </div>
+      </ion-col>
+    </ion-row>
+  
+ <!--
+  {{testText}}
+    <div id="testId" class="compare-item-pic" style="background-image: url('assets/img/speakers/1.jpg');" ion-long-press [interval]="400" (onPressStart)="pressed($event)" (onPressing)="active($event)" (onPressEnd)="released($event)">
+      
+      
+      <div class="compare-pic-comment" *ngFor="let comment of comments" [style.left]="comment.x + 'px'" [style.top]="comment.y + 'px'" >
+          {{comment.text}}
+        </div>
+    </div>
+  -->
+</ion-content>
+
+
+<ion-footer>
+
+  <ion-toolbar>
+
+    <div class="flag-comment" style="left: 30%;"></div>
+    <div class="flag-comment" style="left: 44%;"></div>
+
+
+      <ion-range [(ngModel)]="imgNumber" min="0" max="100" ratio="true" color="danger" pin="false"></ion-range>
+  </ion-toolbar>
+
+</ion-footer>

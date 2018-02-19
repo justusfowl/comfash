@@ -1,0 +1,73 @@
+<ion-header>
+
+  <ion-navbar class="nav-header">
+    <ion-buttons>
+        <button ion-button menuToggle >
+          <ion-icon name="menu"></ion-icon>
+        </button>
+      </ion-buttons>
+
+    <ion-title >{{ 'LIST_MASTER_TITLE' | translate }}</ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="addItem()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content>
+  <div class="hangers-bg"></div>
+   <ion-list>
+    <ion-item *ngFor="let item of api.collections">
+        <div class="session-tile" [style.backgroundImage]="'url(' + item.profilePic + ')'" (click)="openItem(item)">
+          <div class="session-tile-details" >
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                    <ion-icon name="globe" class="session-tile-details-icon"></ion-icon>
+                    <font class="cntFigure">
+                        {{item.name}}
+                    </font>
+                </ion-col>
+                <ion-col>
+                  <div class="session-tile-info">
+                      <font class="cntFigure">
+                          3
+                      </font>
+                      <ion-icon name="image" class="session-tile-details-icon"></ion-icon>
+                      <font class="cntFigure">
+                          3
+                      </font>
+                      <ion-icon name="text" class="session-tile-details-icon"></ion-icon>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+        </div>
+    </ion-item>
+  </ion-list>
+  <!--
+  <ion-list>
+    <ion-item-sliding *ngFor="let item of currentItems">
+      <button ion-item (click)="openItem(item)">
+        <ion-avatar item-start>
+          <img [src]="item.profilePic" />
+        </ion-avatar>
+        <h2>{{item.name}}</h2>
+        <p>{{item.about}}</p>
+        <ion-note item-end *ngIf="item.note">{{item.note}}</ion-note>
+      </button>
+
+      <ion-item-options>
+        <button ion-button color="danger" (click)="deleteItem(item)">
+          {{ 'DELETE_BUTTON' | translate }}
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+-->
+</ion-content>

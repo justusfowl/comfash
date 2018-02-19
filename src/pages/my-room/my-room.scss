@@ -1,0 +1,58 @@
+@import "../../theme/variables";
+
+page-my-room {
+
+    .item{
+        background-color: transparent !important; 
+    } 
+
+    .hangers-bg{
+        position: fixed;
+        background: url('../assets/img/hangersbg.png') no-repeat transparent;
+        opacity: 0.3;
+        background-size: cover;
+        height: 100vh;
+        width: 100vw;
+        background-repeat: repeat-x;
+        top: 0; 
+    }
+
+    .session-tile{
+        position: relative;
+        height: 200px;
+        width:100%;
+        background-position: center center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        transition: transform 1s ease-in 0s;
+        //animation-duration: 100s; 
+        //animation-name: animatedBackground; 
+        //animation-iteration-count: infinite;
+    }
+  
+    @keyframes animatedBackground {
+      from { background-position: center; }
+      to { background-position: center bottom; }
+    }
+
+    .session-tile-details{
+        position: absolute;
+        width: 100%; 
+        background-color: color($colors, light-grey, base);
+        bottom: 0px;
+        padding: 5px;
+        color: white;
+    }
+
+    .session-tile-info{
+        float: right;
+    }
+
+    .cntFigure{
+        color: white;
+    }
+
+    .session-tile-details-icon{
+        color: white;
+    }
+}

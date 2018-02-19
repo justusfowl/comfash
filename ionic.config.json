@@ -1,0 +1,8 @@
+{
+  "name": "comfash",
+  "app_id": "39de9fde",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}

@@ -1,0 +1,46 @@
+@import "../../theme/variables";
+
+page-content{
+
+    .btn-header{
+        position: absolute; 
+        opacity: 0.8;
+    }
+
+    .compare-item-pic{
+        height: 60vh;
+        width: 100%;
+        background-position: center center;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    .compare-item-pic{
+        display: flex; 
+        align-items: center;
+    }
+
+    .tmp-no{
+        position: relative;
+        width: 100%; 
+        text-align: center; 
+        font-size: 11vh; 
+        color: #ffffffcf;
+    }
+
+    .compare-pic-comment{
+        position: absolute; 
+        padding: 4px; 
+        background-color: #949494;
+    }
+
+    .flag-comment{
+        position: absolute; 
+        top: 44%;
+        background-image: url('../assets/img/cf_logo.png');
+        background-size: cover; 
+        background-position: center center;
+        width: 30px; 
+        height: 30px; 
+    }
+}

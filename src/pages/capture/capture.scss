@@ -1,0 +1,37 @@
+@import "../../theme/variables";
+
+page-capture {
+    
+    .btn-header{
+        position: absolute; 
+        opacity: 0.8;
+    }
+
+    // enable for preview on device 
+
+    
+    background-color: transparent !important;
+
+    html, body, ion-app, ion-content, ion-page, .nav-decor {
+        background-color: transparent !important;
+      }
+
+
+
+    .toolbar-background{
+       background-color: color($colors, primary, base);
+    }
+
+    .btn-footer-capture{
+        font-size: 30px;
+        color: color($colors, dark-text, base);
+        font-weight: 900; 
+        text-align: center;
+    }
+
+    .testImg{
+        width: 200px; 
+        height: 200px; 
+    }
+      
+}
