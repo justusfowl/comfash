@@ -5,14 +5,14 @@ page-login {
     .hangers-bg{
         position: absolute;
         background: url('../assets/img/hangersbg.png') no-repeat transparent;
-        opacity: 0.3;
+        opacity: 0.2;
         background-size: cover;
         height: 100vh;
         width: 100vw;
         z-index: 1;
         background-repeat: repeat-x;
     }
-
+ 
     .login-form{ 
         position: relative;
         top: 55%;

@@ -8,13 +8,19 @@
     </ion-buttons>
 
 
-    <ion-row >
-      <ion-col col *ngFor="let item of compareItems;">
-          <div class="compare-item-pic" [style.backgroundImage]="'url(' + getImg(item) + ')'">
+    <ion-row no-bounce no-scrolling id="row-compare-items">
+      <ion-col col *ngFor="let session of compareItems;">
+          <div class="compare-item-pic" [style.backgroundImage]="'url(' + getImgPath(session) + ')'" 
+          ion-long-press [interval]="400" (onPressStart)="pressed($event, session)" (onPressEnd)="released($event)"
+          >
             <div class="tmp-no">
               img # {{imgNumber}}
             </div>
+
+            <div class="compare-pic-comment" *ngFor="let comment of getImgComment(session)" [style]="sanitizer.bypassSecurityTrustStyle(comment.getScalledCommentPos('row-compare-items',getImgFromSession(session)))" >
+              {{comment.commentText}}
             </div>
+          </div>
       </ion-col>
     </ion-row>
   
@@ -24,8 +30,8 @@
       
       
       <div class="compare-pic-comment" *ngFor="let comment of comments" [style.left]="comment.x + 'px'" [style.top]="comment.y + 'px'" >
-          {{comment.text}}
-        </div>
+        {{comment.text}}
+      </div>
     </div>
   -->
 </ion-content>
@@ -34,11 +40,10 @@
 <ion-footer>
 
   <ion-toolbar>
-
-    <div class="flag-comment" style="left: 30%;"></div>
-    <div class="flag-comment" style="left: 44%;"></div>
-
-
+    <div class="hanger-container">
+        <div *ngFor="let hanger of calculateFooterHangers();" class="flag-comment" [style.left]='hanger.orderPrc + "%"'></div>
+    </div>
+    
       <ion-range [(ngModel)]="imgNumber" min="0" max="100" ratio="true" color="danger" pin="false"></ion-range>
   </ion-toolbar>
 

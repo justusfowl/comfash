@@ -1,5 +1,6 @@
 {
   "BACK_BUTTON_TEXT": "Zurück",
+  "LOGOUT" : "Abmelden",
 
   "NAME": "Name",
   "PASSWORD": "Passwort",
@@ -44,9 +45,11 @@
   "SIGNUP_ERROR": "Fehler beim Registrieren, bitte überprüfe deine Informationen und versuche es erneut.",
   "SIGNUP_BUTTON": "Registrieren",
 
-  "LIST_MASTER_TITLE": "Artikel",
+  "LIST_MASTER_TITLE": "MyRoom",
 
-  "ITEM_CREATE_TITLE": "Neuer Artikel",
+  "COLLECTION_CREATE_TITLE": "Neue Collection",
+  "PUBLIC": "Öffentlich",
+
   "ITEM_CREATE_CHOOSE_IMAGE": "Artikel hinzufügen",
 
   "CARDS_TITLE": "Social",

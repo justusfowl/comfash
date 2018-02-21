@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Camera } from '@ionic-native/camera';
 import { IonicPage, NavController, ViewController } from 'ionic-angular';
 
+import { Api } from '../../providers/providers';
+
 @IonicPage()
 @Component({
   selector: 'page-item-create',
@@ -17,11 +19,16 @@ export class ItemCreatePage {
 
   form: FormGroup;
 
-  constructor(public navCtrl: NavController, public viewCtrl: ViewController, formBuilder: FormBuilder, public camera: Camera) {
+  constructor(public navCtrl: NavController, 
+    public viewCtrl: ViewController, 
+    formBuilder: FormBuilder, 
+    public camera: Camera, 
+    public api: Api) {
+
     this.form = formBuilder.group({
-      profilePic: [''],
       name: ['', Validators.required],
-      about: ['']
+      description: [''],
+      public: [true]
     });
 
     // Watch the form for changes, and
@@ -59,6 +66,11 @@ export class ItemCreatePage {
     };
 
     reader.readAsDataURL(event.target.files[0]);
+  }
+
+  makePrivate(){
+    console.log("make private not implemented yet");
+    document.getElementById('container-access-groups').classList.toggle("hidden")
   }
 
   getProfileImageStyle() {

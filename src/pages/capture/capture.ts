@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams, Platform, ViewController } from 'i
 
 import { Item } from '../../models/item';
 import { Items } from '../../providers/providers';
+import { Collection, Session, Image } from '../../models/datamodel';
 
 import { CameraPreview, CameraPreviewPictureOptions, CameraPreviewOptions, CameraPreviewDimensions } from 
 '@ionic-native/camera-preview';
@@ -20,11 +21,16 @@ export class CapturePage {
 
   capturedPics : any = [];
   captureInterval : any;
-  sequenceLength = 5; 
+  currentImage : any = 0;
+  sequenceLength = 5;
+
+  collection : Collection;
+  newSession : Session; 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, 
     platform: Platform, public viewCtrl: ViewController,  public api: Api, private cameraPreview: CameraPreview) { 
-
+    
+    this.collection = navParams.get('collection');
 
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -37,7 +43,8 @@ export class CapturePage {
         width: window.screen.width,
         height: window.screen.height,
         camera: this.cameraPreview.CAMERA_DIRECTION.FRONT,
-        tapPhoto: true,
+        //tapPhoto: true,
+        tapToFocus: true,
         previewDrag: true,
         toBack: true,
         alpha: 1
@@ -56,11 +63,20 @@ export class CapturePage {
         
   }
 
+  switchCam(){
+    this.cameraPreview.switchCamera();
+  }
+
   reload(){
     window['location'].reload();
   }
 
   startCapture(){
+
+    delete this.newSession;
+    this.currentImage = 0;
+
+    this.newSession = new Session({});
 
     this.captureInterval = setInterval(this.takePic.bind(this), 1000); 
 
@@ -68,16 +84,28 @@ export class CapturePage {
 
   takePic(){
 
-    this.cameraPreview.takePicture(this.storePicture.bind(this));
-    
-    if (this.capturedPics.length >= this.sequenceLength){
+    //this.cameraPreview.takePicture(this.storePicture.bind(this));
+
+    // for dev purposes 
+    this.storePicture("../assets/img/hangersbg.png");
+    this.currentImage++;
+
+    if (this.currentImage >= this.sequenceLength){
       clearInterval(this.captureInterval);
     }
 
   }
 
   storePicture (base64PicData) {
-    this.capturedPics.push(base64PicData); 
+
+    let newImg = new Image({
+      "path" : base64PicData,
+      "height" : window.screen.height,
+      "width" : window.screen.width
+    });
+
+    this.newSession.images.push(newImg); 
+    console.log("stored picture: " + this.currentImage)
   }
 
   navBack(){
@@ -88,31 +116,18 @@ export class CapturePage {
 
   addToSession(){
 
-    let pictures = this.capturedPics; 
-
-    var firstPic = {
-      "name": "Donald Duck",
-      "profilePic": "data:image/jpg;base64," + pictures[0],
-      "about": "Donald is a Duck.",
-      "collection" : []
-    };
-
-    for (let item of pictures) {
-
-      var tmpPic = {
-        "name": "Donald Duck",
-        "profilePic": "data:image/jpg;base64," + item,
-        "about": "Donald is a Duck."
-      };
-
-      firstPic.collection.push(tmpPic)
+    if (this.newSession.images.length > 0 ){
       
+      let collectionIndex = this.api.collections.indexOf(this.collection);
+
+      if (collectionIndex != -1){
+
+        this.api.collections[collectionIndex].addSession(this.newSession);
+
+      }
+    
     }
 
-    this.api.collections[0].items.push(firstPic);
-
   }
-
-
 
 }

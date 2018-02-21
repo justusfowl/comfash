@@ -6,17 +6,27 @@
     <button ion-button icon-only (click)="navBack()">
       <ion-icon name="arrow-back"></ion-icon>
     </button>
+
+    {{currentImage}} # pics
   </ion-buttons>
 
   <!-- <img class="testImg" *ngFor="let pic of capturedPics;" [src]= "'data:image/jpeg;base64,' + pic + ''"> -->
 
-  {{capturedPics.length}} # pics
+  <div class="ar-arrow-box">
+      <ion-icon class="ar-icon" name="ios-refresh-circle-outline"></ion-icon>
+  </div>
+  
 </ion-content>
 
 <ion-footer>
   <ion-toolbar>
     <ion-row >
       <ion-col col >
+        <div class="btn-footer-cam" (click)="switchCam()" >
+            <ion-icon name="ios-reverse-camera-outline"></ion-icon>
+        </div>
+    </ion-col>
+    <ion-col col >
         <div class="btn-footer-capture" (click)="startCapture()" >
             <ion-icon name="ios-videocam-outline"></ion-icon>
         </div>

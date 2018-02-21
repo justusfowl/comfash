@@ -3,6 +3,9 @@ import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angu
 
 import { Item } from '../../models/item';
 import { Items } from '../../providers/providers';
+import { Collection, Session } from '../../models/datamodel';
+
+import { Api } from '../../providers/providers';
 
 @IonicPage()
 @Component({
@@ -10,46 +13,29 @@ import { Items } from '../../providers/providers';
   templateUrl: 'item-detail.html'
 })
 export class ItemDetailPage {
-  item: any;
+  collection: Collection;
   selectedItems = {}; 
 
-  constructor(public navCtrl: NavController, navParams: NavParams, public modalCtrl: ModalController) {
+  constructor(public navCtrl: NavController, navParams: NavParams, public modalCtrl: ModalController, private api : Api) {
 
-    let tmpItems = navParams.get('item');
-
-    this.item = tmpItems;
+    this.collection = navParams.get('collection');
   }
 
-  selectPhoto(index){
-    console.log(index);
-
-    document.getElementById('flag-icon_'+index).classList.toggle("active");
-    document.getElementById('flag_'+index).classList.toggle("active");
-
-
-    if (typeof(this.selectedItems[index]) != 'undefined'){
-      delete this.selectedItems[index]
-    }else{
-      this.selectedItems[index] = this.item.items[index];
-    }
-
-    console.log(this.selectedItems);
-  }
+  selectCompareSession(session: Session){
+    session.toggleCompareSession();
+  } 
 
   addItem() {
 
     this.navCtrl.push('CapturePage', {
-      sessionId: "123123"
+      collection: this.collection
     });
 
-
-
-    
   }
 
   compareItems(){
     this.navCtrl.push('ContentPage', {
-      compareItems: this.selectedItems
+      collection: this.collection
     });
   }
 

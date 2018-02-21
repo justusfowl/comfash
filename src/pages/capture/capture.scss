@@ -16,22 +16,50 @@ page-capture {
         background-color: transparent !important;
       }
 
-
-
     .toolbar-background{
        background-color: color($colors, primary, base);
     }
 
-    .btn-footer-capture{
+    .btn-footer-capture, .btn-footer-cam{
         font-size: 30px;
         color: color($colors, dark-text, base);
         font-weight: 900; 
         text-align: center;
     }
 
+    .btn-footer-cam{
+        border-right: 1px solid color($colors, dark-text, base);
+    }
+
     .testImg{
         width: 200px; 
         height: 200px; 
     }
-      
+
+    @keyframes turnArrow{
+        from { 
+             transform: rotate3d(1,0,0,60deg) rotate(0deg); 
+        }
+        to { 
+            transform : rotate3d(1,0,0,60deg) rotate(360deg); 
+        }
+    }
+
+    .ar-icon{
+        
+        -webkit-animation: turnArrow 5s infinite;
+        -moz-animation: turnArrow 5s infinite;
+        -o-animation: turnArrow 5s infinite;
+        animation: turnArrow 5s infinite;
+        animation-timing-function: linear;
+    }
+
+    .ar-arrow-box{
+        color: rgba(color($colors, primary, base),0.7);
+        font-size: 150px;
+        position: relative; 
+        top: 70vh; 
+        width: 100%; 
+        text-align: center;
+    }    
 }

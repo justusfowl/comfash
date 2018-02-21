@@ -10,11 +10,27 @@ import { Settings } from '../providers/providers';
 import { Camera } from '@ionic-native/camera';
 
 @Component({
-  template: `<ion-menu [content]="content">
+  template: `
+  
+  <ion-menu [content]="content">
     <ion-content>
+
+    <div class="profile-image-wrapper" (click)="getPicture()">
+      <div class="profile-image-placeholder" >
+        <ion-icon class="add-icon" name="add"></ion-icon>
+        <div>
+          {{ 'ITEM_CREATE_CHOOSE_IMAGE' | translate }}
+        </div>
+      </div>
+      <div class="profile-image" ></div>
+    </div>
+    
       <ion-list>
         <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
           {{p.title}}
+        </button>
+        <button menuClose ion-item (click)="doLogout()">
+        {{ 'LOGOUT' | translate }}
         </button>
       </ion-list>
     </ion-content>
@@ -46,8 +62,7 @@ export class MyApp {
   pages : any[] = [
     { title: 'MyRoom', component: 'MyRoomPage' },
     { title: 'FittingStream', component: 'CardsPage' },
-    { title: 'Settings', component: 'SettingsPage' },
-    { title: 'Capture', component: 'CapturePage' }
+    { title: 'Settings', component: 'SettingsPage' }
   ]
 
 
@@ -98,5 +113,9 @@ export class MyApp {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
     this.nav.setRoot(page.component);
+  }
+
+  doLogout(){
+    console.log("logout")
   }
 }

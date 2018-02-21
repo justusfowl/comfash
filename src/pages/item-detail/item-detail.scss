@@ -1,4 +1,12 @@
 page-item-detail {
+
+  .fixed-content{
+      background: url('../assets/img/hangersbg.png') no-repeat transparent;
+      opacity: 0.3;
+      background-size: cover;
+      background-repeat: repeat-x;
+  }
+
   .item-profile {
     width: 100%;
     background-position: center center;
@@ -52,6 +60,12 @@ page-item-detail {
     color: color($colors, dark, base);
 }
 
+
+
+
+
+}
+
 .flag-compare{
   position: absolute; 
   height: 40px; 
@@ -74,7 +88,4 @@ page-item-detail {
 
 .flag-compare.active{
   background: color($colors, primary, base);
-}
-
-
 }

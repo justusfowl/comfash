@@ -13,7 +13,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { Items } from '../mocks/providers/items';
-import { Settings } from '../providers/providers';
+import { Settings, AuthService } from '../providers/providers';
 import { User } from '../providers/providers';
 import { Api } from '../providers/providers';
 import { MyApp } from './app.component';
@@ -41,7 +41,7 @@ export function provideSettings(storage: Storage) {
 
 @NgModule({
   declarations: [
-    MyApp
+    MyApp 
   ],
   imports: [
     BrowserModule,
@@ -61,6 +61,7 @@ export function provideSettings(storage: Storage) {
     MyApp
   ],
   providers: [
+    AuthService,
     Api,
     Items,
     User,

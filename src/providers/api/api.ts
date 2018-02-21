@@ -1,207 +1,98 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+
+
+import { Collection, Session, Image, Comment } from '../../models/datamodel'
+import { AuthService } from '../auth/auth'
+
+import 'rxjs/add/operator/map';
 
 /**
  * Api is a generic REST Api handler. Set your API url first.
  */
 @Injectable()
 export class Api {
-  url: string = 'https://example.com/api/v1';
+  url: string = 'http://cl18:9999/api/v01';
 
   public collections : any = [];
-  selectedImgCompare : any = [];
+
+  private selectedCollectionId : Number; 
   
 
-  constructor(public http: HttpClient) {
+  constructor(public http: HttpClient, public auth: AuthService) {
 
-    let items = [
-      {
-        "name": "DINNER",
-        "profilePic": "assets/img/1.jpg",
-        "about": "Burt is a Bear.", 
-        "items" : [{
-          "name": "Donald Duck",
-          "profilePic": "assets/img/1.jpg",
-          "about": "Donald is a Duck.",
-          "collection" : [{
-              "name": "Donald Duck",
-              "profilePic": "assets/img/1.jpg",
-              "about": "Donald is a Duck."
-            },
-            {
-              "name": "TEST1",
-              "profilePic": "assets/img/2.jpg",
-              "about": "Eva is an Eagle."
-            },
-            {
-              "name": "Ellie Elephant",
-              "profilePic": "assets/img/3.jpg",
-              "about": "Ellie is an Elephant."
-            },
-            {
-              "name": "Molly Mouse",
-              "profilePic": "assets/img/4.jpg",
-              "about": "Molly is a Mouse."
-            },
-            {
-              "name": "Paul Puppy",
-              "profilePic": "assets/img/5.jpg",
-              "about": "Paul is a Puppy."
-            }]
-        },
-        {
-          "name": "TEST1",
-          "profilePic": "assets/img/2.jpg",
-          "about": "Eva is an Eagle.",
-          "collection" : [{
-              "name": "Donald Duck",
-              "profilePic": "assets/img/1.jpg",
-              "about": "Donald is a Duck."
-            },
-            {
-              "name": "TEST1",
-              "profilePic": "assets/img/2.jpg",
-              "about": "Eva is an Eagle."
-            },
-            {
-              "name": "Ellie Elephant",
-              "profilePic": "assets/img/3.jpg",
-              "about": "Ellie is an Elephant."
-            },
-            {
-              "name": "Molly Mouse",
-              "profilePic": "assets/img/4.jpg",
-              "about": "Molly is a Mouse."
-            },
-            {
-              "name": "Paul Puppy",
-              "profilePic": "assets/img/5.jpg",
-              "about": "Paul is a Puppy."
-            }]
-        },
-        {
-          "name": "Ellie Elephant",
-          "profilePic": "assets/img/3.jpg",
-          "about": "Ellie is an Elephant."
-        },
-        {
-          "name": "Molly Mouse",
-          "profilePic": "assets/img/4.jpg",
-          "about": "Molly is a Mouse."
-        },
-        {
-          "name": "Paul Puppy",
-          "profilePic": "assets/img/5.jpg",
-          "about": "Paul is a Puppy."
-        }]
+    
+  }
+
+  getCollection(){
+
+    let headers = new Headers({"Content-Type" : "application/json"});
+    let reqOpts = {
+      headers: headers
+    };
+
+    this.http.get<Collection[]>(this.url + '/' + "imgcollection", {responseType: 'json'}).subscribe(
+      (data) => {
+
+        console.log("bluub");
+        console.log(data);
+
+        let outData = data.map(function(val){
+
+          let tmpCollection = new Collection(val);
+
+          let sessionArray = val.sessions.map(function(session){
+
+            let tmpSession = new Session(session);
+
+            let imgArray = session.images.map(function(img){
+
+              let tmpImg = new Image(img);
+
+              let commentsArray = img.comments.map(function(comment){
+
+                return new Comment(comment);
+  
+              });
+
+              tmpImg.comments = commentsArray
+
+              return tmpImg;
+            });
+  
+            tmpSession.images = imgArray;
+  
+            return tmpSession;
+
+          });
+
+          tmpCollection.sessions = sessionArray;
+
+          return tmpCollection;
+
+        })
+
+      this.collections = outData;
+
+      console.log(this.collections);
+
       },
-      {
-        "name": "PARTY",
-        "profilePic": "assets/img/2.jpg",
-        "about": "Charlie is a Cheetah.", 
-        "items" : [{
-          "name": "Donald Duck",
-          "profilePic": "assets/img/1.jpg",
-          "about": "Donald is a Duck."
-        },
-        {
-          "name": "Eva Eagle",
-          "profilePic": "assets/img/2.jpg",
-          "about": "Eva is an Eagle."
-        },
-        {
-          "name": "Ellie Elephant",
-          "profilePic": "assets/img/3.jpg",
-          "about": "Ellie is an Elephant."
-        },
-        {
-          "name": "Molly Mouse",
-          "profilePic": "assets/img/4.jpg",
-          "about": "Molly is a Mouse."
-        },
-        {
-          "name": "Paul Puppy",
-          "profilePic": "assets/img/5.jpg",
-          "about": "Paul is a Puppy."
-        }]
-      },
-      {
-        "name": "LEISURE",
-        "profilePic": "assets/img/3.jpg",
-        "about": "Donald is a Duck.", 
-        "items" : [{
-          "name": "Donald Duck",
-          "profilePic": "assets/img/1.jpg",
-          "about": "Donald is a Duck."
-        },
-        {
-          "name": "Eva Eagle",
-          "profilePic": "assets/img/2.jpg",
-          "about": "Eva is an Eagle."
-        },
-        {
-          "name": "Ellie Elephant",
-          "profilePic": "assets/img/3.jpg",
-          "about": "Ellie is an Elephant."
-        },
-        {
-          "name": "Molly Mouse",
-          "profilePic": "assets/img/4.jpg",
-          "about": "Molly is a Mouse."
-        },
-        {
-          "name": "Paul Puppy",
-          "profilePic": "assets/img/5.jpg",
-          "about": "Paul is a Puppy."
-        }]
-      },
-      {
-        "name": "BUSINESS",
-        "profilePic": "assets/img/4.jpg",
-        "about": "Eva is an Eagle.", 
-        "items" : [{
-          "name": "Donald Duck",
-          "profilePic": "assets/img/1.jpg",
-          "about": "Donald is a Duck."
-        },
-        {
-          "name": "Eva Eagle",
-          "profilePic": "assets/img/2.jpg",
-          "about": "Eva is an Eagle."
-        },
-        {
-          "name": "Ellie Elephant",
-          "profilePic": "assets/img/3.jpg",
-          "about": "Ellie is an Elephant."
-        },
-        {
-          "name": "Molly Mouse",
-          "profilePic": "assets/img/4.jpg",
-          "about": "Molly is a Mouse."
-        },
-        {
-          "name": "Paul Puppy",
-          "profilePic": "assets/img/5.jpg",
-          "about": "Paul is a Puppy."
-        }]
+      error => {
+        console.log("error");
+        console.log(error)
       }
-    ];
-
-
-    for (let item of items) {
-      this.collections.push(item);
-    }
-
+    )
   }
 
 
   get(endpoint: string, params?: any, reqOpts?: any) {
-
+    
+    /*
     if (endpoint == "collection"){
       return this.collections;
     }
+    */
     
-    /*
     if (!reqOpts) {
       reqOpts = {
         params: new HttpParams()
@@ -216,8 +107,32 @@ export class Api {
       }
     }
 
-    return this.http.get(this.url + '/' + endpoint, reqOpts);
-    */
+    return this.http.get(this.url + '/' + endpoint, {responseType: 'json'});
+    
+  }
+
+  addCollection(collection){
+    collection["authorId"] = this.auth.getUserId();
+    this.collections.push(collection);
+  }
+
+  deleteCollection(collectionId){
+    this.collections.forEach((item: Collection, index) => {
+      if (item.getId() == collectionId){
+        this.collections.splice(index,1)
+      }
+    }); 
+  }
+
+
+
+
+  setSelectedCollectionId(collectionId){
+    this.selectedCollectionId = collectionId; 
+  }
+
+  getSelectedCollectionId(){
+    return this.selectedCollectionId;
   }
 
   post(endpoint: string, body: any, reqOpts?: any) {

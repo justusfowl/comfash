@@ -2,13 +2,21 @@
 
 page-content{
 
+    .content{
+        background-image: linear-gradient(to top, $background-color 0%, $background-color-dark 50%);
+    }
+
     .btn-header{
         position: absolute; 
         opacity: 0.8;
     }
 
+    #row-compare-items{
+        height: calc(100vh - 80px);
+    }
+
     .compare-item-pic{
-        height: 60vh;
+        height: 100%;
         width: 100%;
         background-position: center center;
         background-size: cover;
@@ -36,11 +44,19 @@ page-content{
 
     .flag-comment{
         position: absolute; 
-        top: 44%;
-        background-image: url('../assets/img/cf_logo.png');
+        top: 41%;
+        background-image: url('../assets/img/hanger_white.png');
         background-size: cover; 
         background-position: center center;
         width: 30px; 
-        height: 30px; 
+        height: 30px;
+        transform: rotate(15deg);
     }
+
+    .hanger-container{
+        width: 100%; 
+        margin-left: 5px; 
+        margin-right: 5px;
+    }
+
 }

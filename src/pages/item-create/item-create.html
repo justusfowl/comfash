@@ -1,7 +1,9 @@
+<div class="main-cont">
+  
 <ion-header>
 
   <ion-navbar>
-    <ion-title>{{ 'ITEM_CREATE_TITLE' | translate }}</ion-title>
+    <ion-title>{{ 'COLLECTION_CREATE_TITLE' | translate }}</ion-title>
     <ion-buttons start>
       <button ion-button (click)="cancel()">
         <span color="primary" showWhen="ios">
@@ -22,9 +24,10 @@
 
 </ion-header>
 
-
 <ion-content>
   <form *ngIf="form" [formGroup]="form" (ngSubmit)="createItem()">
+    
+    <!--
     <input type="file" #fileInput style="visibility: hidden; height: 0px" name="files[]" (change)="processWebImage($event)" />
     <div class="profile-image-wrapper" (click)="getPicture()">
       <div class="profile-image-placeholder" *ngIf="!this.form.controls.profilePic.value">
@@ -35,16 +38,39 @@
       </div>
       <div class="profile-image" [style.backgroundImage]="getProfileImageStyle()" *ngIf="this.form.controls.profilePic.value"></div>
     </div>
+
+  -->
     <ion-list>
+
+        <ion-item>
+          <ion-label floating>{{ 'NAME' | translate }}</ion-label>
+          <ion-input type="text" formControlName="name" ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label floating>{{ 'DESCRIPTION' | translate }}</ion-label>
+          <ion-input type="text" formControlName="description" ></ion-input>
+        </ion-item>
+      <!-- [(ngModel)]="account.password" name="password" --> 
+
+
       <ion-item>
-        <ion-input type="text" placeholder="{{ 'ITEM_NAME_PLACEHOLDER' | translate }}" formControlName="name"></ion-input>
+        <ion-label>{{ 'PUBLIC' | translate }}</ion-label>
+        <ion-toggle formControlName="public" (ionChange)="makePrivate();" ></ion-toggle>
       </ion-item>
-      <ion-item>
-        <ion-input type="text" placeholder="{{ 'ITEM_ABOUT_PLACEHOLDER' | translate }}" formControlName="about"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input type="text" placeholder="{{ 'ITEM_ABOUT_PLACEHOLDER' | translate }}" formControlName="about"></ion-input>
-      </ion-item>
+
+
+      <div id="container-access-groups" class="hidden">
+
+        <ion-searchbar>
+
+        </ion-searchbar>
+
+      </div>
+
     </ion-list>
   </form>
 </ion-content>
+
+
+</div>

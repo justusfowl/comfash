@@ -1,6 +1,18 @@
 @import "../../theme/variables";
 
 page-item-create {
+
+  .main-cont{
+    height: 100vh; 
+    background-color: rgba($background-color,0.8) !important;
+    padding-top: 40vh; 
+  }
+
+  .header{
+    position: relative !important;
+  }
+
+
   .profile-image-wrapper {
     text-align: center;
     margin: 20px 0;
@@ -36,6 +48,16 @@ page-item-create {
   }
 
   .content{
-    background-color: rgba($background-color,0.8) !important;
+    //background-color: rgba($background-color,0.8) !important;
+    height: 60vh;
   }
+
+  .item-toggle{
+    height: 70px;
+  }
+
+  .hidden{
+    display: none;
+  }
+
 }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, ModalController, NavController } from 'ionic-angular';
 
 import { Item } from '../../models/item';
+import { Collection } from '../../models/datamodel';
 import { Api } from '../../providers/providers';
 
 @IonicPage()
@@ -12,13 +13,14 @@ import { Api } from '../../providers/providers';
 export class MyRoomPage {
 
   constructor(public navCtrl: NavController, public api: Api, public modalCtrl: ModalController) {
-  
+    
+    this.api.getCollection();
   }
 
   /**
    * The view loaded, let's query our items for the list
    */
-  ionViewDidLoad() {
+  ionViewDidLoad() { 
     
   }
 
@@ -28,19 +30,33 @@ export class MyRoomPage {
    */
   addItem() {
     let addModal = this.modalCtrl.create('ItemCreatePage');
-    addModal.onDidDismiss(item => {
-      if (item) {
+    addModal.onDidDismiss(collection => {
+      if (collection) {
+
+        let newCollection = new Collection(collection);
+
+        //console.log(newCollection);
+        this.api.addCollection(collection);
         //this.items.add(item);
       }
     })
+    
     addModal.present();
   }
 
   /**
    * Delete an item from the list of items.
    */
-  deleteItem(item) {
+  deleteCollection(collection: Collection, slidingItem) {
+
+    this.api.deleteCollection(collection.getId());
+    slidingItem.close();
     //this.items.delete(item);
+  }
+
+  quickSelectCapture(collection, slidingItem){
+    this.api.setSelectedCollectionId(collection._id)
+    slidingItem.close();
   }
 
   /**
@@ -48,7 +64,7 @@ export class MyRoomPage {
    */
   openItem(item: Item) {
     this.navCtrl.push('ItemDetailPage', {
-      item: item
+      collection: item
     });
   }
 }

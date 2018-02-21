@@ -18,16 +18,23 @@
 
 </ion-header>
 
-<ion-content>
+<ion-content no-bounce>
   <div class="hangers-bg"></div>
    <ion-list>
-    <ion-item *ngFor="let item of api.collections">
-        <div class="session-tile" [style.backgroundImage]="'url(' + item.profilePic + ')'" (click)="openItem(item)">
+    <ion-item-sliding #slideItem *ngFor="let item of api.collections">
+      <ion-item>
+        <div class="session-tile" [style.backgroundImage]="'url(' + item.getThumbnail() + ')'" (click)="openItem(item)">
+
+            <div id="flag_{{item._id}}" class="flag-compare" [class.active]="item.getId() === api.getSelectedCollectionId()">
+                <ion-icon id="flag-icon_{{item._id}}" name="camera" class="photo-tile-details-icon flag-icon" [class.active]="item.getId() === api.getSelectedCollectionId()" ></ion-icon>
+            </div>
+
           <div class="session-tile-details" >
+
             <ion-grid>
-              <ion-row>
+              <ion-row class="session-tile-row" >
                 <ion-col>
-                    <ion-icon name="globe" class="session-tile-details-icon"></ion-icon>
+                    <ion-icon name="unlock" class="session-tile-details-icon"></ion-icon>
                     <font class="cntFigure">
                         {{item.name}}
                     </font>
@@ -35,9 +42,9 @@
                 <ion-col>
                   <div class="session-tile-info">
                       <font class="cntFigure">
-                          3
+                          4<!--{{item.sessions.length}}-->
                       </font>
-                      <ion-icon name="image" class="session-tile-details-icon"></ion-icon>
+                      <ion-icon name="photos" class="session-tile-details-icon"></ion-icon>
                       <font class="cntFigure">
                           3
                       </font>
@@ -49,6 +56,23 @@
           </div>
         </div>
     </ion-item>
+
+    <ion-item-options side="right">
+      <button class="swipe-btn" ion-button (click)="deleteCollection(item, slideItem)">
+        <ion-icon class="swipe-icon" name="trash"></ion-icon>
+        DELETE
+      </button>
+    </ion-item-options>
+
+    <ion-item-options side="left">
+        <button class="swipe-btn" ion-button (click)="quickSelectCapture(item, slideItem)">
+          <ion-icon class="swipe-icon" name="camera"></ion-icon>
+          SELECT
+        </button>
+    </ion-item-options>
+
+
+    </ion-item-sliding>
   </ion-list>
   <!--
   <ion-list>
