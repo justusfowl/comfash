@@ -57,8 +57,9 @@ page-capture {
     .ar-arrow-box{
         color: rgba(color($colors, primary, base),0.7);
         font-size: 150px;
-        position: relative; 
-        top: 70vh; 
+        position: absolute; 
+        bottom: 30px;
+        //top: 70vh; 
         width: 100%; 
         text-align: center;
     }    

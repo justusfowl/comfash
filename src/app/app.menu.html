@@ -1,0 +1,26 @@
+<ion-menu id='mainmenu' [content]="content">
+    <ion-content>
+
+        <div class="profile-image-wrapper" (click)="getPicture()">
+            <div class="profile-image-placeholder" >
+            <ion-icon class="add-icon" name="add"></ion-icon>
+            <div>
+                {{ 'ITEM_CREATE_CHOOSE_IMAGE' | translate }}
+            </div>
+            </div>
+            <div class="profile-image" ></div>
+            <div>{{auth.userName}}</div>
+        </div>
+
+            <ion-list>
+            <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
+                {{p.title}}
+            </button>
+            <button menuClose ion-item (click)="doLogout()">
+            {{ 'LOGOUT' | translate }}
+            </button>
+            </ion-list>
+        </ion-content>
+
+    </ion-menu>
+<ion-nav #content [root]="rootPage"></ion-nav>

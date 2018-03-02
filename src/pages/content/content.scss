@@ -1,5 +1,23 @@
 @import "../../theme/variables";
 
+
+page-content-turntable{
+    .turntable {
+        display: inline-block;
+        margin: 0px; }
+      .turntable ul {
+        padding: 0px;
+        margin: 0px; }
+      .turntable ul li {
+        list-style-type: none;
+        display: none; }
+      .turntable ul li img {
+        width: 100%; }
+      .turntable ul li.active {
+        display: block; }
+}
+
+
 page-content{
 
     .content{
@@ -29,10 +47,11 @@ page-content{
     }
 
     .tmp-no{
-        position: relative;
+        position: absolute;
+        top: 20px;
         width: 100%; 
         text-align: center; 
-        font-size: 11vh; 
+        font-size: 20px; 
         color: #ffffffcf;
     }
 
@@ -40,6 +59,7 @@ page-content{
         position: absolute; 
         padding: 4px; 
         background-color: #949494;
+        width: 90px;
     }
 
     .flag-comment{

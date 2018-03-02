@@ -4,6 +4,7 @@
 
   "NAME": "Name",
   "PASSWORD": "Passwort",
+  "BIRTHDATE": "Geburtsdatum",
   "EMAIL": "Email",
   "LOGIN": "Anmelden",
   "SIGNUP": "Registrieren",

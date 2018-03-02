@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { IonicPage, NavController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, ToastController, ModalController, MenuController } from 'ionic-angular';
 
-import { User } from '../../providers/providers';
+import { AuthService, MsgService } from '../../providers/providers';
 import { MainPage } from '../pages';
+
+import * as $ from 'jquery';
+
 
 @IonicPage()
 @Component({
@@ -15,8 +18,8 @@ export class LoginPage {
   // The account fields for the login form.
   // If you're using the username field with or without email, make
   // sure to add it to the type
-  account: { email: string, password: string } = {
-    email: '',
+  account: { userId: string, password: string } = {
+    userId: '',
     password: ''
   };
 
@@ -24,9 +27,11 @@ export class LoginPage {
   private loginErrorString: string;
 
   constructor(public navCtrl: NavController,
-    public user: User,
+    public auth: AuthService,
     public toastCtrl: ToastController,
-    public translateService: TranslateService) {
+    public translateService: TranslateService, public modalCtrl: ModalController, public menu: MenuController, private msg: MsgService) {
+
+    this.menu.enable(false,'mainmenu');
 
     this.translateService.get('LOGIN_ERROR').subscribe((value) => {
       this.loginErrorString = value;
@@ -36,24 +41,53 @@ export class LoginPage {
 
   // Attempt to login in through our User service
   doLogin() {
-    this.user.login(this.account).subscribe((resp) => {
-      //this.navCtrl.push(MainPage);
-      this.navCtrl.setRoot(MainPage);
-    }, (err) => {
-      this.navCtrl.setRoot(MainPage);
-      //this.navCtrl.push(MainPage);
-      // Unable to log in
+    
+    this.auth.login(this.account.userId, this.account.password).subscribe(
+      (data) => {
+        this.msg.initMsgService();
+        this.navCtrl.setRoot(MainPage);
+      },
+      error => {
+
+      this.addInvalidPasswordStyle();
+
       let toast = this.toastCtrl.create({
         message: this.loginErrorString,
         duration: 1000,
         position: 'top'
       });
       toast.present();
-    });
+      }
+    )
+
   }
 
-  signUp(){
-    this.navCtrl.setRoot("SignupPage");
-  }  
+  addInvalidPasswordStyle(){
+    $('.login-form').addClass('invalid');
+    $('.login-label').addClass('invalid');
+  }
+
+
+  disableInvalidPasswordStyle(){
+    $('.login-form').removeClass('invalid');
+    $('.login-label').removeClass('invalid');
+  }
+
+
+
+  signUp() {
+
+    $('.login-form').addClass('hide');
+
+    let addModal = this.modalCtrl.create('SignupPage');
+    addModal.onDidDismiss(user => {
+
+      $('.login-form').removeClass('hide');
+
+    })
+    
+    addModal.present();
+  }
+
 
 }

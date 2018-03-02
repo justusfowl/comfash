@@ -7,9 +7,16 @@
         </button>
       </ion-buttons>
 
-    <ion-title >{{ 'LIST_MASTER_TITLE' | translate }}</ion-title>
+    <ion-title >{{ 'LIST_MASTER_TITLE' | translate }} | {{auth.userName}}</ion-title>
 
     <ion-buttons end>
+      <button ion-button icon-only [disabled]="api.getSelectedCollectionId().isSelected" (click)="captureToCollection()" >
+        <ion-icon name="camera" ></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="testMsg()">
+          <ion-icon name="add"></ion-icon>
+        </button>
+
       <button ion-button icon-only (click)="addItem()">
         <ion-icon name="add"></ion-icon>
       </button>
@@ -18,15 +25,24 @@
 
 </ion-header>
 
-<ion-content no-bounce>
+<ion-content>
+  
+  <ion-refresher (ionRefresh)="api.getCollections(($event.complete()))">
+      <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="Update MyRoom"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
   <div class="hangers-bg"></div>
    <ion-list>
     <ion-item-sliding #slideItem *ngFor="let item of api.collections">
       <ion-item>
         <div class="session-tile" [style.backgroundImage]="'url(' + item.getThumbnail() + ')'" (click)="openItem(item)">
 
-            <div id="flag_{{item._id}}" class="flag-compare" [class.active]="item.getId() === api.getSelectedCollectionId()">
-                <ion-icon id="flag-icon_{{item._id}}" name="camera" class="photo-tile-details-icon flag-icon" [class.active]="item.getId() === api.getSelectedCollectionId()" ></ion-icon>
+            <div id="flag_{{item._id}}" class="flag-compare" [class.active]="item.getId() === api.getSelectedCollectionId().selectedId">
+                <ion-icon id="flag-icon_{{item._id}}" name="camera" class="photo-tile-details-icon flag-icon" [class.active]="item.getId() === api.getSelectedCollectionId().selectedId" ></ion-icon>
             </div>
 
           <div class="session-tile-details" >
@@ -34,19 +50,19 @@
             <ion-grid>
               <ion-row class="session-tile-row" >
                 <ion-col>
-                    <ion-icon name="unlock" class="session-tile-details-icon"></ion-icon>
+                    <ion-icon name="unlock" [hidden]="!item.getAccess().public" class="session-tile-details-icon"></ion-icon>
                     <font class="cntFigure">
-                        {{item.name}}
+                        {{item.collectionTitle}}
                     </font>
                 </ion-col>
                 <ion-col>
                   <div class="session-tile-info">
                       <font class="cntFigure">
-                          4<!--{{item.sessions.length}}-->
+                          {{item.getNoSessions()}}
                       </font>
                       <ion-icon name="photos" class="session-tile-details-icon"></ion-icon>
                       <font class="cntFigure">
-                          3
+                          {{item.getNoComments()}}
                       </font>
                       <ion-icon name="text" class="session-tile-details-icon"></ion-icon>
                   </div>

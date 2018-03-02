@@ -5,38 +5,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { Config, Nav, Platform } from 'ionic-angular';
 
 import { FirstRunPage } from '../pages/pages';
-import { Settings } from '../providers/providers';
+import { Settings, WebsocketService } from '../providers/providers';
 
-import { Camera } from '@ionic-native/camera';
+//import { Camera } from '@ionic-native/camera';
+
+import { AuthService, MsgService } from '../providers/providers';
 
 @Component({
-  template: `
-  
-  <ion-menu [content]="content">
-    <ion-content>
-
-    <div class="profile-image-wrapper" (click)="getPicture()">
-      <div class="profile-image-placeholder" >
-        <ion-icon class="add-icon" name="add"></ion-icon>
-        <div>
-          {{ 'ITEM_CREATE_CHOOSE_IMAGE' | translate }}
-        </div>
-      </div>
-      <div class="profile-image" ></div>
-    </div>
-    
-      <ion-list>
-        <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
-          {{p.title}}
-        </button>
-        <button menuClose ion-item (click)="doLogout()">
-        {{ 'LOGOUT' | translate }}
-        </button>
-      </ion-list>
-    </ion-content>
-
-  </ion-menu>
-  <ion-nav #content [root]="rootPage"></ion-nav>`
+  templateUrl: "app.menu.html"
 })
 export class MyApp {
   rootPage = FirstRunPage;
@@ -68,7 +44,7 @@ export class MyApp {
 
   constructor(
     private translate: TranslateService, platform: Platform, settings: Settings, private config: Config, 
-    private statusBar: StatusBar, private splashScreen: SplashScreen) {
+    private statusBar: StatusBar, private splashScreen: SplashScreen, private msg : MsgService, private auth: AuthService, private ws : WebsocketService) {
 
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -77,9 +53,14 @@ export class MyApp {
       this.splashScreen.hide();
 
     });
+
+    if (auth.getToken()){
+      this.msg.initMsgService();
+    }
+
+    //this.msg.connect();
     
     this.initTranslate();
-
 
   }
 
@@ -116,6 +97,12 @@ export class MyApp {
   }
 
   doLogout(){
-    console.log("logout")
+
+    this.ws.disconnect();
+
+    this.auth.logout();
+
+    this.nav.setRoot("LoginPage");
+    
   }
 }

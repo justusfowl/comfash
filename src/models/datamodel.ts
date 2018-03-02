@@ -1,14 +1,15 @@
 
-
 /**
  * The datamodel for the comfash application
  *
  */
 
+
+
 export class Collection {
 
-  _id: String;
-  name : String;
+  collectionId: Number;
+  collectionTitle : String;
   collectionCreated: Date;
   sessions: Session[];
   access: Object = {
@@ -18,8 +19,8 @@ export class Collection {
 
   constructor(fields : any) {
 
-    this._id = fields._id || 'datamodel.ts-testid';
-    this.name = fields.name;
+    this.collectionId = fields.collectionId || null;
+    this.collectionTitle = fields.collectionTitle || '';
     this.collectionCreated = new Date();
     this.sessions = fields.sessions || [];
 
@@ -34,17 +35,43 @@ export class Collection {
   }
 
   getId(){
-    return this._id;
+    return this.collectionId;
+  }
+
+  getAccess(){
+    return this.access;
   }
 
   getThumbnail(){
 
     try{
-      return this.sessions[0].images[0].path
+      return this.sessions[0].images[0].imagePath
     }catch(err){
-      return '../assets/img/hanger_white.png';
+      return '/assets/img/hangersbg.png';
     }
 
+  }
+
+  getNoSessions(){
+    try{
+      return this.sessions.length;
+    }catch(err){
+      return 0;
+    }
+  }
+
+  getNoComments(){
+    try{
+      let amtComments = 0;
+      this.sessions.map(function(val, index){
+        val.images.map(function(img,i){
+          amtComments += img.comments.length;
+        })
+      })
+      return amtComments;
+    }catch(err){
+      return 0;
+    }
   }
 
   addSession(newSession : Session){
@@ -58,21 +85,58 @@ export class Collection {
 
   }
 
-  getCompareSessions(){
-    return this.sessions.filter(session => session.sessionIsCompared == true);
+  castSessions(){
+
+    this.sessions = this.sessions.map(function(sessionItem){
+      if (sessionItem.constructor.name != "Session"){
+        sessionItem = new Session(sessionItem);
+        
+      }
+      sessionItem.castImages();
+      return sessionItem;
+    });
+
+  }
+
+  getSessionsById(sessionIds : number[]){
+    const outArr = [];
+
+    for (var i = 0; i<this.sessions.length; i++){
+      if (sessionIds.indexOf(this.sessions[i].getId()) > -1){
+        outArr.push(this.sessions[i])
+      }
+    }
+
+    return outArr;
+
   }
 
 }
 
 export class Session {
 
-  sessionId: String;
-  images : Image[] = [];
+  sessionId: number;
+  images : Image[];
   sessionCreated: Date;
   sessionIsCompared : Boolean = false;
+  votes = [];
 
   constructor(fields : any) {
+    this.sessionId = fields.sessionId || null;
     this.sessionCreated = new Date();
+    this.images = fields.images || [];
+  }
+
+  castImages(){
+    
+    this.images = this.images.map(function(imageItem){
+      if (imageItem.constructor.name != "Image"){
+          imageItem = new Image(imageItem);
+      }
+      imageItem.castComments();
+      return imageItem;
+    });
+
   }
 
   getId(){
@@ -82,14 +146,15 @@ export class Session {
   getThumbnail(){
 
     try{
-      return this.images[0].path
+      return this.images[0].imagePath
     }catch(err){
-      return '../assets/img/hanger_white.png';
+      return '/assets/img/hangersbg.png';
     }
 
   }
 
   toggleCompareSession(){
+
     if (this.sessionIsCompared){
       this.sessionIsCompared = false;
     }else{
@@ -112,20 +177,39 @@ export class Session {
     
   }
 
+  getNoComments(){
+    try{
+      let amtComments = 0;
+        this.images.map(function(img,i){
+          amtComments += img.comments.length;
+        })
+      return amtComments;
+    }catch(err){
+      return 0;
+    }
+  }
+
+  getNoVotes(){
+    return this.votes.length;
+  }
+
 }
 
 export class Image {
   imageId: String;
-  path: String;
+  imagePath: String;
   height : number;
   width : number;
-  comments : Comment[] = [];
+  comments : Comment[];
+  order : number;
 
   constructor(fields : any) {
-
-    this.path = fields.path || '../assets/img/hanger_white.png';
+    this.imageId = fields.imageId || null;
+    this.imagePath = fields.imagePath || '/assets/img/hangersbg.png';
+    this.comments = fields.comments || [];
     this.height = fields.height;
     this.width = fields.width; 
+    this.order = fields.order;
   }
 
   getId(){
@@ -140,22 +224,36 @@ export class Image {
     return this.comments;
   }
 
+  castComments(){
+    
+    this.comments = this.comments.map(function(commentItem){
+      if (commentItem.constructor.name != "Comment"){
+          return new Comment(commentItem);
+      }else{
+        return commentItem;
+      }
+    });
+
+  }
+
 }
 
 export class Comment {
 
-  commentId: string;
+  commentId: number;
   yRatio : number;
   xRatio : number;
   commentCreated: Date = new Date(); 
   commentText : String = ''; 
   commentUrl: String = '';
+  imageId: number;
 
   constructor(fields : any) {
-
+    this.commentId = fields.commentId || null;
     this.commentText = fields.commentText || '';
     this.yRatio = fields.yRatio || 0.5;
     this.xRatio = fields.xRatio  || 0.5;
+    this.imageId = fields.imageId
   }
 
   getId(){
@@ -226,9 +324,9 @@ export class Comment {
       coordX = (this.xRatio * newWidthTotal) - addionalWidthOneSide;
 
       if (imgRatio < addionalWidthOneSide/newWidthTotal){
-        styleStr += "left: 5px; ";
+        styleStr += "left: 95px; ";
       }else if (imgRatio > (addionalWidthOneSide + viewPortWidth)/newWidthTotal){
-        styleStr += "right: 5px; ";
+        styleStr += "right: 95px; ";
       }else{
         styleStr += "left: " + coordX + "px; ";
       }
@@ -245,9 +343,9 @@ export class Comment {
       coordY = (this.yRatio * newHeightTotal) - addionalHeightOneSide; 
 
       if (coordY > viewPortHeight){
-        styleStr += "bottom: 5px;";
+        styleStr += "bottom: 95px;";
       }else if (coordY < addionalHeightOneSide){
-        styleStr += "top: 5px;";
+        styleStr += "top: 95px;";
       }else{
         styleStr += "top: " + coordY + "px;";
       }
@@ -256,7 +354,7 @@ export class Comment {
       styleStr+= "left: "+ coordX + "px;";
 
     }
-
+    /*
     let debug = {
       img : selectedImg,
       vH : viewPortHeight, 
@@ -270,7 +368,7 @@ export class Comment {
       cY : coordY, 
       styleStr: styleStr
     }
-    
+    */
     return styleStr;
 
   }

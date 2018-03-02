@@ -1,42 +1,78 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 
-import { Item } from '../../models/item';
-import { Items } from '../../providers/providers';
-import { Collection, Session } from '../../models/datamodel';
+import { Session } from '../../models/datamodel';
 
 import { Api } from '../../providers/providers';
 
-@IonicPage()
+@IonicPage({
+  segment: "item-detail/:collectionId"
+})
 @Component({
   selector: 'page-item-detail',
   templateUrl: 'item-detail.html'
 })
-export class ItemDetailPage {
-  collection: Collection;
-  selectedItems = {}; 
+export class ItemDetailPage implements OnInit{
 
-  constructor(public navCtrl: NavController, navParams: NavParams, public modalCtrl: ModalController, private api : Api) {
+  constructor(public navCtrl: NavController, navParams: NavParams, public modalCtrl: ModalController, public api : Api) {
+    
+    let collectionId = navParams.get('collectionId'); 
 
-    this.collection = navParams.get('collection');
+    // entweder selectedCollection aus der API gibts (dann nimm) sonst ladt und pack in API
+
+    this.api.loadCollection(collectionId);
+
+    //this.collection = navParams.get('collection')
+
+  }
+
+  ngOnInit(){
+
   }
 
   selectCompareSession(session: Session){
-    session.toggleCompareSession();
-  } 
+    this.api.toggleCompareSession(session)
+  }
+
+  isCompared(session : Session){
+
+    
+    if (this.api.compareSessionIds.indexOf(session.getId()) != -1){
+      return true;
+    }else{
+      return false;
+    }
+  }
 
   addItem() {
+    
 
-    this.navCtrl.push('CapturePage', {
-      collection: this.collection
-    });
+    let navigate = function (response){
+      
+        this.navCtrl.push('CapturePage', {
+        collection: this.api.selectedCollection, 
+        collectionId : this.api.selectedCollection.getId(),
+        sessionId : response.sessionId,
+        srvNav : 'session'
+      });
+
+    }
+
+    this.api.addSession(this.api.selectedCollection.getId(), navigate.bind(this));
 
   }
 
   compareItems(){
+
     this.navCtrl.push('ContentPage', {
-      collection: this.collection
+      collection: this.api.selectedCollection, 
+      collectionId : this.api.selectedCollection.getId(), 
+      compareSessionIds: this.api.compareSessionIds
     });
+  }
+
+  navBack(){
+    this.navCtrl.setRoot('MyRoomPage');
   }
 
 }

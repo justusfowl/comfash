@@ -6,6 +6,7 @@
   "NAME": "Name",
   "EMAIL": "Email",
   "USERNAME": "Username",
+  "BIRTHDATE": "Birthdate",
   "PASSWORD": "Password",
   "LOGIN": "Sign in",
   "SIGNUP": "Sign up",

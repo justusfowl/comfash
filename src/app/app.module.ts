@@ -1,7 +1,7 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { CameraPreview } from '@ionic-native/camera-preview';
 
 import { Camera } from '@ionic-native/camera';
@@ -12,11 +12,13 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
-import { Items } from '../mocks/providers/items';
-import { Settings, AuthService } from '../providers/providers';
-import { User } from '../providers/providers';
-import { Api } from '../providers/providers';
+import { User, Api, MsgService, WebsocketService,  Settings, AuthService } from '../providers/providers';
+
+import { AuthIntercept } from '../providers/api/authintercept'
 import { MyApp } from './app.component';
+
+//import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
+//const config: SocketIoConfig = { url: 'http://192.168.178.142:9999', options: {} };
 
 // The translate loader needs to know where to load i18n files
 // in Ionic's static asset pipeline.
@@ -54,7 +56,8 @@ export function provideSettings(storage: Storage) {
       }
     }),
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    //SocketIoModule.forRoot(config)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -62,8 +65,10 @@ export function provideSettings(storage: Storage) {
   ],
   providers: [
     AuthService,
+    MsgService,
+    WebsocketService,
     Api,
-    Items,
+    { provide: HTTP_INTERCEPTORS, useClass : AuthIntercept, multi: true},
     User,
     Camera,
     CameraPreview,

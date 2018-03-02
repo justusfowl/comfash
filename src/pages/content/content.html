@@ -6,15 +6,28 @@
         <ion-icon name="arrow-back"></ion-icon>
       </button>
     </ion-buttons>
-
-
+<!-- 
     <ion-row no-bounce no-scrolling id="row-compare-items">
-      <ion-col col *ngFor="let session of compareItems;">
+        <ion-col col *ngFor="let session of api.compareSessions;">
+          <div id="myturn" class="turntable"> 
+            <ul  > 
+
+              <li *ngFor="let image of session.images;" [attr.data-img-src]="image.imagePath"></li>
+
+            </ul>
+          </div>
+        </ion-col>
+      </ion-row>
+-->
+    
+    <div id='turntable'></div>
+    <ion-row no-bounce no-scrolling id="row-compare-items">
+      <ion-col col *ngFor="let session of api.compareSessions;">
           <div class="compare-item-pic" [style.backgroundImage]="'url(' + getImgPath(session) + ')'" 
-          ion-long-press [interval]="400" (onPressStart)="pressed($event, session)" (onPressEnd)="released($event)"
+          ion-long-press [interval]="400" (onPressStart)="pressed($event, session)"
           >
             <div class="tmp-no">
-              img # {{imgNumber}}
+              img # {{imgNumber}}, sess # {{session.getId()}}
             </div>
 
             <div class="compare-pic-comment" *ngFor="let comment of getImgComment(session)" [style]="sanitizer.bypassSecurityTrustStyle(comment.getScalledCommentPos('row-compare-items',getImgFromSession(session)))" >
@@ -23,8 +36,10 @@
           </div>
       </ion-col>
     </ion-row>
-  
- <!--
+    
+
+
+  <!--
   {{testText}}
     <div id="testId" class="compare-item-pic" style="background-image: url('assets/img/speakers/1.jpg');" ion-long-press [interval]="400" (onPressStart)="pressed($event)" (onPressing)="active($event)" (onPressEnd)="released($event)">
       

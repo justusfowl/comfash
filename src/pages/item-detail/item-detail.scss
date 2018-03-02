@@ -60,32 +60,4 @@ page-item-detail {
     color: color($colors, dark, base);
 }
 
-
-
-
-
-}
-
-.flag-compare{
-  position: absolute; 
-  height: 40px; 
-  width: 30px; 
-  display: flex; 
-  align-items: center; 
-  right: 5px; 
-  background: color($colors, light-grey, base);
-}
-
-.flag-icon{
-  text-align: center;
-  width: 100%;
-  font-size: 30px;
-}
-
-.flag-icon.active{
-  color: white;
-}
-
-.flag-compare.active{
-  background: color($colors, primary, base);
 }

@@ -1,28 +1,97 @@
+
+import { Storage } from '@ionic/storage';
+import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
 
-import { Injectable } from '@angular/core';
+import { Api } from '../api/api'
 
 
 @Injectable()
 export class AuthService {
   
-    private username : String;
-    private userId : Number; 
+    private userName : string = "";
+    private userId : string = "";
+    //private userBirthDate : string
+    private token : string = "";
+
+    constructor(private store : Storage, private api: Api) {
+        //this.loadFromStorage(); 
+    }
+
+    login(userId : string, password : string){
+
+        let data = {
+            userId : userId, 
+            password : password
+        };
+
+        return this.api.post("auth", data).map(response => {
+            this.handleLoginSuccess(response);
+        })
+        
+        /*.subscribe(
+            (data) => {
+                this.handleLoginSuccess(data);
+            },
+            error => {
+              console.log("error");
+              console.log(error)
+            }
+          )
+          */
+    }
 
 
-    constructor() {
+    logout(){
+        window.localStorage.clear();
+        return true; // this.store.clear();
+    }
 
-        this.username = "Uli"; 
-        this.userId = 21312;
+    handleLoginSuccess(data){
 
+        this.userId = data.userId; 
+        this.userName = data.userName; 
+        this.token = data.token;
+
+        /*
+        this.store.set('userId', data.userId);
+        this.store.set('userName', data.userName); 
+        this.store.set('jwt', data.token); 
+        */
+
+        window.localStorage.setItem('userId', data.userId);
+        window.localStorage.setItem('userName', data.userName);
+        window.localStorage.setItem('jwt', data.token);
+        
+    }
+
+    loadFromStorage(){
+        this.store.get('userName').then((val) => {
+            this.userName = val; 
+        });
+
+        this.store.get('userId').then((val) => {
+            this.userId = val; 
+        });
+
+        this.store.get('jwt').then((val) => {
+            this.token = val;  
+        });
     }
 
     getUsername (){
-        return this.username; 
+        return window.localStorage.getItem('userName');
+        // return this.userName; 
     }
 
-    getUserId(){
-        return this.userId; 
+    getUserId (){
+        return window.localStorage.getItem('userId');
+        // return this.userId;
+    }
+
+    getToken () : string {
+        return window.localStorage.getItem('jwt');
+        // return this.token;
     }
 
 
