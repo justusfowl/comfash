@@ -85,21 +85,10 @@ export class MyRoomPage {
   captureToCollection(){
 
 
-    let navigate = function (response){
-      
-        this.navCtrl.push('CapturePage', {
-        collectionId : this.api.getSelectedCollectionId().selectedId,
-        sessionId : response.sessionId,
-        srvNav : 'myRoom'
-      });
-
-    }
-
-  let collectionId = this.api.getSelectedCollectionId().selectedId; 
-
-  this.api.addSession(collectionId, navigate.bind(this));
-
-
+    this.navCtrl.push('CapturePage', {
+      collectionId : this.api.getSelectedCollectionId().selectedId,
+      srvNav : 'myRoom'
+    });
   }
   
 }

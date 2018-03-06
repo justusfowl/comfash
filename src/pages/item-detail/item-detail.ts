@@ -48,17 +48,17 @@ export class ItemDetailPage implements OnInit{
     
 
     let navigate = function (response){
-      
-        this.navCtrl.push('CapturePage', {
-        collection: this.api.selectedCollection, 
-        collectionId : this.api.selectedCollection.getId(),
-        sessionId : response.sessionId,
-        srvNav : 'session'
-      });
 
     }
 
-    this.api.addSession(this.api.selectedCollection.getId(), navigate.bind(this));
+    
+    this.navCtrl.push('CapturePage', {
+      collection: this.api.selectedCollection, 
+      collectionId : this.api.selectedCollection.getId(),
+      srvNav : 'session'
+    });
+
+    //this.api.addSession(this.api.selectedCollection.getId(), navigate.bind(this));
 
   }
 

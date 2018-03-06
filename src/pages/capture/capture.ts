@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform, ViewController } from 'ionic-angular';
 
-import { Session, Image } from '../../models/datamodel';
+import { Session } from '../../models/datamodel';
 
 import { CameraPreview, CameraPreviewOptions } from '@ionic-native/camera-preview';
 
@@ -14,6 +14,7 @@ import * as $ from 'jquery';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
 
+import { AuthService } from '../../providers/providers'
 
 declare var cordova : any;
 
@@ -35,9 +36,20 @@ export class CapturePage {
   captureInterval : any;
   currentImage : any = 0;
   
+  cameraPreviewOpts: CameraPreviewOptions = {
+    x: 0,
+    y: 0,
+    width: window.screen.width,
+    height: window.screen.height,
+    camera: this.cameraPreview.CAMERA_DIRECTION.FRONT,
+    //tapPhoto: true,
+    tapToFocus: true,
+    previewDrag: true,
+    toBack: true,
+    alpha: 1
+  };
 
   collectionId : any;
-  sessionId : any;
 
   newSession : Session;
 
@@ -45,11 +57,11 @@ export class CapturePage {
 
   myBackgroundVideo : any;
   
-  fileTransfer: FileTransferObject = this.transfer.create(); 
+  //fileTransfer: FileTransferObject = this.transfer.create(); 
 
   constructor(public navCtrl: NavController, public navParams: NavParams, 
     platform: Platform, public viewCtrl: ViewController,  public api: Api, private cameraPreview: CameraPreview, 
-    public lz: LZStringService, private transfer: FileTransfer, private file: File, public config : ConfigService) {
+    public lz: LZStringService, private transfer: FileTransfer, private file: File, public config : ConfigService, private auth: AuthService) {
     
     var compressed = this.lz.compress("This is a test string");
     
@@ -58,88 +70,106 @@ export class CapturePage {
     this.srcNav = navParams.get('srvNav'); 
 
     this.collectionId = navParams.get('collectionId');
-    this.sessionId = navParams.get('sessionId');
 
     
-
-
     platform.ready().then(() => {
-      
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      
-      /*
-      const cameraPreviewOpts: CameraPreviewOptions = {
-        x: 0,
-        y: 0,
-        width: window.screen.width,
-        height: window.screen.height,
-        camera: this.cameraPreview.CAMERA_DIRECTION.FRONT,
-        //tapPhoto: true,
-        tapToFocus: true,
-        previewDrag: true,
-        toBack: true,
-        alpha: 1
-      };
-      
-      this.cameraPreview.startCamera(cameraPreviewOpts).then(
-        (res) => {
-          console.log(res)
-        },
-        (err) => {
-          console.log("blubb no camera?!?!?!?")
-          console.log(err)
-        });
-
-        this.cameraPreview.setFlashMode(this.cameraPreview.FLASH_MODE.OFF);
-      */
-    });
-
     
-        
+      this.startLiveCam();
+      
+    }); 
   }
 
+  startLiveCam(){
+    this.cameraPreview.startCamera(this.cameraPreviewOpts).then(
+      (res) => {
+        console.log("STARTING SUCCESS")
+        console.log(res)
+      },
+      (err) => {
+        console.log("blubb no camera?!?!?!?")
+        console.log(err)
+      });
 
-  // full example
-upload(fileDATA) {
-  let options: FileUploadOptions = {
-     fileKey: 'file',
-     fileName: 'testfile.mp4', 
+      this.cameraPreview.setFlashMode(this.cameraPreview.FLASH_MODE.OFF);
+
+  }
+
+  stopLiveCam(){
+    this.cameraPreview.stopCamera();
+  }
+  
+  
+
+  upload(fileData) {
+
+  var comp = this;
+
+    let options: FileUploadOptions = {
+      fileKey: 'file',
+      fileName: 'testfile.mp4', 
       mimeType : 'video/mp4'
+    }
+
+    let headers = {
+      "x-access-token" : this.auth.getToken()
+    }
+
+    options.headers = headers; 
+
+    var fileTransfer = this.transfer.create(); 
+
+    let endpoint = this.config.getAPIBase() + '/' + "imgcollection/" + this.collectionId + "/session"
+    console.log(endpoint);
+
+    fileTransfer.upload(fileData, endpoint , options)
+    .then((data) => {
+      console.log(data)
+      console.log("SUCCESS");
+      comp.navBack();
+      
+ 
+    }, (err) => {
+     console.log(err)
+     console.log("ERROR")
+    })
+    
+
   }
-
-  this.fileTransfer.upload(fileDATA, this.config.getHostBase() + "/upload", options)
-   .then((data) => {
-     console.log(data)
-     console.log("SUCCESS")
-   }, (err) => {
-    console.log(err)
-    console.log("ERROR")
-   })
-}
-
-
 
   switchCam(){
     this.cameraPreview.switchCamera();
   }
-
+ 
   reload(){
     window['location'].reload();
   }
-
+ 
   startCapture(){
 
     console.log("START!");
-    console.log(cordova.plugins.backgroundvideo);
-    (<any>window).cordova.plugins.backgroundvideo.start('myVideo', 'front', true, null, null);
-    /*
-    delete this.newSession;
-    this.currentImage = 0;
-    this.newSession = new Session({});
 
-    this.captureInterval = setInterval(this.takePic.bind(this), this.captureIntervalMilSec); 
-    */
+    console.log(cordova.plugins.backgroundvideo);
+
+    var comp = this;
+
+    const captureOptions = {
+      filename : 'testVideo', 
+      camera : 'front', 
+      x: 0, 
+      y: 0, 
+      width: window.screen.width,
+      height: window.screen.height,
+    };
+
+    (<any>window).cordova.plugins.backgroundvideo.start(captureOptions, null, null);
+
+    setTimeout(function(){
+
+      comp.stopMe();
+    
+    }, 4000);
+
+
   }
 
   testChangeVideo(){
@@ -172,26 +202,31 @@ upload(fileDATA) {
 
   stopMe(){
 
-    console.log("STOP!");
+    console.log("STOP!"); 
 
     var comp = this; 
-
+      
     (<any>window).cordova.plugins.backgroundvideo.stop(function (filePath){
-      console.log("success")
+      console.log("success for the file: ")
+      console.log(filePath)
 
       let file = "file://" + filePath; 
-      console.log(file);
-      comp.changeVideo(file);
 
-      comp.upload(filePath);
-      comp.upload(file);
+      setTimeout(function(){
+        console.log("i am about to file upload")
+        comp.upload(filePath);
+        
+      
+      }, 500);
+
+
       return file;
     }, function (err){
-      console.log("success")
+      console.log("error")
       console.log(JSON.stringify(err));
       return err;
     })
-
+    
 
   }
 
@@ -215,7 +250,7 @@ upload(fileDATA) {
   }
 
   storePicture (base64PicData) {
-
+/*
     let newImg = new Image({
       "imagePath" : "data:image/jpeg;base64, " + base64PicData,
       "height" : window.screen.height,
@@ -227,10 +262,13 @@ upload(fileDATA) {
     //this.api.uploadImgStr(this.collectionId, this.sessionId, newImg, this.sequenceLength)
     //this.newSession.images.push(newImg); 
     console.log("stored picture: " + this.currentImage)
+    */
   }
 
   navBack(){
     console.log("nav back");
+
+    this.cameraPreview.stopCamera();
     
     if (this.srcNav == 'session' || this.srcNav == undefined){
       this.navCtrl.setRoot('ItemDetailPage', {

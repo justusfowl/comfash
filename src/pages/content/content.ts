@@ -6,7 +6,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 import { Collection, Session, Comment } from '../../models/datamodel';
 
-import { Api, AuthService } from '../../providers/providers';
+import { Api, AuthService, ConfigService } from '../../providers/providers';
 
 import * as $ from 'jquery';
 window['$'] = window['jQuery'] = $;
@@ -45,7 +45,8 @@ export class ContentPage implements AfterViewInit {
     public modalCtrl: ModalController, 
     private api : Api, 
     public sanitizer : Sanitizer, 
-    private auth : AuthService) {
+    private auth : AuthService, 
+    public config : ConfigService) {
 
       /*
       
@@ -218,9 +219,10 @@ export class ContentPage implements AfterViewInit {
     // entweder selectedCollection aus der API gibts (dann nimm) sonst ladt und pack in API
     
     let onCollectionLoaded = function (){
+
       this.api.compareSessionIds = compareSessionIds;
       this.api.compareSessions = this.api.selectedCollection.getSessionsById(compareSessionIds);
-      this.calculateFooterHangers();
+      //this.calculateFooterHangers();
 
       //$('#myturn').turntable();
     };
@@ -289,7 +291,7 @@ export class ContentPage implements AfterViewInit {
       tmpItem.calculateRatioFromCoords(coords,viewPort,selectedImg);
 
       // send to API 
-      this.api.addCommentToSelectedImg(this.api.selectedCollection.getId(), session.getId(), tmpItem, selectedImg)
+      //this.api.addCommentToSelectedImg(this.api.selectedCollection.getId(), session.getId(), tmpItem, selectedImg)
       // on success add to Img
       //selectedImg.addComment(tmpItem)
     });
@@ -300,7 +302,7 @@ export class ContentPage implements AfterViewInit {
    getImgFromSession(session: Session){
 
     let sessionIndex = session.getImgIndexFromPercent(this.imgNumber); 
-    return session.images[sessionIndex]
+    return null; //session.images[sessionIndex]
    }
 
    getImgPath(session: Session){
@@ -329,7 +331,7 @@ export class ContentPage implements AfterViewInit {
   calculateFooterHangers(){
 
     let tmpArray = []; 
-
+    /*
     for (var session of this.api.compareSessions){
 
       session.images.map(function(element, index){
@@ -344,7 +346,23 @@ export class ContentPage implements AfterViewInit {
         };
       })
     }
+
+    */
+
     return tmpArray;
+  }
+
+  slide(event){
+    console.log(this.imgNumber);
+
+    let comp = this;
+
+    const videos : any = document.getElementsByTagName("video");
+
+    for (var i = 0; i<videos.length; i++){
+      let element = videos[i];
+      element.currentTime = (comp.imgNumber / 100) * element.duration;
+    }
   }
 
    navBack(){

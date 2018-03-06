@@ -43,14 +43,14 @@
      
         
       <ion-col col *ngFor="let session of api.compareSessions;">
-          <div *ngFor="let image of session.images; let i = index;"  class="compare-item-pic" [class.active]="checkIfImgActive(i, session.images.length)" [style.backgroundImage]="'url(' + image.imagePath + ')'" 
-          ion-long-press [interval]="400" (onPressStart)="pressed($event, session)"
-          >
+          <div ion-long-press [interval]="400" (onPressStart)="pressed($event, session)" >
+
+            <video no-controls [src]="config.getHostBase() + session.getSessionItemPath()"></video>
             <div class="tmp-no">
-              img # {{imgNumber}}, sess # {{session.getId()}}, test: {{testText}}
+              img # {{imgNumber}}, sess # {{session.getId()}}, test: {{config.getHostBase() + session.getSessionItemPath()}}
             </div>
 
-            <div class="compare-pic-comment" *ngFor="let comment of image.comments" [style]="sanitizer.bypassSecurityTrustStyle(comment.getScalledCommentPos('row-compare-items',image))" >
+            <div class="compare-pic-comment" *ngFor="let comment of session.comments" [style]="sanitizer.bypassSecurityTrustStyle(comment.getScalledCommentPos('row-compare-items',session))" >
               {{comment.commentText}}
             </div>
           </div>
@@ -80,7 +80,7 @@
         <div *ngFor="let hanger of calculateFooterHangers();" class="flag-comment" [style.left]='hanger.orderPrc + "%"'></div>
     </div>
     
-      <ion-range [(ngModel)]="imgNumber" min="0" max="100" ratio="true" color="danger" pin="false"></ion-range>
+      <ion-range (ionChange)="slide($event)" [(ngModel)]="imgNumber" min="0" max="100" ratio="true" color="danger" pin="false"></ion-range>
   </ion-toolbar>
 
 </ion-footer>

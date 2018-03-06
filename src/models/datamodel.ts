@@ -5,7 +5,6 @@
  */
 
 
-
 export class Collection {
 
   collectionId: Number;
@@ -45,7 +44,7 @@ export class Collection {
   getThumbnail(){
 
     try{
-      return this.sessions[0].images[0].imagePath
+      return this.sessions[0].getThumbnail()
     }catch(err){
       return '/assets/img/hangersbg.png';
     }
@@ -64,9 +63,7 @@ export class Collection {
     try{
       let amtComments = 0;
       this.sessions.map(function(val, index){
-        val.images.map(function(img,i){
-          amtComments += img.comments.length;
-        })
+        amtComments += val.comments.length;
       })
       return amtComments;
     }catch(err){
@@ -92,7 +89,7 @@ export class Collection {
         sessionItem = new Session(sessionItem);
         
       }
-      sessionItem.castImages();
+      sessionItem.castComments();
       return sessionItem;
     });
 
@@ -116,17 +113,38 @@ export class Collection {
 export class Session {
 
   sessionId: number;
-  images : Image[];
+  //images : Image[];
+  comments : Comment[];
   sessionCreated: Date;
-  sessionIsCompared : Boolean = false;
+  sessionIsCompared : boolean = false;
   votes = [];
+  thumbnailPath : string;
+  sessionItemPath : string;
+  height: number; 
+  width: number;
 
   constructor(fields : any) {
     this.sessionId = fields.sessionId || null;
     this.sessionCreated = new Date();
-    this.images = fields.images || [];
+    this.comments = fields.comments || [];
+    this.sessionItemPath = fields.sessionItemPath || "";
+    this.height = fields.height || 0;
+    this.width = fields.width || 0;
+    this.thumbnailPath = fields.thumbnailPath || '/assets/img/thumbnailDefault.png';
   }
 
+  castComments(){
+    
+    this.comments = this.comments.map(function(commentItem){
+      if (commentItem.constructor.name != "Comment"){
+          return new Comment(commentItem);
+      }else{
+        return commentItem;
+      }
+    });
+  }
+
+/*
   castImages(){
     
     this.images = this.images.map(function(imageItem){
@@ -138,33 +156,35 @@ export class Session {
     });
 
   }
-
+*/
   getId(){
     return this.sessionId;
   }
 
   getThumbnail(){
-
     try{
-      return this.images[0].imagePath
+      return this.thumbnailPath;
     }catch(err){
       return '/assets/img/hangersbg.png';
     }
+  }
 
+  getSessionItemPath(){
+    return this.sessionItemPath;
   }
 
   toggleCompareSession(){
-
     if (this.sessionIsCompared){
       this.sessionIsCompared = false;
     }else{
       this.sessionIsCompared = true;
     }
-    
   }
 
   getImgIndexFromPercent(PercInt : number){
 
+    return 0;
+    /*
     let index = (Math.ceil(this.images.length * (PercInt / 100))) -1 ;
 
     if (index < 0){
@@ -174,19 +194,11 @@ export class Session {
     }else{
       return (Math.ceil(this.images.length * (PercInt / 100))) -1 ;
     }
-    
+    */
   }
 
   getNoComments(){
-    try{
-      let amtComments = 0;
-        this.images.map(function(img,i){
-          amtComments += img.comments.length;
-        })
-      return amtComments;
-    }catch(err){
-      return 0;
-    }
+    return this.comments.length;
   }
 
   getNoVotes(){
@@ -194,7 +206,7 @@ export class Session {
   }
 
 }
-
+/*
 export class Image {
   imageId: String;
   imagePath: String;
@@ -237,10 +249,11 @@ export class Image {
         return commentItem;
       }
     });
-
   }
 
 }
+
+*/
 
 export class Comment {
 
@@ -264,7 +277,7 @@ export class Comment {
     return this.commentId;
   }
 
-  calculateRatioFromCoords(coords: any, viewPort : Element, selectedImg : Image){
+  calculateRatioFromCoords(coords: any, viewPort : Element, selectedSessionItem : Session){
 
       let commentCoordX = coords.x;
       let commentCoordY = coords.y; 
@@ -273,8 +286,8 @@ export class Comment {
       let viewPortWidth = viewPort.clientWidth;
       let viewPortRatio = viewPortWidth / viewPortHeight; 
 
-      let imgHeight = selectedImg.height; 
-      let imgWidth = selectedImg.width; 
+      let imgHeight = selectedSessionItem.height; 
+      let imgWidth = selectedSessionItem.width; 
       let imgRatio = imgWidth / imgHeight; 
       
       let scallingFactor = (imgRatio / viewPortRatio);
@@ -303,7 +316,7 @@ export class Comment {
 
   }
 
-  getScalledCommentPos(viewPortId : string, selectedImg : Image){
+  getScalledCommentPos(viewPortId : string, selectedSessionItem : Session){
 
     let viewPort = document.getElementById(viewPortId);
 
@@ -311,8 +324,8 @@ export class Comment {
     let viewPortWidth = viewPort.clientWidth;
     let viewPortRatio = viewPortWidth / viewPortHeight; 
 
-    let imgHeight = selectedImg.height; 
-    let imgWidth = selectedImg.width; 
+    let imgHeight = selectedSessionItem.height; 
+    let imgWidth = selectedSessionItem.width; 
     let imgRatio = imgWidth / imgHeight; 
     
     let scallingFactor = (imgRatio / viewPortRatio);

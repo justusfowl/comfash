@@ -42,14 +42,11 @@ page-content{
     }
 
     .compare-item-pic{
-        display: none; 
+        display: flex; 
         align-items: center;
 
     }
 
-    .compare-item-pic.active{
-        display: flex !important;
-    }
 
     .tmp-no{
         position: absolute;

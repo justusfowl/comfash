@@ -2,7 +2,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 
-import { Collection, Session, Image, Comment } from '../../models/datamodel'
+import { Collection, Session, Comment } from '../../models/datamodel'
 
 
 import 'rxjs/add/operator/map';
@@ -114,25 +114,7 @@ export class Api {
 
   }
 
-  addSession(collectionId: Number, callback: any){
-
-    let endpoint = "imgcollection/" + collectionId + "/session";
-
-    this.post(endpoint, null).subscribe(
-      (data) => {
-          //callback(data);
-          console.log(data);
-          console.log("data updated and insert?!")
-          callback(data);
-      },
-      error => {
-        console.log("error");
-        console.log(error)
-      }
-    );
-
-
-  }
+  
 
   setSelectedCollectionId(collectionId){
 
@@ -170,6 +152,7 @@ export class Api {
 
   }
 
+  /*
   uploadImgStr(collectionId : Number, sessionId : Number, image: Image, imgSequenceNumber : Number){
     
     this.post("imgcollection/" + collectionId + "/session/" + sessionId, image).subscribe(
@@ -187,6 +170,8 @@ export class Api {
 
   }
 
+  */
+/*
   addCommentToSelectedImg(collectionId : Number, sessionId : Number, comment: Comment, selectedImg : Image){
     this.post("imgcollection/" + collectionId + "/session/" + sessionId + "/comment", comment).subscribe(
       (data) => {
@@ -200,7 +185,7 @@ export class Api {
       }
     )
   }
-
+*/
 
 
   // ### BASIC FUNCTIONS ###
