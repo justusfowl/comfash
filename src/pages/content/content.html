@@ -18,9 +18,10 @@
           </div>
         </ion-col>
       </ion-row>
--->
-    
-    <div id='turntable'></div>
+
+      old
+
+       <div id='turntable'></div>
     <ion-row no-bounce no-scrolling id="row-compare-items">
       <ion-col col *ngFor="let session of api.compareSessions;">
           <div class="compare-item-pic" [style.backgroundImage]="'url(' + getImgPath(session) + ')'" 
@@ -35,6 +36,26 @@
             </div>
           </div>
       </ion-col>
+    </ion-row>
+-->
+    
+    <ion-row no-bounce no-scrolling id="row-compare-items">
+     
+        
+      <ion-col col *ngFor="let session of api.compareSessions;">
+          <div *ngFor="let image of session.images; let i = index;"  class="compare-item-pic" [class.active]="checkIfImgActive(i, session.images.length)" [style.backgroundImage]="'url(' + image.imagePath + ')'" 
+          ion-long-press [interval]="400" (onPressStart)="pressed($event, session)"
+          >
+            <div class="tmp-no">
+              img # {{imgNumber}}, sess # {{session.getId()}}, test: {{testText}}
+            </div>
+
+            <div class="compare-pic-comment" *ngFor="let comment of image.comments" [style]="sanitizer.bypassSecurityTrustStyle(comment.getScalledCommentPos('row-compare-items',image))" >
+              {{comment.commentText}}
+            </div>
+          </div>
+      </ion-col>
+
     </ion-row>
     
 

@@ -1,4 +1,4 @@
-import { Component, Sanitizer } from '@angular/core';
+import { Component, Sanitizer, AfterViewInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { DomSanitizer } from "@angular/platform-browser";
 
@@ -23,7 +23,7 @@ window['$'] = window['jQuery'] = $;
     ScreenOrientation
   ]
 })
-export class ContentPage {
+export class ContentPage implements AfterViewInit {
 
   compareItems : Session[] = [];
   footerHangers = [];
@@ -47,13 +47,14 @@ export class ContentPage {
     public sanitizer : Sanitizer, 
     private auth : AuthService) {
 
-
+      /*
+      
       let turnTableDefaults = {
         axis: 'x',
         reverse: false,
         scrollStart: 'middle'
       };
-      /*
+      
       (function($){
 
         $.fn.turntable = function(options){
@@ -192,7 +193,7 @@ export class ContentPage {
       })(jQuery);
 
       */
-      
+
 
 
     this.compareItems.length = 0; 
@@ -228,10 +229,36 @@ export class ContentPage {
 
    }
 
+   ngAfterViewInit(){
+    let comp = this; 
+     
+
+    $('#row-compare-items').bind('touchmove', function (evt : any) {
+      console.log(evt);
+
+      comp.testText = "SLIDING";
+
+     var currentY = evt.originalEvent.touches[0].clientY;
+   });
+   }
+
    active(e){
     this.testText = 'active'; 
     console.log("active")
     //console.log(e);
+   }
+
+   checkIfImgActive(index: number, length : number){
+
+    let imgNum = (Math.ceil(length * (this.imgNumber / 100))) -1 ;
+
+    if (imgNum == index){
+      return true; 
+    }else{
+      return false;
+    }
+    
+
    }
 
    pressed(e, session : Session){

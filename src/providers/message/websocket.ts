@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/Observable';
 
 import * as io from 'socket.io-client';
 import { AuthService } from '../auth/auth';
+import { ConfigService } from '../config/config';
 
 
 @Injectable()
@@ -15,7 +16,7 @@ export class WebsocketService {
     private socket: SocketIOClient.Socket;
     public isConnected : boolean = false;
   
-    constructor( public auth : AuthService) { 
+    constructor( public auth : AuthService, public config: ConfigService) { 
 
     }
 
@@ -23,7 +24,7 @@ export class WebsocketService {
 
         console.log("i am here, connecting..");
 
-        this.socket = io("http://192.168.178.142:9999", {'query' : 'token=' + this.auth.getToken()});
+        this.socket = io(this.config.getHostBase(), {'query' : 'token=' + this.auth.getToken()});
 
         this.socket.on('connect', function(data) {
 

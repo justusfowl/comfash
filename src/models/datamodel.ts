@@ -212,6 +212,10 @@ export class Image {
     this.order = fields.order;
   }
 
+  getImagePath(){
+    return this.imagePath;
+  }
+
   getId(){
     return this.imageId;
   }

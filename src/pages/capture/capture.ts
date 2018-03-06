@@ -5,7 +5,17 @@ import { Session, Image } from '../../models/datamodel';
 
 import { CameraPreview, CameraPreviewOptions } from '@ionic-native/camera-preview';
 
-import { Api } from '../../providers/providers';
+import { Api, ConfigService } from '../../providers/providers';
+
+import {LZStringService} from 'ng-lz-string';
+
+import * as $ from 'jquery';
+
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
+import { File } from '@ionic-native/file';
+
+
+declare var cordova : any;
 
 @IonicPage({
   segment: "capture/:collectionId"
@@ -18,7 +28,7 @@ import { Api } from '../../providers/providers';
 export class CapturePage {
 
   captureIntervalMilSec = 100;
-  sequenceLength = 2;
+  sequenceLength = 50;
 
 
   capturedPics : any = [];
@@ -33,20 +43,32 @@ export class CapturePage {
 
   srcNav : any;  
 
+  myBackgroundVideo : any;
+  
+  fileTransfer: FileTransferObject = this.transfer.create(); 
+
   constructor(public navCtrl: NavController, public navParams: NavParams, 
-    platform: Platform, public viewCtrl: ViewController,  public api: Api, private cameraPreview: CameraPreview) { 
+    platform: Platform, public viewCtrl: ViewController,  public api: Api, private cameraPreview: CameraPreview, 
+    public lz: LZStringService, private transfer: FileTransfer, private file: File, public config : ConfigService) {
+    
+    var compressed = this.lz.compress("This is a test string");
+    
+    console.log(compressed)
     
     this.srcNav = navParams.get('srvNav'); 
 
     this.collectionId = navParams.get('collectionId');
     this.sessionId = navParams.get('sessionId');
 
+    
+
 
     platform.ready().then(() => {
+      
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
- 
       
+      /*
       const cameraPreviewOpts: CameraPreviewOptions = {
         x: 0,
         y: 0,
@@ -70,10 +92,33 @@ export class CapturePage {
         });
 
         this.cameraPreview.setFlashMode(this.cameraPreview.FLASH_MODE.OFF);
-        
+      */
     });
+
+    
         
   }
+
+
+  // full example
+upload(fileDATA) {
+  let options: FileUploadOptions = {
+     fileKey: 'file',
+     fileName: 'testfile.mp4', 
+      mimeType : 'video/mp4'
+  }
+
+  this.fileTransfer.upload(fileDATA, this.config.getHostBase() + "/upload", options)
+   .then((data) => {
+     console.log(data)
+     console.log("SUCCESS")
+   }, (err) => {
+    console.log(err)
+    console.log("ERROR")
+   })
+}
+
+
 
   switchCam(){
     this.cameraPreview.switchCamera();
@@ -85,13 +130,68 @@ export class CapturePage {
 
   startCapture(){
 
-    
-
+    console.log("START!");
+    console.log(cordova.plugins.backgroundvideo);
+    (<any>window).cordova.plugins.backgroundvideo.start('myVideo', 'front', true, null, null);
+    /*
     delete this.newSession;
     this.currentImage = 0;
     this.newSession = new Session({});
 
     this.captureInterval = setInterval(this.takePic.bind(this), this.captureIntervalMilSec); 
+    */
+  }
+
+  testChangeVideo(){
+    let videoFile = 'http://techslides.com/demos/sample-videos/small.mp4';
+    this.changeVideo(videoFile);
+  }
+
+  testlocalVid(){
+    let videoFile = "file:///var/mobile/Containers/Data/Application/8918DA2E-A254-4977-A127-B6A15712CE97/Library/NoCloud/myVideo_8.mp4";
+    this.changeVideo(videoFile);
+    this.upload("/var/mobile/Containers/Data/Application/8918DA2E-A254-4977-A127-B6A15712CE97/Library/NoCloud/myVideo_8.mp4")
+  }
+
+  changeVideo(videoFile){ 
+
+    //let videoFile = 'http://techslides.com/demos/sample-videos/small.mp4';
+    try{
+      var videocontainer = document.getElementById('myVideo');
+
+      var video : any = document.getElementById('myVideo');
+      video.src = videoFile;
+      //sources[1].src = 'video2.ogv';
+      video.load();
+      video.play();
+    }catch(err){
+      console.log(err)
+    }
+
+  }
+
+  stopMe(){
+
+    console.log("STOP!");
+
+    var comp = this; 
+
+    (<any>window).cordova.plugins.backgroundvideo.stop(function (filePath){
+      console.log("success")
+
+      let file = "file://" + filePath; 
+      console.log(file);
+      comp.changeVideo(file);
+
+      comp.upload(filePath);
+      comp.upload(file);
+      return file;
+    }, function (err){
+      console.log("success")
+      console.log(JSON.stringify(err));
+      return err;
+    })
+
 
   }
 
@@ -106,7 +206,10 @@ export class CapturePage {
 
     if (this.currentImage >= this.sequenceLength){
       clearInterval(this.captureInterval);
-      this.navBack();
+
+      const pics = this.lz.compress(JSON.stringify(this.capturedPics));
+      console.log(pics)
+      //this.navBack();
     }
 
   }
@@ -120,8 +223,9 @@ export class CapturePage {
       "order" : this.currentImage + 1
     });
 
-    this.api.uploadImgStr(this.collectionId, this.sessionId, newImg, this.sequenceLength)
-    this.newSession.images.push(newImg); 
+    this.capturedPics.push(newImg)
+    //this.api.uploadImgStr(this.collectionId, this.sessionId, newImg, this.sequenceLength)
+    //this.newSession.images.push(newImg); 
     console.log("stored picture: " + this.currentImage)
   }
 

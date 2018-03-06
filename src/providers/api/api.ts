@@ -11,8 +11,8 @@ import 'rxjs/add/operator/map';
  * Api is a generic REST Api handler. Set your API url first.
  */
 @Injectable()
-export class Api {
-  url: string = 'http://cl18:9999/api/v01';
+export class Api { 
+  url: string = 'http://192.168.178.142:9999/api/v01';
 
   public collections : any = [];
 

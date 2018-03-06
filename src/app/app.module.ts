@@ -3,16 +3,25 @@ import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CameraPreview } from '@ionic-native/camera-preview';
-
 import { Camera } from '@ionic-native/camera';
+
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { IonicStorageModule, Storage } from '@ionic/storage';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+// Import your library
+import { LZStringModule, LZStringService } from 'ng-lz-string';
 
-import { User, Api, MsgService, WebsocketService,  Settings, AuthService } from '../providers/providers';
+import { File } from '@ionic-native/file';
+
+
+import { FileTransfer } from '@ionic-native/file-transfer';
+
+
+
+import { ConfigService, User, Api, MsgService, WebsocketService,  Settings, AuthService } from '../providers/providers';
 
 import { AuthIntercept } from '../providers/api/authintercept'
 import { MyApp } from './app.component';
@@ -57,6 +66,7 @@ export function provideSettings(storage: Storage) {
     }),
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
+    LZStringModule
     //SocketIoModule.forRoot(config)
   ],
   bootstrap: [IonicApp],
@@ -64,6 +74,7 @@ export function provideSettings(storage: Storage) {
     MyApp
   ],
   providers: [
+    ConfigService,
     AuthService,
     MsgService,
     WebsocketService,
@@ -76,7 +87,10 @@ export function provideSettings(storage: Storage) {
     StatusBar,
     { provide: Settings, useFactory: provideSettings, deps: [Storage] },
     // Keep this to enable Ionic's runtime error handling during development
-    { provide: ErrorHandler, useClass: IonicErrorHandler }
+    { provide: ErrorHandler, useClass: IonicErrorHandler }, 
+    LZStringService, 
+    File, 
+    FileTransfer
   ]
 })
 export class AppModule { }
