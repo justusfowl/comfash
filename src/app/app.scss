@@ -58,3 +58,17 @@ html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: 
   .footer-btns{
     text-align: center;
   }
+
+  .content, .content-ios{
+    background-color: rgba(233,233,231,1);
+    background-image: url('../assets/img/comfash-bg.png');
+  }
+
+    
+  .btn-header{
+    position: fixed; 
+    opacity: 0.8;
+    top: 15px; 
+    left: 5px; 
+    z-index: 999;
+  }

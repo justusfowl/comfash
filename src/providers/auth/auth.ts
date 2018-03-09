@@ -17,7 +17,7 @@ export class AuthService {
     constructor(private store : Storage, private api: Api) {
         //this.loadFromStorage(); 
     }
-
+ 
     login(userId : string, password : string){
 
         let data = {

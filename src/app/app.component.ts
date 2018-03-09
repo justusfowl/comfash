@@ -38,6 +38,7 @@ export class MyApp {
   pages : any[] = [
     { title: 'MyRoom', component: 'MyRoomPage' },
     { title: 'FittingStream', component: 'CardsPage' },
+    { title: 'Notifications', component: 'NotificationsPage' },
     { title: 'Settings', component: 'SettingsPage' }
   ]
 

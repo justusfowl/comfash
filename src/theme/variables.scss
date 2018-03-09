@@ -13,8 +13,9 @@ $font-path: "../assets/fonts";
 // http://ionicframework.com/docs/v2/theming/overriding-ionic-variables/
 
 $text-color:        rgba(233,233,231,1);
-$background-color: #466675;
+$background-color: #466675; 
 $background-color-dark: rgb(51, 67, 75);
+$background-color-light: #d6d6d6;
 
 
 // Named Color Variables
@@ -37,9 +38,9 @@ $colors: (
 );
 
 
-$refresher-icon-color : $text-color;
-$refresher-text-color : $text-color;
-$refresher-icon-color : $text-color;
+$refresher-icon-color : color($colors, dark-text, base);
+$refresher-text-color : color($colors, dark-text, base);
+$refresher-icon-color : color($colors, dark-text, base);
 
 // App iOS Variables
 // --------------------------------------------------

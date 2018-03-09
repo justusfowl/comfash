@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, ModalController, NavController, MenuController } from 'ionic-angular';
 
 import { Collection } from '../../models/datamodel';
-import { Api, AuthService, MsgService } from '../../providers/providers';
+import { Api, AuthService, MsgService, ConfigService } from '../../providers/providers';
 
 
 @IonicPage()
@@ -12,8 +12,13 @@ import { Api, AuthService, MsgService } from '../../providers/providers';
 })
 export class MyRoomPage {
 
-  constructor(public navCtrl: NavController, public api: Api, public modalCtrl: ModalController, public msg : MsgService, public auth: AuthService,
-    public menu: MenuController) {
+  constructor(public navCtrl: NavController, 
+    public api: Api, 
+    public modalCtrl: ModalController, 
+    public msg : MsgService, 
+    public auth: AuthService,
+    public menu: MenuController,
+    public config: ConfigService) {
 
     this.menu.enable(true,'mainmenu');
 
@@ -27,10 +32,6 @@ export class MyRoomPage {
     
   }
 
-  testMsg(){
-    
-  }
-
   /**
    * Prompt the user to add a new item. This shows our ItemCreatePage in a
    * modal and then adds the new item to our data source if the user created one.
@@ -41,6 +42,8 @@ export class MyRoomPage {
       if (collection) {
 
         let newCollection = new Collection(collection);
+
+        newCollection.sharedWithUsers = collection.sharedWithUsers;
 
         console.log("new collection"); 
         console.log(newCollection)
@@ -76,7 +79,7 @@ export class MyRoomPage {
 
     this.api.selectedCollection = item;
 
-    this.navCtrl.setRoot('ItemDetailPage', {
+    this.navCtrl.setRoot('ImgCollectionPage', {
       collection: item, 
       collectionId : item.getId()
     });
@@ -89,6 +92,12 @@ export class MyRoomPage {
       collectionId : this.api.getSelectedCollectionId().selectedId,
       srvNav : 'myRoom'
     });
+  }
+
+  toNotification(){
+
+    this.navCtrl.setRoot('NotificationsPage', {});
+
   }
   
 }

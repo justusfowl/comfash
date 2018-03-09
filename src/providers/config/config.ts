@@ -5,11 +5,11 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class ConfigService {
   
-    private hostURL : string = "192.168.178.142";
+    private hostURL : string = "comfash.local";
     private hostPort : string = "9999"
     private apiVersion : string = "01";
     private API : string = "/api/v" + this.apiVersion;
-    private apiProtocol : string = 'http';
+    private apiProtocol : string = 'https';
 
 
     constructor() {

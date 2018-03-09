@@ -12,19 +12,21 @@ page-my-room {
 
     .item{
         background-color: transparent !important; 
-        padding: 0 0 0 0 !important;
+        padding: 10px 0 0 0 !important;
     }
 
     .item-wrapper{
         background-color: transparent !important;
     }
 
-    .fixed-content{
+    /*
+    .hangers-bg{
         background: url('../assets/img/hangersbg.png') no-repeat transparent;
         opacity: 0.3;
         background-size: cover;
         background-repeat: repeat-x;
     }
+    */
 
     .session-tile{
         position: relative;
@@ -76,6 +78,35 @@ page-my-room {
         font-size: 50px;
     }
 
-    
+    .headerBtn{
+        padding-right: 5px;
+    }
+
+    .cnt-new-notifications{
+        position: absolute; 
+        z-index: 102; 
+        color: color($colors, dark-text, base);
+        font-size: 10px; 
+        left: 16px; 
+        top: 12px; 
+    }
+
+    ion-content.has-refresher > .scroll-content{
+        background-color: initial !important;
+    }
+
+    .fab-button{
+        position: fixed; 
+        bottom: 20px; 
+        
+    }
+
+    .fab-button.left{
+        left: 20px; 
+    }
+
+    .fab-button.right{
+        right: 20px; 
+    }
     
 }

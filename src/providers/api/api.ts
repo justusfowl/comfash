@@ -6,13 +6,14 @@ import { Collection, Session, Comment } from '../../models/datamodel'
 
 
 import 'rxjs/add/operator/map';
+import { ConfigService } from '../config/config';
 
 /**
  * Api is a generic REST Api handler. Set your API url first.
  */
 @Injectable()
 export class Api { 
-  url: string = 'http://192.168.178.142:9999/api/v01';
+  url: string;
 
   public collections : any = [];
 
@@ -26,24 +27,32 @@ export class Api {
   public compareSessions : Session[] = [];
 
 
-  constructor( public http: HttpClient ) {
-    
+  constructor( public http: HttpClient, public config: ConfigService ) {
+    this.url = this.config.getAPIBase();
   }
 
   getCollections(callback = function(){ }){
 
     this.http.get<Collection[]>(this.url + '/' + "imgcollection").subscribe(
       (data) => {
+        
+        try{
+          let outData = data.map(function(val){
+            let tmpCollection = new Collection(val);
+            tmpCollection.castSessions();
+            callback();
 
-        let outData = data.map(function(val){
-          let tmpCollection = new Collection(val);
-          tmpCollection.castSessions();
-          callback();
+            return tmpCollection;
+          })
 
-          return tmpCollection;
-        })
+        this.collections = outData;
+      }
+      catch(err){
+        console.log(err)
+        this.collections = [];
+        return null;
+      }
 
-      this.collections = outData;
       },
       error => {
         console.log("error");
@@ -85,7 +94,7 @@ export class Api {
 
   addCollection(collection: Collection){
     
-    this.post("imgcollection", collection).subscribe(
+    this.http.post(this.url + "/imgcollection", collection).subscribe(
       (data) => {
           console.log(data);
           this.getCollections();
@@ -152,6 +161,22 @@ export class Api {
 
   }
 
+
+
+
+
+  getUser(searchStr: string){
+
+      return this.http.get(this.url + '/' + "user" + "?userSearch=" + searchStr);
+      
+  }
+
+
+  getMessages(){
+    return this.http.get(this.url + "/user/messages");
+  }
+
+
   /*
   uploadImgStr(collectionId : Number, sessionId : Number, image: Image, imgSequenceNumber : Number){
     
@@ -171,25 +196,28 @@ export class Api {
   }
 
   */
-/*
-  addCommentToSelectedImg(collectionId : Number, sessionId : Number, comment: Comment, selectedImg : Image){
-    this.post("imgcollection/" + collectionId + "/session/" + sessionId + "/comment", comment).subscribe(
-      (data) => {
-        let addedComment = new Comment(data);
 
-        selectedImg.addComment(addedComment);
-      },
-      error => {
-        console.log("error");
-        console.log(error)
-      }
-    )
+ addCommentToSession(collectionId : Number, sessionId : Number, comment: Comment, selectedSession : Session){ 
+  this.post("imgcollection/" + collectionId + "/session/" + sessionId + "/comment", comment).subscribe(
+    (data) => {
+      let addedComment = new Comment(data);
+
+      selectedSession.addComment(addedComment);
+    },
+    error => {
+      console.log("error");
+      console.log(error)
+    }
+  )
+}
+
+post(endpoint: string, body: any, reqOpts?: any) {
+    return this.http.post(this.url + '/' + endpoint, body, reqOpts);
   }
-*/
 
-
+  
   // ### BASIC FUNCTIONS ###
-
+/*
   get(endpoint: string, params?: any, reqOpts?: any) {
 
     let options = this.prepareReqOpts(reqOpts, params);
@@ -198,9 +226,7 @@ export class Api {
 
   }
 
-  post(endpoint: string, body: any, reqOpts?: any) {
-    return this.http.post(this.url + '/' + endpoint, body, reqOpts);
-  }
+  
 
   put(endpoint: string, body: any, reqOpts?: any) {
     return this.http.put(this.url + '/' + endpoint, body, reqOpts);
@@ -213,7 +239,7 @@ export class Api {
   patch(endpoint: string, body: any, reqOpts?: any) {
     return this.http.put(this.url + '/' + endpoint, body, reqOpts);
   }
-
+*/
 
   prepareReqOpts(reqOpts? : any, params? : any){
     if (!reqOpts) {

@@ -1,31 +1,15 @@
 
 
+  <div id="countdownOverlay" hidden>
+    <div id="countDownText">{{secondsUntilShot}}</div>
+  </div>
+
 <ion-content no-bounce>
 
   <ion-buttons class="btn-header">
     <button ion-button icon-only (click)="navBack()">
       <ion-icon name="arrow-back"></ion-icon>
     </button>
-    <button ion-button icon-only (click)="startCapture()">
-      <ion-icon name="cart"></ion-icon>
-    </button>
-    <button ion-button icon-only (click)="stopMe()">
-      <ion-icon name="arrow-back"></ion-icon>
-    </button>
-    <button ion-button icon-only (click)="testChangeVideo()">
-        <ion-icon name="people"></ion-icon>
-      </button>
-      <button ion-button icon-only (click)="testlocalVid()">
-          <ion-icon name="trash"></ion-icon>
-      </button>
-      <button ion-button icon-only (click)="stopLiveCam()">
-        <ion-icon name="camera"></ion-icon>
-    </button>
-    
-      
-
-
-    {{currentImage}} # pics
   </ion-buttons>
 
   <!-- <img class="testImg" *ngFor="let pic of capturedPics;" [src]= "'data:image/jpeg;base64,' + pic + ''"> -->
@@ -33,19 +17,23 @@
   <div class="ar-arrow-box">
       <ion-icon class="ar-icon" name="ios-refresh-circle-outline"></ion-icon>
   </div>
+
+  <div id="onAirCapture" hidden class="recordingIcon"></div>
+
+
   
 </ion-content>
 
-<ion-footer>
+<ion-footer id="footer" >
   <ion-toolbar>
     <ion-row >
       <ion-col col >
-        <div class="btn-footer-cam" (click)="switchCam()" >
+        <div id="btn-switch-cam" class="btn-footer-cam" (click)="switchCam()" >
             <ion-icon name="ios-reverse-camera-outline"></ion-icon>
         </div>
     </ion-col>
     <ion-col col >
-        <div class="btn-footer-capture" (click)="startCapture()" >
+        <div id="btn-capture" class="btn-footer-capture" (click)="startCountdown()" >
             <ion-icon name="ios-videocam-outline"></ion-icon>
         </div>
     </ion-col>

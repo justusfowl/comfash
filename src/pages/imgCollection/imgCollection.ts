@@ -3,18 +3,18 @@ import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angu
 
 import { Session } from '../../models/datamodel';
 
-import { Api } from '../../providers/providers';
+import { Api, ConfigService } from '../../providers/providers';
 
 @IonicPage({
-  segment: "item-detail/:collectionId"
+  segment: "imgCollection/:collectionId"
 })
 @Component({
-  selector: 'page-item-detail',
-  templateUrl: 'item-detail.html'
+  selector: 'page-imgCollection',
+  templateUrl: 'imgCollection.html'
 })
-export class ItemDetailPage implements OnInit{
+export class ImgCollectionPage implements OnInit{
 
-  constructor(public navCtrl: NavController, navParams: NavParams, public modalCtrl: ModalController, public api : Api) {
+  constructor(public navCtrl: NavController, navParams: NavParams, public modalCtrl: ModalController, public api : Api, public config : ConfigService) {
     
     let collectionId = navParams.get('collectionId'); 
 
@@ -23,7 +23,7 @@ export class ItemDetailPage implements OnInit{
     this.api.loadCollection(collectionId);
 
     //this.collection = navParams.get('collection')
-
+ 
   }
 
   ngOnInit(){

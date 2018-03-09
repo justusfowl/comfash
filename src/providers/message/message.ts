@@ -1,7 +1,7 @@
 import 'rxjs/add/operator/toPromise';
 
 import { Injectable, OnInit } from '@angular/core';
-import { AlertController, ToastController } from 'ionic-angular';
+import { AlertController, ToastController, App } from 'ionic-angular';
 
 import { Observable } from 'rxjs/Observable';
 import { Api } from '../api/api';
@@ -18,6 +18,9 @@ export class MsgService implements OnInit {
     public groups : any;
     private socket;
     test : any;
+    newMessages : any = [];
+    myMessages : any = [];
+    
   
     constructor( private alertCtrl : AlertController, public toastCtrl: ToastController, private api: Api, private ws : WebsocketService) { 
        
@@ -34,11 +37,27 @@ export class MsgService implements OnInit {
 
         this.ws.onNewMessage().subscribe( msg => {
             console.log(msg);
+            this.toast(msg);
+
+            this.newMessages.push(msg);
+            
+            this.api.getMessages().subscribe(messages => {
+                this.myMessages = messages;
+            })
+            
         })
         
     }
 
-    alert(msg: string){
+    isNotificationDisabled(){
+        if (this.newMessages.length == 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    alert(msg: any){
 
         let alert = this.alertCtrl.create({
             title: 'Comfash',
@@ -49,7 +68,7 @@ export class MsgService implements OnInit {
 
     }
 
-    toast(msg: string){
+    toast(msg: any){
 
         let toast = this.toastCtrl.create({
             message: msg,

@@ -1,24 +1,20 @@
 <ion-header>
 
   <ion-navbar class="nav-header">
-    <ion-buttons>
-        <button ion-button menuToggle >
+    <ion-buttons start>
+        <button ion-button icon-only menuToggle >
           <ion-icon name="menu"></ion-icon>
         </button>
+
       </ion-buttons>
 
-    <ion-title >{{ 'LIST_MASTER_TITLE' | translate }} | {{auth.userName}}</ion-title>
+    <ion-title >{{ 'LIST_MASTER_TITLE' | translate }}</ion-title>
 
     <ion-buttons end>
-      <button ion-button icon-only [disabled]="api.getSelectedCollectionId().isSelected" (click)="captureToCollection()" >
-        <ion-icon name="camera" ></ion-icon>
-      </button>
-      <button ion-button icon-only (click)="testMsg()">
-          <ion-icon name="add"></ion-icon>
-        </button>
 
-      <button ion-button icon-only (click)="addItem()">
-        <ion-icon name="add"></ion-icon>
+      <button class="headerBtn" ion-button icon-only (click)="toNotification()" [disabled]='msg.isNotificationDisabled()' >
+        <div class="cnt-new-notifications"> {{msg.newMessages.length}}</div>   
+          <ion-icon name="chatboxes" ></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -35,11 +31,26 @@
       refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
-  <div class="hangers-bg"></div>
+
+
+  <ion-fab class="fab-button left" >
+      <button ion-fab class="swipe-btn" (click)="addItem()">
+          <ion-icon class="swipe-icon" name="add"></ion-icon>
+        </button>
+    </ion-fab>
+
+
+  <ion-fab class="fab-button right" >
+    <button ion-fab class="swipe-btn" [disabled]="api.getSelectedCollectionId().isSelected" (click)="captureToCollection()">
+        <ion-icon class="swipe-icon" name="videocam"></ion-icon>
+      </button>
+  </ion-fab>
+  
+
    <ion-list>
     <ion-item-sliding #slideItem *ngFor="let item of api.collections">
       <ion-item>
-        <div class="session-tile" [style.backgroundImage]="'url(' + item.getThumbnail() + ')'" (click)="openItem(item)">
+        <div class="session-tile" [style.backgroundImage]="'url(' + config.getHostBase() + item.getThumbnail() + ')'" (click)="openItem(item)">
 
             <div id="flag_{{item._id}}" class="flag-compare" [class.active]="item.getId() === api.getSelectedCollectionId().selectedId">
                 <ion-icon id="flag-icon_{{item._id}}" name="camera" class="photo-tile-details-icon flag-icon" [class.active]="item.getId() === api.getSelectedCollectionId().selectedId" ></ion-icon>
@@ -90,6 +101,9 @@
 
     </ion-item-sliding>
   </ion-list>
+
+
+
   <!--
   <ion-list>
     <ion-item-sliding *ngFor="let item of currentItems">

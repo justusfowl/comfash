@@ -1,11 +1,5 @@
-page-item-detail {
+page-imgCollection {
 
-  .fixed-content{
-      background: url('../assets/img/hangersbg.png') no-repeat transparent;
-      opacity: 0.3;
-      background-size: cover;
-      background-repeat: repeat-x;
-  }
 
   .item-profile {
     width: 100%;
@@ -30,7 +24,7 @@ page-item-detail {
     background-repeat: no-repeat;
     transition: transform 1s ease-in 0s;
     //animation-duration: 100s; 
-    //animation-name: animatedBackground; 
+    //animation-name: animatedBackground;  
     //animation-iteration-count: infinite;
 }
 

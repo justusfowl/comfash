@@ -59,17 +59,32 @@
         <ion-toggle formControlName="public" (ionChange)="makePrivate();" ></ion-toggle>
       </ion-item>
 
-
-      <div id="container-access-groups" class="hidden">
-
-        <ion-searchbar>
-
-        </ion-searchbar>
-
-      </div>
-
     </ion-list>
   </form>
+  
+  <div id="container-access-groups" class="hidden">
+
+    <ion-list>
+      <ion-item #slideItem *ngFor="let userId of userIdsSelected">
+          <div (click)="removeUser(userId)" >
+            {{userId}}
+          </div>
+      </ion-item>
+    </ion-list>
+
+    <ion-searchbar [(ngModel)]="userSearch" (ionInput)="getUserSearch($event)">
+    </ion-searchbar>
+
+    <ion-list>
+      <ion-item #slideItem *ngFor="let user of userSearchList">
+          <div (click)="toggleUserInvite(user)" >
+            {{user.userId}}
+            <ion-icon name="checkmark" [hidden]="checkIfUserIsSelected(user)" item-right></ion-icon>
+          </div>
+      </ion-item>
+    </ion-list>
+
+  </div>
 </ion-content>
 
 

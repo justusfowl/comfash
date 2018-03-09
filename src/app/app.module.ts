@@ -16,10 +16,7 @@ import { LZStringModule, LZStringService } from 'ng-lz-string';
 
 import { File } from '@ionic-native/file';
 
-
 import { FileTransfer } from '@ionic-native/file-transfer';
-
-
 
 import { ConfigService, User, Api, MsgService, WebsocketService,  Settings, AuthService } from '../providers/providers';
 
@@ -52,7 +49,7 @@ export function provideSettings(storage: Storage) {
 
 @NgModule({
   declarations: [
-    MyApp 
+    MyApp
   ],
   imports: [
     BrowserModule,

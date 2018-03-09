@@ -1,0 +1,29 @@
+@import "../../theme/variables";
+
+
+page-notifications {
+
+    ion-label{
+        white-space: normal !important;
+    }
+
+    /* assume that the item is mine, otherwise aux overwrites the style indicating that this message is received by ME */
+    .item{
+        padding: 15px !important;
+        margin-top: 20px !important;
+        margin-left: -20px;
+        background-color: $background-color-dark;
+    }
+
+    .item.aux{
+        margin-left: 20px !important; 
+        background-color: $background-color !important;
+    }
+
+    .msg-detail{
+        font-size: 10px; 
+        position: absolute; 
+        right: 20px; 
+        bottom: 2px;
+    }
+}

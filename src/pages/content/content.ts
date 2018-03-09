@@ -27,7 +27,7 @@ export class ContentPage implements AfterViewInit {
 
   compareItems : Session[] = [];
   footerHangers = [];
-  imgNumber = 1; 
+  prcSessionItem = 1; 
   testText = "";
   
   comments = [];
@@ -35,8 +35,13 @@ export class ContentPage implements AfterViewInit {
   lastPressedX : any; 
   lastPressedY: any; 
 
-  selectedIndex = 0; 
-  collection : Collection; 
+  selectedCommentId : number = 0;
+  enableCommentList : boolean = false;
+
+  selectedIndex : number = -1; 
+  collection : Collection;
+
+  
 
   constructor(
     public navCtrl: NavController, 
@@ -47,155 +52,6 @@ export class ContentPage implements AfterViewInit {
     public sanitizer : Sanitizer, 
     private auth : AuthService, 
     public config : ConfigService) {
-
-      /*
-      
-      let turnTableDefaults = {
-        axis: 'x',
-        reverse: false,
-        scrollStart: 'middle'
-      };
-      
-      (function($){
-
-        $.fn.turntable = function(options){
-      
-          // variable declarations
-          'use strict';
-      
-          var mobilecheck = function() {
-            var check = true;
-            //(function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4)))check = true;})(navigator.userAgent||navigator.vendor||window.opera);
-            return check;
-          };
-       
-          var $listItems = $('ul', this).children(),
-              settings = $.extend({}, turnTableDefaults, options),
-              $turntable = $(this),
-              sections = [];
-      
-          // splits container based on
-          // amount of li's in turntable
-          function divideContainer(images) {
-      
-            var initialLength,
-                dividend = images.length;
-            if (settings.axis === 'scroll') {
-              initialLength = $(window).height();
-            } else if (settings.axis === 'y') {
-              initialLength = $turntable.height();
-            } else {
-              initialLength = $turntable.width();
-            }
-      
-            var sectionLength = initialLength / dividend;
-      
-            // creates array of value pairs with min and max ranges
-            for (var i = 0; i < images.length; i++) {
-              sections[i] = {
-                min: sectionLength * i,
-                max: sectionLength + (sectionLength * i),
-                index: i
-              };
-            }
-      
-            // reverses direction
-            if (settings.reverse === true) {
-              // reverse array
-              sections.reverse();
-              // reset index values
-              $.each(sections, function(i, obj) {
-                obj.index = i;
-              });
-            }
-          }
-      
-          //loads images one at a time on page load
-          (function appendImages(callback) {
-            $listItems.each(function () {
-              $(this).html('<img src="' + $(this).data("imgSrc") + '">');
-            });
-          })();
-      
-          // divides container once image is loaded
-          $("li:first-child>img", $turntable).on('load', function () {
-            $(this).parent().addClass('active');
-            divideContainer($listItems);
-          });
-      
-          //redivides window on resize
-          $(window).resize(function(){
-            divideContainer($listItems);
-          });
-      
-          // loop through array and find correct range pair
-          var applyClasses = function(sections, position) {
-            $.each(sections, function () {
-              if (position >= this.min && position <= this.max) {
-                $listItems.removeClass('active');
-                $listItems.eq(this.index).addClass("active");
-              }
-            });
-          };
-      
-          // finds mouse position and appends body
-          // based on location
-          if (settings.axis === 'scroll'){
-            // scroll
-            return $(window).scroll(function(){
-              var scrollStart;
-              if (settings.scrollStart === 'bottom') {
-                scrollStart = $turntable.height();
-              } else if (settings.scrollStart === 'top') {
-                scrollStart = 0;
-              } else {
-                // scroll start is middle or other unusable value
-                scrollStart = $turntable.height() / 2;
-              }
-              var offset = $turntable.offset();
-              var position = offset.top - ( $(window).scrollTop() - scrollStart );
-              applyClasses(sections, position);
-            });
-      
-          } else if(mobilecheck()){
-            // touch
-            return $turntable.on("touchmove", function (e: any) {
-              e.preventDefault();
-              var offset = $(this).offset();
-              
-              var t = e.originalEvent.touches[0] || e.originalEvent.changedTouches[0];
-              var position;
-              if (settings.axis === 'y') {
-                position = t.pageY - offset.top;
-              } else {
-                position = t.pageX - offset.left;
-              }
-              // loop through array and find correct range pair
-              applyClasses(sections, position);
-            });   
-      
-          } else {
-            // mouseover
-            return $turntable.on("mousemove", function (e) {
-              var offset = $(this).offset();
-              var position;
-              if (settings.axis === 'y') {
-                position = e.pageY - offset.top;
-              } else {
-                position = e.pageX - offset.left;
-              }
-              applyClasses(sections, position);
-            });  
-      
-          }
-        }; //end if
-      
-      
-      })(jQuery);
-
-      */
-
-
 
     this.compareItems.length = 0; 
 
@@ -222,7 +78,7 @@ export class ContentPage implements AfterViewInit {
 
       this.api.compareSessionIds = compareSessionIds;
       this.api.compareSessions = this.api.selectedCollection.getSessionsById(compareSessionIds);
-      //this.calculateFooterHangers();
+      this.calculateFooterHangers();
 
       //$('#myturn').turntable();
     };
@@ -232,16 +88,24 @@ export class ContentPage implements AfterViewInit {
    }
 
    ngAfterViewInit(){
+
     let comp = this; 
      
-
     $('#row-compare-items').bind('touchmove', function (evt : any) {
-      console.log(evt);
+        console.log(evt);
 
-      comp.testText = "SLIDING";
+      var currentY = evt.originalEvent.touches[0].clientY;
+    });
 
-     var currentY = evt.originalEvent.touches[0].clientY;
-   });
+      setTimeout(function(){ 
+        let videos : any = $('video.video-background');
+
+        for (var i=0; i<videos.length; i++){
+          videos[i].pause()
+        }
+
+
+      }, 1500);
    }
 
    active(e){
@@ -252,7 +116,7 @@ export class ContentPage implements AfterViewInit {
 
    checkIfImgActive(index: number, length : number){
 
-    let imgNum = (Math.ceil(length * (this.imgNumber / 100))) -1 ;
+    let imgNum = (Math.ceil(length * (this.prcSessionItem / 100))) -1 ;
 
     if (imgNum == index){
       return true; 
@@ -262,12 +126,14 @@ export class ContentPage implements AfterViewInit {
     
 
    }
+   
 
    pressed(e, session : Session){
      
     // normalize coords to include offset of target element 
 
     let targetElement = e.target.getBoundingClientRect();
+    let currentPrcSessionItem = this.prcSessionItem;
 
     let coords = {
       "x" : e.center.x - targetElement.x  < 0 ? 0 : e.center.x - targetElement.x ,
@@ -278,22 +144,19 @@ export class ContentPage implements AfterViewInit {
     let addModal = this.modalCtrl.create('ItemCreatePage');
     addModal.onDidDismiss(item => {
 
-      let selectedImg = this.getImgFromSession(session);
-
       let tmpItem = new Comment({
         commentText : item.name, 
         userId : this.auth.getUserId(),
-        imageId : selectedImg.getId()
+        sessionId : session.getId(), 
+        prcSessionItem : currentPrcSessionItem
       });
 
       let viewPort = document.getElementById('row-compare-items');
 
-      tmpItem.calculateRatioFromCoords(coords,viewPort,selectedImg);
+      tmpItem.calculateRatioFromCoords(coords,viewPort,session);
 
-      // send to API 
-      //this.api.addCommentToSelectedImg(this.api.selectedCollection.getId(), session.getId(), tmpItem, selectedImg)
-      // on success add to Img
-      //selectedImg.addComment(tmpItem)
+      this.api.addCommentToSession(this.api.selectedCollection.getId(), session.getId(), tmpItem, session);
+      
     });
 
     addModal.present();
@@ -301,7 +164,7 @@ export class ContentPage implements AfterViewInit {
 
    getImgFromSession(session: Session){
 
-    let sessionIndex = session.getImgIndexFromPercent(this.imgNumber); 
+    let sessionIndex = session.getImgIndexFromPercent(this.prcSessionItem); 
     return null; //session.images[sessionIndex]
    }
 
@@ -315,6 +178,32 @@ export class ContentPage implements AfterViewInit {
      }
     
    }
+
+  scaleToFill() {
+
+    let returnScale = "";
+    try{
+
+        let videoTag : any = $('video.video-background')[0];
+
+        var $video = $(videoTag),
+            videoRatio = videoTag.videoWidth / videoTag.videoHeight,
+            tagRatio = $video.width() / $video.height(),
+            val;
+
+        if (videoRatio < tagRatio) {
+            val = tagRatio / videoRatio * 1.02;
+        } else if (tagRatio < videoRatio) {
+            val = videoRatio / tagRatio * 1.02;
+        }
+
+      return 'scale(' + parseFloat(val) + ')';
+
+    }catch(err){
+      return 'scale(1)'
+    }
+}
+
 
 
   getImgComment(session: Session){
@@ -331,38 +220,153 @@ export class ContentPage implements AfterViewInit {
   calculateFooterHangers(){
 
     let tmpArray = []; 
-    /*
+    let tmpArrayPrc = []; 
+    
     for (var session of this.api.compareSessions){
 
-      session.images.map(function(element, index){
-        if (element.comments.length > 0){
+      session.comments.map(function(comment, index){
 
-          let prc = Math.round((index/session.images.length) * 100);
+          let prc = Math.round((comment.prcSessionItem));
 
-          tmpArray.push({
-            index: index, 
-            orderPrc : prc > 95 ? 95 : prc < 5 ? 5 : prc
-          });
-        };
-      })
-    }
+          if (tmpArrayPrc.indexOf(prc) == -1){
+            
+            tmpArrayPrc.push(prc);
+            tmpArray.push({
+              index: index, 
+              orderPrc : prc > 95 ? 95 : prc < 5 ? 5 : prc
+            });
+          }
+          
 
-    */
+        });
+
+      }
 
     return tmpArray;
   }
 
+  setSelectedIndex(index){
+    this.selectedIndex = index;
+  }
+
+  enableComments(index){
+
+    let rowElement = document.getElementById('row-compare-items');
+    let commentList = document.getElementById('comment-list');
+
+    if (this.enableCommentList){
+
+      this.enableCommentList = false;
+
+      if (this.selectedIndex == index){
+        
+        this.selectedCommentId = -1;
+        this.setSelectedIndex(-1);
+        rowElement.classList.remove('comment-list-active');
+        commentList.classList.remove('active');
+
+      }else{
+        this.setSelectedIndex(index);
+      }
+    }else{
+      this.enableCommentList = true;
+      this.setSelectedIndex(index);
+      rowElement.classList.add('comment-list-active');
+      commentList.classList.add('active');
+    }
+
+  }
+
+  selectComment(i, comment){
+
+    this.highlightComment(comment);
+
+    if (!this.enableCommentList){
+      this.enableComments(i);
+    }else{
+      this.setSelectedIndex(i);
+    }
+    
+    this.highlightCommentListItem(comment);
+  }
+
+  highlightCommentListItem(comment : Comment){
+    
+    // give some time for the view to render the new comment list
+
+    setTimeout(function(){ 
+      
+      try {
+        let el = document.getElementById('comment-list_' + comment.getId());
+        el.scrollIntoView();
+        el.classList.add('item-selected');
+      }catch(err){
+        console.log(err)
+      }
+      
+    }, 230);
+
+    setTimeout(function(){ 
+
+      try {
+        let el = document.getElementById('comment-list_' + comment.getId());
+        el.classList.remove('item-selected');
+      }catch(err){
+        console.log(err)
+      }
+
+    }, 3000);
+  }
+
+
+  highlightComment(comment: Comment){
+
+    this.selectedCommentId = comment.getId();
+
+    this.highlightCommentListItem(comment);
+  }
+
+  checkCommentActive(comment : Comment){
+
+    if (comment.getId() == this.selectedCommentId){
+      return true;
+    }else{
+      return false;
+    }
+    
+  }
+
+  checkCommentHidden(displayComments){
+
+    if (displayComments.length > 0){
+      return false;
+    }else{
+      return true;
+    }
+    
+  }
+
+  getCommentsForSelectedSession(){
+
+    if (this.api.compareSessions.length > 0 && this.selectedIndex != -1){
+      return this.api.compareSessions[this.selectedIndex].comments;
+    }else{
+      return [];
+    }
+  }
+
   slide(event){
-    console.log(this.imgNumber);
+
+    // set videos to corresponding currentTime
 
     let comp = this;
-
     const videos : any = document.getElementsByTagName("video");
-
     for (var i = 0; i<videos.length; i++){
       let element = videos[i];
-      element.currentTime = (comp.imgNumber / 100) * element.duration;
+      element.currentTime = (comp.prcSessionItem / 100) * element.duration;
     }
+
+
   }
 
    navBack(){

@@ -42,7 +42,7 @@ export class SignupPage {
 
   doSignup() {
     // Attempt to login in through our User service
-    this.api.post('user', this.account).subscribe((resp) => {
+    this.api.post('auth/register', this.account).subscribe((resp) => {
       this.viewCtrl.dismiss();
       this.msg.alert('Welcome to comfash - glad you are here!')
     }, (err) => {

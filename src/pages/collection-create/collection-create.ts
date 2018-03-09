@@ -19,6 +19,12 @@ export class CollectionCreatePage {
 
   form: FormGroup;
 
+  userSearchList : any;
+  userSearch : any;
+
+  usersSelected : any = [];
+  userIdsSelected : any = [];
+
   constructor(public navCtrl: NavController, 
     public viewCtrl: ViewController, 
     formBuilder: FormBuilder, 
@@ -97,7 +103,53 @@ export class CollectionCreatePage {
       public : this.form.value.public
     };
 
+    obj["sharedWithUsers"] = this.usersSelected;
+
     console.log(obj)
     this.viewCtrl.dismiss(obj);
+  }
+
+  getUserSearch(event){
+
+    let userSearch = this.userSearch;
+    let comp = this;
+    
+    if (userSearch.length >= 3){
+      this.api.getUser(userSearch).subscribe(users => {
+        comp.userSearchList = users;
+      }, 
+      error => {
+        console.log("error in searching the users")
+      });
+    }
+  }
+
+  removeUser(userId){
+    let userIndex = this.userIdsSelected.indexOf(userId);
+    this.usersSelected.splice(userIndex , 1);
+      this.userIdsSelected.splice(userIndex , 1);
+  }
+
+  toggleUserInvite(user){
+    let userIndex = this.userIdsSelected.indexOf(user.userId); 
+
+    if ( userIndex == -1 ){
+      this.usersSelected.push(user);
+      this.userIdsSelected.push(user.userId);
+    }else{
+      this.usersSelected.splice(userIndex , 1);
+      this.userIdsSelected.splice(userIndex , 1);
+    }
+  }
+
+  checkIfUserIsSelected(user){
+    let userIndex = this.userIdsSelected.indexOf(user.userId); 
+
+    if ( userIndex == -1 ){
+      return true;
+    }else{
+      false;
+    }
+
   }
 }

@@ -15,6 +15,7 @@ export class Collection {
     public: true, 
     groupId : null
   };
+  sharedWithUsers : any = [];
 
   constructor(fields : any) {
 
@@ -46,7 +47,7 @@ export class Collection {
     try{
       return this.sessions[0].getThumbnail()
     }catch(err){
-      return '/assets/img/hangersbg.png';
+      return '../assets/img/hangersbg.png';
     }
 
   }
@@ -118,10 +119,14 @@ export class Session {
   sessionCreated: Date;
   sessionIsCompared : boolean = false;
   votes = [];
-  thumbnailPath : string;
+  sessionThumbnailPath : string;
   sessionItemPath : string;
   height: number; 
   width: number;
+  displayHeight: number; 
+  displayWidth: number; 
+  displayTop: number; 
+  displayLeft: number
 
   constructor(fields : any) {
     this.sessionId = fields.sessionId || null;
@@ -130,7 +135,7 @@ export class Session {
     this.sessionItemPath = fields.sessionItemPath || "";
     this.height = fields.height || 0;
     this.width = fields.width || 0;
-    this.thumbnailPath = fields.thumbnailPath || '/assets/img/thumbnailDefault.png';
+    this.sessionThumbnailPath = fields.sessionThumbnailPath || '../assets/img/hangersbg.png';
   }
 
   castComments(){
@@ -163,9 +168,9 @@ export class Session {
 
   getThumbnail(){
     try{
-      return this.thumbnailPath;
+      return this.sessionThumbnailPath;
     }catch(err){
-      return '/assets/img/hangersbg.png';
+      return '../assets/img/hangersbg.png';
     }
   }
 
@@ -179,6 +184,10 @@ export class Session {
     }else{
       this.sessionIsCompared = true;
     }
+  }
+
+  getRatio(){
+    return this.width/this.height;
   }
 
   getImgIndexFromPercent(PercInt : number){
@@ -197,6 +206,20 @@ export class Session {
     */
   }
 
+  getCommentsDisplay(currentPrcSessionItem){
+
+    let displayComments = this.comments.filter(function(comment, index){
+
+      if (comment.displayBoolHidden == false){
+        return comment;
+      }
+
+    });
+
+    return displayComments;
+
+  }
+
   getNoComments(){
     return this.comments.length;
   }
@@ -204,6 +227,11 @@ export class Session {
   getNoVotes(){
     return this.votes.length;
   }
+
+  addComment(comment: Comment){
+    this.comments.push(comment);
+  }
+
 
 }
 /*
@@ -232,9 +260,6 @@ export class Image {
     return this.imageId;
   }
 
-  addComment(comment: Comment){
-    this.comments.push(comment);
-  }
 
   getComments(){
     return this.comments;
@@ -263,18 +288,37 @@ export class Comment {
   commentCreated: Date = new Date(); 
   commentText : String = ''; 
   commentUrl: String = '';
-  imageId: number;
+  sessionId: number;
+  prcSessionItem : number;
+
+  displayBoolHidden : boolean = false; 
+
 
   constructor(fields : any) {
     this.commentId = fields.commentId || null;
     this.commentText = fields.commentText || '';
     this.yRatio = fields.yRatio || 0.5;
     this.xRatio = fields.xRatio  || 0.5;
-    this.imageId = fields.imageId
+    this.sessionId = fields.sessionId
+    this.prcSessionItem = fields.prcSessionItem || null;
+
+
   }
 
   getId(){
     return this.commentId;
+  }
+
+  calculateDisplay(currentPrcSessionItem){
+
+    if (currentPrcSessionItem - 10 <= this.prcSessionItem && currentPrcSessionItem + 10 >= this.prcSessionItem){
+      this.displayBoolHidden = false;
+      return false;
+    }else{
+      this.displayBoolHidden = true;
+      return true;
+    }
+
   }
 
   calculateRatioFromCoords(coords: any, viewPort : Element, selectedSessionItem : Session){

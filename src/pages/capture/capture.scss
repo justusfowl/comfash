@@ -1,19 +1,15 @@
 @import "../../theme/variables";
 
 page-capture {
-    
-    .btn-header{
-        position: absolute; 
-        opacity: 0.8;
-    }
+
 
     // enable for preview on device 
 
     
-    background-color: transparent !important;
+    background: transparent !important;
 
-    html, body, ion-app, ion-content, ion-page, .nav-decor {
-        background-color: transparent !important;
+    html, body, ion-app, ion-content, ion-page, .content, .nav-decor {
+        background: transparent !important;
       }
 
     .toolbar-background{
@@ -62,5 +58,52 @@ page-capture {
         //top: 70vh; 
         width: 100%; 
         text-align: center;
-    }    
+    }
+    
+    
+    .recordingIcon{
+        background-color: rgb(143, 5, 16); 
+        height: 50px;
+        width: 50px; 
+        position: absolute; 
+        right: 40px; 
+        top: 30px; 
+
+        -moz-border-radius: 75px; 
+        -webkit-border-radius: 75px;
+       
+        animation: blinker 1s linear infinite;
+    }
+
+    @keyframes blinker{
+        50% { opacity : 0;}
+    }
+
+         
+    #countdownOverlay {
+        width: 100vw; /* Full width (cover the whole page) */
+        height: 100vh; /* Full height (cover the whole page) */
+        top: 0; 
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(101, 101, 101, 0.5);
+        z-index: 100; /* Specify a stack order in case you're using a different order for other elements */
+        cursor: pointer; /* Add a pointer on hover */
+        position: fixed;
+        //visibility: hidden;
+    } 
+
+    #countDownText{
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: 200px;
+        color: white;
+        transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+        
+    }
+
 }
