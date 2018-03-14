@@ -14,8 +14,17 @@ export class AuthService {
     //private userBirthDate : string
     private token : string = "";
 
+    private isAuth : boolean = false;
+
+    public userAvatarPath : string = "";
+
     constructor(private store : Storage, private api: Api) {
-        //this.loadFromStorage(); 
+
+        if (this.getToken()){
+            this.isAuth = true;
+        }
+
+
     }
  
     login(userId : string, password : string){
@@ -29,20 +38,11 @@ export class AuthService {
             this.handleLoginSuccess(response);
         })
         
-        /*.subscribe(
-            (data) => {
-                this.handleLoginSuccess(data);
-            },
-            error => {
-              console.log("error");
-              console.log(error)
-            }
-          )
-          */
     }
 
 
     logout(){
+        this.isAuth = false;
         window.localStorage.clear();
         return true; // this.store.clear();
     }
@@ -52,6 +52,7 @@ export class AuthService {
         this.userId = data.userId; 
         this.userName = data.userName; 
         this.token = data.token;
+        this.userAvatarPath = data.userAvatarPath;
 
         /*
         this.store.set('userId', data.userId);
@@ -62,21 +63,32 @@ export class AuthService {
         window.localStorage.setItem('userId', data.userId);
         window.localStorage.setItem('userName', data.userName);
         window.localStorage.setItem('jwt', data.token);
+        window.localStorage.setItem('avatar', data.userAvatarPath);
+
+        this.isAuth = true;
+
+
+        console.log("get Ids in auth service:")
+
+        // Retrieve the OneSignal user id and the device token
+        if (window["plugins"]){
+            window["plugins"].OneSignal.getIds()
+            .then((ids) =>
+            {
+                console.log('getIds: ' + JSON.stringify(ids));
+            });
+        }
+
         
     }
 
-    loadFromStorage(){
-        this.store.get('userName').then((val) => {
-            this.userName = val; 
-        });
+    setAvatarBaseStr (avatarBase){
+        this.userAvatarPath = avatarBase;
+        window.localStorage.setItem('avatar', avatarBase);
+    }
 
-        this.store.get('userId').then((val) => {
-            this.userId = val; 
-        });
-
-        this.store.get('jwt').then((val) => {
-            this.token = val;  
-        });
+    getAuthStatus(){
+        return this.isAuth;
     }
 
     getUsername (){
@@ -92,6 +104,10 @@ export class AuthService {
     getToken () : string {
         return window.localStorage.getItem('jwt');
         // return this.token;
+    }
+
+    getUserAvatarPath () : string {
+        return window.localStorage.getItem('avatar') || "";
     }
 
 

@@ -1,6 +1,6 @@
 @import "../../theme/variables";
 
-page-item-create {
+page-comment-create {
 
   .main-cont{
     height: 100vh; 
@@ -48,7 +48,8 @@ page-item-create {
   }
 
   .content{
-    //background-color: rgba($background-color,0.8) !important;
+    background-color: $background-color;
+    background-image: unset;
     height: 60vh;
   }
 

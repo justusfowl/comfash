@@ -25,11 +25,20 @@
 
 <ion-content padding>
 
+    <ion-refresher (ionRefresh)="api.getCollections(($event.complete()))">
+        <ion-refresher-content
+        pullingIcon="arrow-dropdown"
+        pullingText="Update MyRoom"
+        refreshingSpinner="circles"
+        refreshingText="Refreshing...">
+      </ion-refresher-content>
+    </ion-refresher>
+
   <button ion-item *ngFor="let message of msg.myMessages" (click)="followMessageLink(message)" [class.aux]='checkIfMsgIsAux(message)'>
     <ion-label>
         {{message.messageBody}}
         <div class="msg-detail">
-            sent by {{message.senderName}}
+            {{getAuthorText(message)}}
         </div>
     </ion-label>
   </button>

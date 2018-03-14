@@ -1,5 +1,9 @@
 page-imgCollection {
 
+    .grid, .col {
+        padding : 0 !important;
+    }
+
 
   .item-profile {
     width: 100%;
@@ -17,7 +21,7 @@ page-imgCollection {
 
   .photo-tile{
     position: relative;
-    height: 200px;
+    height: 300px;
     width:100%;
     background-position: center center;
     background-size: cover;
@@ -36,18 +40,23 @@ page-imgCollection {
 .photo-tile-details{
     position: absolute;
     width: 100%; 
-    background-color: color($colors, light-grey, base);
+    background-color: color($colors, text, base);
     bottom: 0px;
     padding: 5px;
 }
 
 .photo-tile-info{
     float: right;
+    
 }
 
+.session-delete{
+    font-size: 16px;
+}
 
 .cntFigure{
     color: color($colors, dark, base);
+    font-size: 10px;
 }
 
 .photo-tile-details-icon{

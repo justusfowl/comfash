@@ -1,12 +1,15 @@
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, ApplicationRef } from '@angular/core';
 
 
-import { Collection, Session, Comment } from '../../models/datamodel'
+import { Collection, Session, Comment, Vote } from '../../models/datamodel'
 
 
 import 'rxjs/add/operator/map';
 import { ConfigService } from '../config/config';
+
+import { FirstRunPage  } from '../../pages/pages';
+
 
 /**
  * Api is a generic REST Api handler. Set your API url first.
@@ -26,8 +29,15 @@ export class Api {
   public compareSessionIds : Number[] = [];
   public compareSessions : Session[] = [];
 
+  // fitting stream 
 
-  constructor( public http: HttpClient, public config: ConfigService ) {
+  public streamItems : any = [];
+
+
+  constructor( 
+    public http: HttpClient, 
+    public config: ConfigService, 
+    private ref: ApplicationRef) {
     this.url = this.config.getAPIBase();
   }
 
@@ -48,6 +58,7 @@ export class Api {
         this.collections = outData;
       }
       catch(err){
+       
         console.log(err)
         this.collections = [];
         return null;
@@ -55,8 +66,7 @@ export class Api {
 
       },
       error => {
-        console.log("error");
-        console.log(error)
+        this.handleAPIError(error);
       }
     )
   }
@@ -82,8 +92,7 @@ export class Api {
           
         },
         error => {
-          console.log("error");
-          console.log(error)
+          this.handleAPIError(error);
         }
       )
 
@@ -145,19 +154,130 @@ export class Api {
     return { selectedId : this.selectedCollectionId , isSelected : isSelected }; 
   }
 
-
-  toggleCompareSession(session : Session){
+/**
+ * Function to toggle whether a session should be viewable for comparison or not, flag available to delete 
+ * @param session 
+ * @param forceDelete 
+ */
+  toggleCompareSession(session : Session, forceDelete = false){
 
     let sessionId = session.getId();
     let currIndex = this.compareSessionIds.indexOf(sessionId);
 
     if ( currIndex == -1){
-      this.compareSessionIds.push(sessionId);
-      this.compareSessions.push(session);
+
+      // when normally toggling, add session to comparison if not there
+      // upon deletion, just make sure to remove and not add again
+
+      if (!forceDelete){
+        this.compareSessionIds.push(sessionId);
+        this.compareSessions.push(session);
+      }
+      
     }else{
+
       this.compareSessionIds.splice(currIndex, 1); 
       this.compareSessions.splice(currIndex, 1)
     }
+
+
+  }
+
+  addSessionToCollection(collectionId : number, newSession : Session){
+
+
+    this.collections.forEach((collection : Collection) => {
+      
+      if (collection.getId() == collectionId){
+
+        collection.addSession(newSession)
+
+      }
+
+    });
+
+  }
+
+  deleteSession(collection: Collection, session: Session){
+    let collectionId = collection.getId();
+    let sessionId = session.getId();
+
+    this.toggleCompareSession(session, true);
+
+    this.http.delete(this.url + '/imgcollection/' + collectionId + "/session/" + sessionId).subscribe(
+      (data) => {
+
+        let session = this.getSessionById(sessionId); 
+        let index = this.selectedCollection.sessions.indexOf(session);
+        this.selectedCollection.sessions.splice(index, 1);
+
+        this.getCollections();
+      },
+      error => {
+        this.handleAPIError(error);
+      }
+    );
+
+  }
+
+  private getCollectionByIdHandler(collectionId){
+
+    let getHandler = function getCollectionById(collection){
+      return collection.getId() == collectionId;
+    }
+
+    return getHandler;
+  }
+
+  private getSessionByIdHandler(sessionId){
+
+    let getHandler = function getSessionByIdHandler(session){
+      return session.getId() == sessionId;
+    }
+
+    return getHandler;
+  }
+
+  getCollectionById(collectionId) : Collection{
+
+    let getCollectionByIdHandler = this.getCollectionByIdHandler(collectionId);
+
+    let collection = this.collections.find(getCollectionByIdHandler);
+
+    return collection;
+
+  }
+
+  /**
+   * Function to return a session from within the selected collection 
+   * @param sessionId 
+   */
+  getSessionById(sessionId : number) : Session{
+
+    let collection = this.selectedCollection;
+
+    let getSessionByIdHandler = this.getCollectionByIdHandler(sessionId);
+
+    let session = collection.sessions.find(getSessionByIdHandler);
+
+    return session;
+
+  }
+
+  syncToSession(collectionId: number, tmpSessionId : number, data : any){
+
+    console.log("before syncing session")
+
+    // get session with Id from selected collection
+
+    let session = this.getSessionById(tmpSessionId);
+
+    session.sessionId = data.sessionId; 
+    session.flagIsTmp = false; 
+    session.sessionItemPath = data.sessionItemPath; 
+    session.sessionThumbnailPath = data.sessionThumbnailPath;
+
+    this.ref.tick();
 
   }
 
@@ -205,10 +325,55 @@ export class Api {
       selectedSession.addComment(addedComment);
     },
     error => {
+      this.handleAPIError(error);
+    }
+  )
+}
+
+upsertVote(collectionId : number, sessionId: number, vote : Vote){
+  this.post("imgcollection/" + collectionId + "/session/" + sessionId + "/vote", vote).subscribe(
+    (data) => {
+        console.log(data)
+    },
+    error => {
+      this.handleAPIError(error);
+    }
+  )
+
+}
+
+upsertUserAvatar(avatar : any){
+  return this.post("user/avatar", avatar);
+}
+
+getTrendStream(options){
+
+    let qry = ''; 
+
+    if (options.limit){
+      qry += '?limit=' + options.limit;
+    }
+
+    if (options.skip){
+      if (qry.length > 0){
+        qry += "&"
+      }else{
+        qry += "?"
+      }
+
+      qry += 'skip=' + options.skip
+    }
+
+  this.http.get(this.url + "/stream" + qry).subscribe(
+    (data) => {
+        this.streamItems = data;
+    },
+    error => {
       console.log("error");
       console.log(error)
     }
-  )
+  );
+  
 }
 
 post(endpoint: string, body: any, reqOpts?: any) {
@@ -240,6 +405,20 @@ post(endpoint: string, body: any, reqOpts?: any) {
     return this.http.put(this.url + '/' + endpoint, body, reqOpts);
   }
 */
+
+  handleAPIError(error){
+
+    console.log("Error in API call")
+    console.log(error);
+
+    let errorCode = error.status;
+
+    switch (errorCode) {
+        case 401:
+          alert("Unauthorized");
+            break;
+    }
+  }
 
   prepareReqOpts(reqOpts? : any, params? : any){
     if (!reqOpts) {

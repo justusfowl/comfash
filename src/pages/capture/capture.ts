@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Sanitizer } from '@angular/core';
+import { DomSanitizer } from "@angular/platform-browser";
+
 import { IonicPage, NavController, NavParams, Platform, ViewController } from 'ionic-angular';
 
 import { Session } from '../../models/datamodel';
@@ -28,6 +30,7 @@ declare var cordova : any;
 })
 export class CapturePage {
 
+  
   captureIntervalMilSec = 4000;
   countdownMilSecInterval = 1000;
   countdownSec = 3;
@@ -52,9 +55,19 @@ export class CapturePage {
   newSession : Session;
   srcNav : any;  
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, 
-    platform: Platform, public viewCtrl: ViewController,  public api: Api, private cameraPreview: CameraPreview, 
-    public lz: LZStringService, private transfer: FileTransfer, private file: File, public config : ConfigService, private auth: AuthService) {
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams, 
+    platform: Platform, 
+    public viewCtrl: ViewController,    
+    public _sanitizer : DomSanitizer,   
+    public api: Api, 
+    private cameraPreview: CameraPreview, 
+    public lz: LZStringService, 
+    private transfer: FileTransfer, 
+    private _file: File, 
+    public config : ConfigService, 
+    private auth: AuthService) {
     
     var compressed = this.lz.compress("This is a test string");
     
@@ -113,6 +126,77 @@ export class CapturePage {
 
     let endpoint = this.config.getAPIBase() + '/' + "imgcollection/" + this.collectionId + "/session";
 
+    let fileName = fileData.substring(fileData.indexOf("comfash_"), fileData.length);
+
+    let date = new Date(); 
+
+    let newSession = new Session({
+      sessionId : date.getTime() * 999999,
+      sessionItemPath : fileData
+    });
+
+    newSession.flagIsTmp = true;
+
+    this.api.addSessionToCollection(this.collectionId, newSession); 
+
+    console.log("SuCCESSSful added") 
+    comp.navBack();
+
+    console.log("uploading the video in the background");
+
+    fileTransfer.upload(fileData, endpoint , options, true)
+    .then((data) => {
+      console.log("successfully uploading the video");
+
+      console.warn("hier muss noch ein refresh stattfinden bevor man zurück zur page kommt");
+
+      //this.api.syncToSession(this.collectionId, newSession.getId(), data);
+
+      this.api.loadCollection(this.collectionId, true)
+
+      //comp.navBack();
+ 
+    }, (err) => {
+      console.log("error in uploading the video");
+      console.log(err);
+    })
+
+    
+  /*
+    this._file.checkFile(this._file.dataDirectory, fileName).then((correct : boolean) => {
+      if(correct){
+
+          this._file.readAsDataURL(this._file.dataDirectory,  fileName).then((base64) => {
+            console.log("SuCCESSS")  
+            console.log(base64); 
+
+
+            let newSession = new Session({
+              sessionId : date.getTime() * 999999,
+              sessionItemPath : this._sanitizer.bypassSecurityTrustUrl(base64)
+            })
+
+            newSession.flagIsTmp = true;
+
+            this.api.addSessionToCollection(this.collectionId, newSession); 
+
+            console.log("SuCCESSSful added") 
+            comp.navBack();
+
+          }).catch((err) => {
+              console.log("Fehler in datei oder sowas");
+              console.log(err);
+          });
+      } else {
+          console.log("Datei konnte nicht gefunden werden");
+      }
+  }).catch((err) => {
+      console.log("Äußerster fehler");
+      console.log(err);
+  });
+
+
+
     fileTransfer.upload(fileData, endpoint , options, true)
     .then((data) => {
       console.log("successfully uploading the video");
@@ -123,9 +207,11 @@ export class CapturePage {
       //comp.navBack();
  
     }, (err) => {
-      console.log("error in uploading the video")
-      console.log(err)
+      console.log("error in uploading the video");
+      console.log(err);
     })
+
+    */
     
   }
 
@@ -164,8 +250,10 @@ export class CapturePage {
 
     var comp = this;
 
+    var fileName = new Date().getTime().toString();
+
     const captureOptions = {
-      filename : 'comfashVideo', 
+      filename : "comfash_" + fileName, 
       camera : comp.captureCamera, 
       x: 0, 
       y: 0, 
@@ -211,11 +299,11 @@ export class CapturePage {
       console.log("successfully capturing file: ")
       console.log(filePath);
 
-      comp.setUIRecording(true);
+      comp.setUIRecording(false);
 
       setTimeout(function(){
         comp.upload(filePath);
-      }, 500);
+      }, 100);
 
     }, function (err){
       console.log("error for capturing:")

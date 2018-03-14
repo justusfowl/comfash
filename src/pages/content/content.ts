@@ -4,7 +4,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
-import { Collection, Session, Comment } from '../../models/datamodel';
+import { Collection, Session, Comment, Vote } from '../../models/datamodel';
 
 import { Api, AuthService, ConfigService } from '../../providers/providers';
 
@@ -27,7 +27,7 @@ export class ContentPage implements AfterViewInit {
 
   compareItems : Session[] = [];
   footerHangers = [];
-  prcSessionItem = 1; 
+  prcSessionItem = 10; 
   testText = "";
   
   comments = [];
@@ -70,9 +70,8 @@ export class ContentPage implements AfterViewInit {
     }else{
       compareSessionIds = navParams.get('compareSessionIds');
     }
-    
 
-    // entweder selectedCollection aus der API gibts (dann nimm) sonst ladt und pack in API
+    let userId = this.auth.getUserId();
     
     let onCollectionLoaded = function (){
 
@@ -80,7 +79,6 @@ export class ContentPage implements AfterViewInit {
       this.api.compareSessions = this.api.selectedCollection.getSessionsById(compareSessionIds);
       this.calculateFooterHangers();
 
-      //$('#myturn').turntable();
     };
 
     this.api.loadCollection(collectionId, null, onCollectionLoaded.bind(this));
@@ -141,22 +139,25 @@ export class ContentPage implements AfterViewInit {
     }
 
 
-    let addModal = this.modalCtrl.create('ItemCreatePage');
-    addModal.onDidDismiss(item => {
+    let addModal = this.modalCtrl.create('CommentCreatePage');
+    addModal.onDidDismiss(comment => {
 
-      let tmpItem = new Comment({
-        commentText : item.name, 
-        userId : this.auth.getUserId(),
-        sessionId : session.getId(), 
-        prcSessionItem : currentPrcSessionItem
-      });
+      if (comment){
+        let tmpItem = new Comment({
+                commentText : comment.commentText, 
+                userId : this.auth.getUserId(),
+                sessionId : session.getId(), 
+                prcSessionItem : currentPrcSessionItem
+              });
 
-      let viewPort = document.getElementById('row-compare-items');
+        let viewPort = document.getElementById('row-compare-items');
 
-      tmpItem.calculateRatioFromCoords(coords,viewPort,session);
+        tmpItem.calculateRatioFromCoords(coords,viewPort,session);
 
-      this.api.addCommentToSession(this.api.selectedCollection.getId(), session.getId(), tmpItem, session);
-      
+        this.api.addCommentToSession(this.api.selectedCollection.getId(), session.getId(), tmpItem, session);  
+
+      }
+
     });
 
     addModal.present();
@@ -203,7 +204,6 @@ export class ContentPage implements AfterViewInit {
       return 'scale(1)'
     }
 }
-
 
 
   getImgComment(session: Session){
@@ -352,6 +352,33 @@ export class ContentPage implements AfterViewInit {
       return this.api.compareSessions[this.selectedIndex].comments;
     }else{
       return [];
+    }
+  }
+
+  voteChange(voteType, session){
+
+    let vote = new Vote({
+      sessionId : session.getId(), 
+      userId : this.auth.getUserId(), 
+      voteType : voteType
+    }); 
+
+    session.myVote = vote;
+
+    this.api.upsertVote(this.api.selectedCollection.getId() , session.getId(), vote);
+
+  }
+
+  checkIfMyVoteIsActive(session : Session, voteType){
+
+    try { 
+      if (session.myVote.voteType == voteType){
+        return true;
+      }else{
+        return false;
+      }
+    }catch(err){
+      return false;
     }
   }
 

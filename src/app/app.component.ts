@@ -4,18 +4,18 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Config, Nav, Platform } from 'ionic-angular';
 
-import { FirstRunPage } from '../pages/pages';
+import { FirstRunPage, MainPage } from '../pages/pages';
 import { Settings, WebsocketService } from '../providers/providers';
 
-//import { Camera } from '@ionic-native/camera';
+import { Camera } from '@ionic-native/camera';
 
-import { AuthService, MsgService } from '../providers/providers';
+import { AuthService, MsgService, Api, ConfigService } from '../providers/providers';
 
 @Component({
   templateUrl: "app.menu.html"
 })
 export class MyApp {
-  rootPage = FirstRunPage;
+  rootPage = '';
 
   @ViewChild(Nav) nav: Nav;
 
@@ -44,8 +44,18 @@ export class MyApp {
 
 
   constructor(
-    private translate: TranslateService, platform: Platform, settings: Settings, private config: Config, 
-    private statusBar: StatusBar, private splashScreen: SplashScreen, private msg : MsgService, private auth: AuthService, private ws : WebsocketService) {
+    private translate: TranslateService, 
+    platform: Platform, 
+    settings: Settings, 
+    private config: Config, 
+    private statusBar: StatusBar, 
+    private splashScreen: SplashScreen, 
+    private msg : MsgService, 
+    private auth: AuthService, 
+    private ws : WebsocketService, 
+    public camera: Camera, 
+    public api: Api, 
+    private cfg : ConfigService) {
 
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -53,10 +63,28 @@ export class MyApp {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
 
+      // OneSignal Code start:
+    // Enable to debug issues:
+    // window["plugins"].OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
+
+    var notificationOpenedCallback = function(jsonData) {
+      console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+    };
+
+    if (window["plugins"]){
+      window["plugins"].OneSignal
+        .startInit("56791b6b-28da-4dde-9ee0-6e4e057313d4")
+        .handleNotificationOpened(notificationOpenedCallback)
+        .endInit();
+    }
+
     });
 
     if (auth.getToken()){
       this.msg.initMsgService();
+      this.rootPage = MainPage;
+    }else{
+      this.rootPage = FirstRunPage;
     }
 
     //this.msg.connect();
@@ -64,6 +92,56 @@ export class MyApp {
     this.initTranslate();
 
   }
+
+  /*
+  // Define settings for iOS
+  var iosSettings = {};
+  iosSettings["kOSSettingsKeyAutoPrompt"] = true;
+  iosSettings["kOSSettingsKeyInAppLaunchURL"] = false;
+
+
+  // Initialise plugin with OneSignal service
+  this.signal.startInit("56791b6b-28da-4dde-9ee0-6e4e057313d4").iOSSettings(iosSettings);
+
+
+  // Control how OneSignal notifications will be shown when
+  // one is received while your app is in focus
+  this.signal.inFocusDisplaying(this.signal.OSInFocusDisplayOption.InAppAlert);
+
+
+  // Retrieve the OneSignal user id and the device token
+  this.signal.getIds()
+  .then((ids) =>
+  {
+    console.log('getIds: ' + JSON.stringify(ids));
+  });
+
+
+  // When a push notification is received handle
+  // how the application will respond
+  this.signal.handleNotificationReceived()
+  .subscribe((msg) =>
+  {
+    // Log data received from the push notification service
+    console.log('Notification received');
+    console.dir(msg);
+  });
+
+
+  // When a push notification is opened by the user
+  // handle how the application will respond
+  this.signal.handleNotificationOpened()
+  .subscribe((msg) =>
+  {
+    // Log data received from the push notification service
+    console.log('Notification opened');
+    console.dir(msg);
+  });
+
+
+  // End plugin initialisation
+  this.signal.endInit();
+  */
 
   initTranslate() {
     // Set the default language for translation strings, and the current language.
@@ -105,5 +183,46 @@ export class MyApp {
 
     this.nav.setRoot("LoginPage");
     
+  }
+
+  getPicture() {
+    if (Camera['installed']()) {
+      this.camera.getPicture({
+        destinationType: this.camera.DestinationType.DATA_URL,
+        targetWidth: 250,
+        targetHeight: 250
+      }).then((data) => {
+
+        let picSrc = 'data:image/jpg;base64,' + data;
+        let avatarBody = { 'imagePath': picSrc };
+
+        this.api.upsertUserAvatar(avatarBody).subscribe( data => {
+          this.auth.setAvatarBaseStr(picSrc);
+        });
+
+
+      }, (err) => {
+        alert('Unable to take photo');
+      })
+    } else {
+      console.log("click?"!);
+    }
+  }
+
+  getAvatarUrl(avatarPath){
+
+    try{
+      if (avatarPath.length > 0){
+        if (avatarPath.substring(0,4) == 'data'){
+          return avatarPath; 
+        }else{
+          return this.cfg.getHostBase() + avatarPath;
+        }
+      }else{
+        return "";
+      }
+    }catch(err){
+      return "";
+    }
   }
 }

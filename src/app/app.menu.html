@@ -2,14 +2,20 @@
     <ion-content>
 
         <div class="profile-image-wrapper" (click)="getPicture()">
-            <div class="profile-image-placeholder" >
-            <ion-icon class="add-icon" name="add"></ion-icon>
-            <div>
-                {{ 'ITEM_CREATE_CHOOSE_IMAGE' | translate }}
+            <div class="profile-image-placeholder" [style.background-image]="'url(' + getAvatarUrl(auth.getUserAvatarPath()) + ')'">
+            
+                <div class="avatar-add" [hidden]="auth.getUserAvatarPath().length > 0">
+                    <ion-icon class="add-icon" name="add"></ion-icon>
+
+                    <div>
+                        {{ 'ITEM_CREATE_CHOOSE_IMAGE' | translate }}
+                    </div>
+                </div>
+                
             </div>
-            </div>
-            <div class="profile-image" ></div>
-            <div>{{auth.userName}}</div>
+            
+            <div class="userName" >{{auth.getUsername()}}</div>
+            
         </div>
 
             <ion-list>

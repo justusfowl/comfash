@@ -2,48 +2,46 @@
 
 page-my-room {
 
+    .grid, .col, .item-inner {
+        padding: 0 !important;
+    }
+
     .label{
         margin: 0 !important;
     }
 
-    .item-inner{
-        padding: 0 !important;
-    }
-
     .item{
         background-color: transparent !important; 
-        padding: 10px 0 0 0 !important;
+        padding: 0 0 0 0 !important;
     }
 
     .item-wrapper{
         background-color: transparent !important;
     }
 
-    /*
-    .hangers-bg{
-        background: url('../assets/img/hangersbg.png') no-repeat transparent;
-        opacity: 0.3;
-        background-size: cover;
-        background-repeat: repeat-x;
-    }
-    */
-
     .session-tile{
         position: relative;
-        height: 200px;
+        height: 300px;
         width:100%;
         background-position: center center;
         background-size: cover;
         background-repeat: no-repeat;
         transition: transform 1s ease-in 0s;
-        //animation-duration: 100s; 
-        //animation-name: animatedBackground; 
-        //animation-iteration-count: infinite;
     }
   
     @keyframes animatedBackground {
       from { background-position: center; }
       to { background-position: center bottom; }
+    }
+
+    .session-tile-collection-title{
+        width: 100%; 
+        text-align: center;
+        color: color($colors, text, base);
+        position: absolute; 
+        top: 10%; 
+        font-size: 20px;
+        text-shadow: 0 0 11px color($colors, text, base), 0 0 1px black;
     }
 
     .session-tile-details{
@@ -55,7 +53,7 @@ page-my-room {
     }
 
     .session-tile-row{
-        font-size: 14px; 
+        font-size: 10px; 
     }
 
     .session-tile-info{
@@ -75,7 +73,7 @@ page-my-room {
     }
 
     .swipe-icon{
-        font-size: 50px;
+        font-size: 40px;
     }
 
     .headerBtn{
@@ -87,8 +85,10 @@ page-my-room {
         z-index: 102; 
         color: color($colors, dark-text, base);
         font-size: 10px; 
-        left: 16px; 
-        top: 12px; 
+        left: 3px; 
+        top: 13px;
+        width: 100%; 
+        text-align: center;
     }
 
     ion-content.has-refresher > .scroll-content{

@@ -3,6 +3,8 @@ import 'rxjs/add/operator/toPromise';
 import { Injectable, OnInit } from '@angular/core';
 import { AlertController, ToastController, App } from 'ionic-angular';
 
+import { TranslateService } from '@ngx-translate/core';
+
 import { Observable } from 'rxjs/Observable';
 import { Api } from '../api/api';
 
@@ -10,6 +12,8 @@ import { Api } from '../api/api';
 import * as io from 'socket.io-client';
 import * as Rx from 'rxjs/Rx';
 import { WebsocketService } from './websocket';
+import { AuthService } from '../auth/auth';
+import { Message } from '../../models/datamodel';
 
 
 @Injectable()
@@ -22,7 +26,13 @@ export class MsgService implements OnInit {
     myMessages : any = [];
     
   
-    constructor( private alertCtrl : AlertController, public toastCtrl: ToastController, private api: Api, private ws : WebsocketService) { 
+    constructor( 
+        private alertCtrl : AlertController, 
+        public toastCtrl: ToastController, 
+        private api: Api, 
+        private ws : WebsocketService, 
+        public translate: TranslateService, 
+        public auth : AuthService) { 
        
     }
 
@@ -32,20 +42,25 @@ export class MsgService implements OnInit {
     }
 
     initMsgService(){
-        
-        this.ws.connect();
 
-        this.ws.onNewMessage().subscribe( msg => {
-            console.log(msg);
-            this.toast(msg);
+        if (!this.ws.isConnected){
 
-            this.newMessages.push(msg);
-            
-            this.api.getMessages().subscribe(messages => {
-                this.myMessages = messages;
+            this.ws.connect();
+
+            this.ws.onNewMessage().subscribe( (msg : Message) => {
+                
+                console.log(msg);
+                this.toast(msg.getMessage());
+
+                this.newMessages.push(msg);
+                
+                this.api.getMessages().subscribe(messages => {
+                    this.myMessages = messages;
+                })
+                
             })
-            
-        })
+
+        }
         
     }
 
@@ -68,7 +83,36 @@ export class MsgService implements OnInit {
 
     }
 
-    toast(msg: any){
+    presentConfirm(cbAccept) {
+
+        let title = this.translate.instant("ALERT_DELETE_TITLE");
+        let msg = this.translate.instant("ALERT_DELETE_MSG");
+
+        let cancelTxt = this.translate.instant("CANCEL");
+
+        let acceptTxt = this.translate.instant("ACCEPT");
+
+        let alert = this.alertCtrl.create({
+          title: title,
+          message: msg,
+          buttons: [
+            {
+              text: cancelTxt,
+              role: 'cancel',
+              handler: () => {
+                console.log('Cancel clicked');
+              }
+            },
+            {
+              text: acceptTxt,
+              handler: cbAccept
+            }
+          ]
+        });
+        alert.present();
+      }
+
+    toast(msg: string){
 
         let toast = this.toastCtrl.create({
             message: msg,

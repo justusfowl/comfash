@@ -18,7 +18,7 @@ import { File } from '@ionic-native/file';
 
 import { FileTransfer } from '@ionic-native/file-transfer';
 
-import { ConfigService, User, Api, MsgService, WebsocketService,  Settings, AuthService } from '../providers/providers';
+import { ConfigService, User, Api, MsgService, WebsocketService,  Settings, AuthService, UtilService } from '../providers/providers';
 
 import { AuthIntercept } from '../providers/api/authintercept'
 import { MyApp } from './app.component';
@@ -52,6 +52,7 @@ export function provideSettings(storage: Storage) {
     MyApp
   ],
   imports: [
+    
     BrowserModule,
     HttpClientModule,
     TranslateModule.forRoot({
@@ -71,9 +72,10 @@ export function provideSettings(storage: Storage) {
     MyApp
   ],
   providers: [
+    UtilService,
+    MsgService,
     ConfigService,
     AuthService,
-    MsgService,
     WebsocketService,
     Api,
     { provide: HTTP_INTERCEPTORS, useClass : AuthIntercept, multi: true},

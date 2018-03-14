@@ -53,7 +53,11 @@
         <div class="session-tile" [style.backgroundImage]="'url(' + config.getHostBase() + item.getThumbnail() + ')'" (click)="openItem(item)">
 
             <div id="flag_{{item._id}}" class="flag-compare" [class.active]="item.getId() === api.getSelectedCollectionId().selectedId">
-                <ion-icon id="flag-icon_{{item._id}}" name="camera" class="photo-tile-details-icon flag-icon" [class.active]="item.getId() === api.getSelectedCollectionId().selectedId" ></ion-icon>
+                <ion-icon id="flag-icon_{{item._id}}" name="videocam" class="photo-tile-details-icon flag-icon" [class.active]="item.getId() === api.getSelectedCollectionId().selectedId" ></ion-icon>
+            </div>
+
+            <div class="session-tile-collection-title">
+                {{item.collectionTitle}}
             </div>
 
           <div class="session-tile-details" >
@@ -62,9 +66,6 @@
               <ion-row class="session-tile-row" >
                 <ion-col>
                     <ion-icon name="unlock" [hidden]="!item.getAccess().public" class="session-tile-details-icon"></ion-icon>
-                    <font class="cntFigure">
-                        {{item.collectionTitle}}
-                    </font>
                 </ion-col>
                 <ion-col>
                   <div class="session-tile-info">
@@ -93,7 +94,7 @@
 
     <ion-item-options side="left">
         <button class="swipe-btn" ion-button (click)="quickSelectCapture(item, slideItem)">
-          <ion-icon class="swipe-icon" name="camera"></ion-icon>
+          <ion-icon class="swipe-icon" name="videocam"></ion-icon>
           SELECT
         </button>
     </ion-item-options>

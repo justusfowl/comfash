@@ -6,42 +6,7 @@
         <ion-icon name="arrow-back"></ion-icon>
       </button>
     </ion-buttons>
-<!-- 
-    <ion-row no-bounce no-scrolling id="row-compare-items">
-        <ion-col col *ngFor="let session of api.compareSessions;">
-          <div id="myturn" class="turntable"> 
-            <ul  > 
-
-              <li *ngFor="let image of session.images;" [attr.data-img-src]="image.imagePath"></li>
-
-            </ul>
-          </div>
-        </ion-col>
-      </ion-row>
-
-      old
-
-       <div id='turntable'></div>
-    <ion-row no-bounce no-scrolling id="row-compare-items">
-      <ion-col col *ngFor="let session of api.compareSessions;">
-          <div class="compare-item-pic" [style.backgroundImage]="'url(' + getImgPath(session) + ')'" 
-          ion-long-press [interval]="400" (onPressStart)="pressed($event, session)"
-          >
-            <div class="tmp-no">
-              img # {{prcSessionItem}}, sess # {{session.getId()}}
-            </div>
-
-            <div class="compare-pic-comment" *ngFor="let comment of getImgComment(session)" [style]="sanitizer.bypassSecurityTrustStyle(comment.getScalledCommentPos('row-compare-items',getImgFromSession(session)))" >
-              {{comment.commentText}}
-            </div>
-          </div>
-      </ion-col>
-    </ion-row>
--->
-    
-    <ion-row no-bounce no-scrolling id="row-compare-items">
-     
-        
+    <ion-row no-bounce no-scrolling id="row-compare-items"> 
       <ion-col col *ngFor="let session of api.compareSessions; let i = index;">
           <div class="video-container" [style.width]="(100 / api.compareSessions.length) + 'vw'" ion-long-press [interval]="400" (onPressStart)="pressed($event, session)" >
 
@@ -52,59 +17,53 @@
             -->
 
 
-            <video  class="video-background" autoplay preload="auto" playsinline webkit-playsinline  [src]="config.getHostBase() + session.getSessionItemPath()" type="video/mp4"></video>
-
+            <video  class="video-background" autoplay preload="auto" playsinline webkit-playsinline  [poster]="config.getHostBase() + session.getThumbnail()" [src]="config.getHostBase() + session.getSessionItemPath()" type="video/mp4"></video>
+          
+            <!--
             <div class="tmp-no">
-              % {{prcSessionItem}}, sess # {{session.getId()}}, path: {{config.getHostBase() + session.getSessionItemPath()}}
+              % {{prcSessionItem}}, sess # {{session.getId()}} 
             </div>
+          -->
 
-            <div class="icon-comment-hanger" (click)="enableComments(i)">
-                <ion-icon name="chatboxes" class="bookmark-icon"></ion-icon>
-                <div class="no-comments">{{session.getCommentsDisplay(prcSessionItem).length}}</div>
-            </div>
+            <ion-grid class="session-details">
+              <ion-row>
+                <ion-col col-6>
+                    <font class="no-comments" [hidden]="session.getCommentsDisplay(prcSessionItem).length == 0" >{{session.getCommentsDisplay(prcSessionItem).length}}</font>
+                    <ion-icon name="chatboxes" [hidden]="session.getCommentsDisplay(prcSessionItem).length == 0" class="bookmark-icon" (click)="enableComments(i)"></ion-icon>
+                </ion-col>
+                <ion-col>
+                </ion-col>
+                <ion-col col-2 class="voting-btn">
+                    <ion-icon name="thumbs-up" class="vote-icon vote-up" (click)="voteChange(1, session)" [class.isVoteActive]="checkIfMyVoteIsActive(session, 1)"></ion-icon>
+                </ion-col>
+                <ion-col col-2 class="voting-btn">
+                    <ion-icon name="thumbs-down" class="vote-icon vote-down" (click)="voteChange(0, session)" [class.isVoteActive]="checkIfMyVoteIsActive(session, 0)"></ion-icon>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
 
             <div class="compare-pic-comment" *ngFor="let comment of session.comments" (click)="selectComment(i, comment)" [class.active]="checkCommentActive(comment)" [hidden]="comment.calculateDisplay(prcSessionItem)" [style]="sanitizer.bypassSecurityTrustStyle(comment.getScalledCommentPos('row-compare-items',session))" >
-              
             </div>
 
           </div>
       </ion-col>
     </ion-row>
-    
-
     <ion-list id="comment-list" class="comment-list" >
-
         <div [id]="'comment-list_' + comment.getId()" class="comment-list-item" *ngFor="let comment of getCommentsForSelectedSession();" [hidden]="comment.calculateDisplay(prcSessionItem)" (click)="highlightComment(comment)">
                 {{comment.commentText}}
                 <div class="comment-list-item-detail">
                   Author
                 </div>
         </div>
-
     </ion-list>
-
-
-  <!--
-  {{testText}}
-    <div id="testId" class="compare-item-pic" style="background-image: url('assets/img/speakers/1.jpg');" ion-long-press [interval]="400" (onPressStart)="pressed($event)" (onPressing)="active($event)" (onPressEnd)="released($event)">
-      
-      
-      <div class="compare-pic-comment" *ngFor="let comment of comments" [style.left]="comment.x + 'px'" [style.top]="comment.y + 'px'" >
-        {{comment.text}}
-      </div>
-    </div>
-  -->
 </ion-content>
 
-
 <ion-footer>
-
   <ion-toolbar>
     <div class="hanger-container">
         <div *ngFor="let hanger of calculateFooterHangers();" class="flag-comment" [style.left]='hanger.orderPrc + "%"'></div>
     </div>
-    
-      <ion-range (ionChange)="slide($event)" [(ngModel)]="prcSessionItem" min="0" max="100" ratio="true" color="danger" pin="false"></ion-range>
+      <ion-range class="session-slider" (ionChange)="slide($event)" [(ngModel)]="prcSessionItem" min="0" max="100" ratio="true" color="danger" pin="false"></ion-range>
   </ion-toolbar>
 
 </ion-footer>

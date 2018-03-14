@@ -7,8 +7,8 @@
 
 export class Collection {
 
-  collectionId: Number;
-  collectionTitle : String;
+  collectionId: number;
+  collectionTitle : string;
   collectionCreated: Date;
   sessions: Session[];
   access: Object = {
@@ -47,7 +47,7 @@ export class Collection {
     try{
       return this.sessions[0].getThumbnail()
     }catch(err){
-      return '../assets/img/hangersbg.png';
+      return '/img/hangersbg.png';
     }
 
   }
@@ -86,11 +86,12 @@ export class Collection {
   castSessions(){
 
     this.sessions = this.sessions.map(function(sessionItem){
+
       if (sessionItem.constructor.name != "Session"){
         sessionItem = new Session(sessionItem);
-        
       }
       sessionItem.castComments();
+      sessionItem.castVotes();
       return sessionItem;
     });
 
@@ -127,15 +128,29 @@ export class Session {
   displayWidth: number; 
   displayTop: number; 
   displayLeft: number
+  flagIsTmp : boolean = false;
+
+  myVote : Vote;
+  hasVote : boolean = false;
 
   constructor(fields : any) {
     this.sessionId = fields.sessionId || null;
     this.sessionCreated = new Date();
     this.comments = fields.comments || [];
+    this.votes = fields.votes || [];
     this.sessionItemPath = fields.sessionItemPath || "";
     this.height = fields.height || 0;
     this.width = fields.width || 0;
-    this.sessionThumbnailPath = fields.sessionThumbnailPath || '../assets/img/hangersbg.png';
+    this.sessionThumbnailPath = fields.sessionThumbnailPath || '/img/hangersbg.png';
+
+
+    // per default there is not any vote by the user but if there is, parse it
+
+    if (fields.myVote){
+      let newVote = new Vote(fields.myVote); 
+      this.myVote = newVote;
+    }
+    
   }
 
   castComments(){
@@ -149,19 +164,32 @@ export class Session {
     });
   }
 
-/*
-  castImages(){
+  castVotes(){
     
-    this.images = this.images.map(function(imageItem){
-      if (imageItem.constructor.name != "Image"){
-          imageItem = new Image(imageItem);
+    this.votes = this.votes.map(function(voteItem){
+      if (voteItem.constructor.name != "Vote"){
+          return new Vote(voteItem);
+      }else{
+        return voteItem;
       }
-      imageItem.castComments();
-      return imageItem;
     });
+  }
+
+  getMyVote(userId : string){
+
+    let getHandler = function getVoteFindHandler(vote){
+      return vote.getUserId() == userId;
+    }
+
+    let myVote = this.votes.find(getHandler);
+
+    if (myVote != undefined){
+      this.myVote = myVote;
+    }
+
 
   }
-*/
+
   getId(){
     return this.sessionId;
   }
@@ -170,7 +198,7 @@ export class Session {
     try{
       return this.sessionThumbnailPath;
     }catch(err){
-      return '../assets/img/hangersbg.png';
+      return '/img/hangersbg.png';
     }
   }
 
@@ -193,17 +221,7 @@ export class Session {
   getImgIndexFromPercent(PercInt : number){
 
     return 0;
-    /*
-    let index = (Math.ceil(this.images.length * (PercInt / 100))) -1 ;
 
-    if (index < 0){
-      return 0;
-    }else if (index > this.images.length - 1){
-      return this.images.length - 1 ;
-    }else{
-      return (Math.ceil(this.images.length * (PercInt / 100))) -1 ;
-    }
-    */
   }
 
   getCommentsDisplay(currentPrcSessionItem){
@@ -234,51 +252,29 @@ export class Session {
 
 
 }
-/*
-export class Image {
-  imageId: String;
-  imagePath: String;
-  height : number;
-  width : number;
-  comments : Comment[];
-  order : number;
+
+export class Vote {
+
+  sessionId: number;
+  voteType : number;
+  voteChanged : Date;
+  userId : string;
+
 
   constructor(fields : any) {
-    this.imageId = fields.imageId || null;
-    this.imagePath = fields.imagePath || '/assets/img/hangersbg.png';
-    this.comments = fields.comments || [];
-    this.height = fields.height;
-    this.width = fields.width; 
-    this.order = fields.order;
+    this.sessionId = fields.sessionId;
+    this.voteType = fields.voteType;
+    this.voteChanged = fields.voteChanged || new Date();
+    this.userId = fields.userId;
   }
 
-  getImagePath(){
-    return this.imagePath;
+  getUserId(){
+    return this.userId;
   }
 
-  getId(){
-    return this.imageId;
-  }
-
-
-  getComments(){
-    return this.comments;
-  }
-
-  castComments(){
-    
-    this.comments = this.comments.map(function(commentItem){
-      if (commentItem.constructor.name != "Comment"){
-          return new Comment(commentItem);
-      }else{
-        return commentItem;
-      }
-    });
-  }
 
 }
 
-*/
 
 export class Comment {
 
@@ -404,7 +400,7 @@ export class Comment {
       coordY = (this.yRatio * newHeightTotal) - addionalHeightOneSide; 
 
       if (coordY > viewPortHeight){
-        styleStr += "bottom: 95px;";
+        styleStr += "bottom: 130px;";
       }else if (coordY < addionalHeightOneSide){
         styleStr += "top: 95px;";
       }else{
@@ -435,3 +431,32 @@ export class Comment {
   }
 
 }
+
+  // ## messages ##
+
+  export class Message {
+
+    messageId: number;
+    isUnread : boolean;
+    senderName : string;
+    receiverName : string;
+    messageBody : string;
+    messageCreated : Date;
+    linkUrl : any;
+  
+  
+    constructor(fields : any) {
+      this.messageId = fields.messageId;
+      this.isUnread = fields.isUnread;
+      this.receiverName = fields.receiverName;
+      this.senderName = fields.senderName;
+      this.messageBody = fields.messageBody; 
+      this.linkUrl = JSON.parse(fields.linkUrl);
+      this.messageCreated = fields.messageCreated;
+    }
+
+    getMessage() : string{
+      return this.messageBody;
+    }
+  }
+  

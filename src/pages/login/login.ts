@@ -38,6 +38,15 @@ export class LoginPage {
     })
 
   }
+  
+  ionViewWillEnter(){
+
+    if (this.auth.getToken()){
+      this.msg.initMsgService();
+      this.navCtrl.setRoot(MainPage);
+    }
+
+  }
 
   // Attempt to login in through our User service
   doLogin() {

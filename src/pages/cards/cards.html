@@ -7,7 +7,7 @@
           </button>
         </ion-buttons>
 
-    <ion-title>{{ 'CARDS_TITLE' | translate }}</ion-title>
+    <ion-title>{{ 'FITTING_STREAM_TITLE' | translate }}</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -15,17 +15,17 @@
 
 <ion-content>
 
-  <ion-card *ngFor="let item of cardItems">
+  <ion-card *ngFor="let item of api.streamItems">
 
     <ion-item>
       <ion-avatar item-start>
-        <img [src]="item.user.avatar">
+        <img [src]="config.getHostBase() + item.userAvatarPath">
       </ion-avatar>
-      <h2>{{item.user.name}}</h2>
-      <p>{{item.date}}</p>
+      <h2>{{item.userName}}</h2>
+      <p>{{item.collectionCreated}}</p>
     </ion-item>
 
-    <div class="session-tile" [style.backgroundImage]="'url(' + item.image + ')'" (click)="openItem(item)">
+    <div class="session-tile" [style.backgroundImage]="'url(' + config.getHostBase() + item.sessionThumbnailPath + ')'" (click)="openItem(item)">
         
       <div class="session-title">
           <ion-row>
@@ -36,10 +36,10 @@
               </ion-col>
               <ion-col col-4 class="session-details">
                   <ion-card-content >
-                      12
-                      <ion-icon name='cart'></ion-icon>
+                      {{util.formatToPercent(item.avgVote)}}
+                      <ion-icon name='thumbs-up'></ion-icon>
             
-                      4
+                      {{item.noSessions}}
                       <ion-icon name='text'></ion-icon>
                     </ion-card-content>
               </ion-col>

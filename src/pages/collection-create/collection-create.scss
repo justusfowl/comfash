@@ -2,10 +2,14 @@
 
 page-collection-create {
 
+  .searchbar-ios{
+    background-color: unset;
+  }
+
   .main-cont{
     height: 100vh; 
     background-color: rgba($background-color,0.8) !important;
-    padding-top: 40vh; 
+    // padding-top: 40vh; 
   }
 
   .header{
@@ -48,8 +52,9 @@ page-collection-create {
   }
 
   .content{
-    //background-color: rgba($background-color,0.8) !important;
-    height: 60vh;
+    background-color: $background-color !important;
+    background-image: unset; 
+    // height: 60vh;
   }
 
   .item-toggle{
@@ -58,6 +63,20 @@ page-collection-create {
 
   .hidden{
     display: none;
+  }
+
+  .selected-users-container{
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .selected-user{
+    display: inline-block; 
+    margin: 4px; 
+    background-color:  color($colors, light, base);
+    padding: 4px; 
+    border-radius: 4px;
+    font-size: 12px; 
   }
 
 }

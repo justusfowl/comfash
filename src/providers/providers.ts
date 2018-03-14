@@ -5,6 +5,7 @@ import { WebsocketService } from './message/websocket';
 import { AuthService } from './auth/auth';
 import { Settings } from './settings/settings';
 import { User } from './user/user';
+import { UtilService } from './util/util';
 
 export {
     ConfigService,
@@ -13,5 +14,6 @@ export {
     WebsocketService,
     AuthService,
     Settings,
-    User
+    User, 
+    UtilService
 };

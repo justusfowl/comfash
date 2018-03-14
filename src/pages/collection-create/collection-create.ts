@@ -13,11 +13,6 @@ import { Api } from '../../providers/providers';
 export class CollectionCreatePage {
   @ViewChild('fileInput') fileInput;
 
-  isReadyToSave: boolean;
-
-  item: any;
-
-  form: FormGroup;
 
   userSearchList : any;
   userSearch : any;
@@ -25,53 +20,24 @@ export class CollectionCreatePage {
   usersSelected : any = [];
   userIdsSelected : any = [];
 
+  newCollectionTitle : string; 
+  isPublic : boolean;
+
   constructor(public navCtrl: NavController, 
     public viewCtrl: ViewController, 
     formBuilder: FormBuilder, 
     public camera: Camera, 
     public api: Api) {
 
-    this.form = formBuilder.group({
-      collectionTitle: ['', Validators.required],
-      description: [''],
-      public: [true]
-    });
+      this.newCollectionTitle = ""; 
+      this.isPublic = false; 
+      this.usersSelected.length = 0; 
+      this.userIdsSelected.length = 0;
 
-    // Watch the form for changes, and
-    this.form.valueChanges.subscribe((v) => {
-      this.isReadyToSave = this.form.valid;
-    });
   }
 
   ionViewDidLoad() {
 
-  }
-
-  getPicture() {
-    if (Camera['installed']()) {
-      this.camera.getPicture({
-        destinationType: this.camera.DestinationType.DATA_URL,
-        targetWidth: 96,
-        targetHeight: 96
-      }).then((data) => {
-        this.form.patchValue({ 'profilePic': 'data:image/jpg;base64,' + data });
-      }, (err) => {
-        alert('Unable to take photo');
-      })
-    } else {
-      this.fileInput.nativeElement.click();
-    }
-  }
-
-  processWebImage(event) {
-    let reader = new FileReader();
-    reader.onload = (readerEvent) => {
-
-      let imageData = (readerEvent.target as any).result;
-      this.form.patchValue({ 'profilePic': imageData });
-    };
-
-    reader.readAsDataURL(event.target.files[0]);
   }
 
   makePrivate(){
@@ -79,8 +45,12 @@ export class CollectionCreatePage {
     document.getElementById('container-access-groups').classList.toggle("hidden")
   }
 
-  getProfileImageStyle() {
-    return 'url(' + this.form.controls['profilePic'].value + ')'
+  isReadyToSave(){
+    if (this.newCollectionTitle.length > 0){
+      return true; 
+    }else{
+      return false;
+    }
   }
 
   /**
@@ -95,18 +65,14 @@ export class CollectionCreatePage {
    * back to the presenter.
    */
   done() {
-    if (!this.form.valid) { return; }
 
-    let obj = this.form.value;
-    
-    obj["access"] = {
-      public : this.form.value.public
-    };
+    let newCollection = {
+      collectionTitle : this.newCollectionTitle, 
+      sharedWithUsers : this.usersSelected, 
+      isPublic : this.isPublic
+    }
 
-    obj["sharedWithUsers"] = this.usersSelected;
-
-    console.log(obj)
-    this.viewCtrl.dismiss(obj);
+    this.viewCtrl.dismiss(newCollection);
   }
 
   getUserSearch(event){
