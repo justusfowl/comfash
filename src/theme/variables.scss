@@ -15,7 +15,7 @@ $font-path: "../assets/fonts";
 $text-color:        rgba(233,233,231,1);
 $background-color: #466675; 
 $background-color-dark: rgb(51, 67, 75);
-$background-color-light: #d6d6d6;
+$background-color-light: #e8e8e8;
 
 
 // Named Color Variables
@@ -28,9 +28,12 @@ $background-color-light: #d6d6d6;
 
 $colors: (
   primary:    #FAC8BF,
+  primary-accent:    #8b3036,
+  primary-light: #fdefed,
   secondary:  #94FFFC,
   light:      rgba(172,186,193,0.8),
-  light-grey: rgb(158, 181, 206),
+  light-grey: rgb(169, 169, 169),
+  dark-grey: rgba(123, 123, 123, 1),
   dark:       rgba(42,54,61,0.8),
   text:       $text-color, 
   dark-text: $background-color,

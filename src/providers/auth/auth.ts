@@ -18,6 +18,8 @@ export class AuthService {
 
     public userAvatarPath : string = "";
 
+    public testDeviceId : string = "";
+
     constructor(private store : Storage, private api: Api) {
 
         if (this.getToken()){
@@ -68,15 +70,16 @@ export class AuthService {
         this.isAuth = true;
 
 
-        console.log("get Ids in auth service:")
-
         // Retrieve the OneSignal user id and the device token
-        if (window["plugins"]){
-            window["plugins"].OneSignal.getIds()
-            .then((ids) =>
-            {
-                console.log('getIds: ' + JSON.stringify(ids));
-            });
+
+        try{
+
+            window['plugins'].OneSignal.getIds((id)=>this.setDeviceToken(id));
+
+
+        }
+        catch(err){
+            console.log(JSON.stringify(err))
         }
 
         
@@ -108,6 +111,16 @@ export class AuthService {
 
     getUserAvatarPath () : string {
         return window.localStorage.getItem('avatar') || "";
+    }
+
+    setDeviceToken(id){
+        this.testDeviceId = id.pushToken;
+        this.api.registerDevice(id).subscribe( resp => {
+            console.log("device successfully registered with comfash");
+        }, 
+        error => {
+            this.api.handleAPIError(error);
+        })
     }
 
 

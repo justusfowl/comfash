@@ -12,12 +12,14 @@
                     </div>
                 </div>
                 
+            </div> 
+            
+            <div class="userName" >
+                <ion-icon class="add-icon" name="camera" (click)="getPicture()"></ion-icon>
+                {{auth.getUsername()}}
             </div>
             
-            <div class="userName" >{{auth.getUsername()}}</div>
-            
         </div>
-
             <ion-list>
             <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
                 {{p.title}}

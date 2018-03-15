@@ -1,112 +1,11 @@
 @import "../../theme/variables";
 
 page-my-room {
-
-    .grid, .col, .item-inner {
-        padding: 0 !important;
-    }
-
-    .label{
-        margin: 0 !important;
-    }
-
-    .item{
-        background-color: transparent !important; 
-        padding: 0 0 0 0 !important;
-    }
-
-    .item-wrapper{
-        background-color: transparent !important;
-    }
-
-    .session-tile{
-        position: relative;
-        height: 300px;
-        width:100%;
-        background-position: center center;
-        background-size: cover;
-        background-repeat: no-repeat;
-        transition: transform 1s ease-in 0s;
-    }
-  
-    @keyframes animatedBackground {
-      from { background-position: center; }
-      to { background-position: center bottom; }
-    }
-
-    .session-tile-collection-title{
-        width: 100%; 
-        text-align: center;
-        color: color($colors, text, base);
-        position: absolute; 
-        top: 10%; 
-        font-size: 20px;
-        text-shadow: 0 0 11px color($colors, text, base), 0 0 1px black;
-    }
-
-    .session-tile-details{
-        position: absolute;
-        width: 100%; 
-        background-color: color($colors, text, base);
-        bottom: -1px;
-        padding: 5px;
-    }
-
-    .session-tile-row{
-        font-size: 10px; 
-    }
-
-    .session-tile-info{
-        float: right;
-    }
-
-    .cntFigure{
-        color: color($colors, dark-text, base);
-    }
-
-    .session-tile-details-icon{
-        color: color($colors, dark-text, base);
-    }
-
-    .swipe-btn{
-        color: color($colors, dark-text, base);
-    }
-
-    .swipe-icon{
-        font-size: 40px;
-    }
-
-    .headerBtn{
-        padding-right: 5px;
-    }
-
-    .cnt-new-notifications{
-        position: absolute; 
-        z-index: 102; 
-        color: color($colors, dark-text, base);
-        font-size: 10px; 
-        left: 3px; 
-        top: 13px;
-        width: 100%; 
-        text-align: center;
-    }
-
-    ion-content.has-refresher > .scroll-content{
-        background-color: initial !important;
-    }
-
-    .fab-button{
-        position: fixed; 
-        bottom: 20px; 
-        
-    }
-
-    .fab-button.left{
-        left: 20px; 
-    }
-
-    .fab-button.right{
-        right: 20px; 
-    }
     
+    .room-user-Id{
+        margin: 0; 
+        padding: 0; 
+        font-size: 9px; 
+        color : color($colors, primary, base);
+    }
 }

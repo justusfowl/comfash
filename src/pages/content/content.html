@@ -52,7 +52,7 @@
         <div [id]="'comment-list_' + comment.getId()" class="comment-list-item" *ngFor="let comment of getCommentsForSelectedSession();" [hidden]="comment.calculateDisplay(prcSessionItem)" (click)="highlightComment(comment)">
                 {{comment.commentText}}
                 <div class="comment-list-item-detail">
-                  Author
+                  {{comment.getUsername()}}, {{util.formatDateDiffToNow(comment.getDate())}}
                 </div>
         </div>
     </ion-list>

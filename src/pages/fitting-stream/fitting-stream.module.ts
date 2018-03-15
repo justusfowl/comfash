@@ -2,18 +2,18 @@ import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { IonicPageModule } from 'ionic-angular';
 
-import { CardsPage } from './cards';
+import { FittingStreamPage } from './fitting-stream';
 
 @NgModule({
   declarations: [
-    CardsPage,
+    FittingStreamPage,
   ],
   imports: [
-    IonicPageModule.forChild(CardsPage),
+    IonicPageModule.forChild(FittingStreamPage),
     TranslateModule.forChild()
   ],
   exports: [
-    CardsPage
+    FittingStreamPage
   ]
 })
-export class CardsPageModule { }
+export class FittingStreamPageModule { }

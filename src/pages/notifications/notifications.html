@@ -25,23 +25,38 @@
 
 <ion-content padding>
 
-    <ion-refresher (ionRefresh)="api.getCollections(($event.complete()))">
+    <ion-refresher (ionRefresh)="msg.updateMessages($event.complete())">
         <ion-refresher-content
         pullingIcon="arrow-dropdown"
-        pullingText="Update MyRoom"
+        pullingText="Update notifications"
         refreshingSpinner="circles"
         refreshingText="Refreshing...">
       </ion-refresher-content>
     </ion-refresher>
 
-  <button ion-item *ngFor="let message of msg.myMessages" (click)="followMessageLink(message)" [class.aux]='checkIfMsgIsAux(message)'>
-    <ion-label>
-        {{message.messageBody}}
-        <div class="msg-detail">
-            {{getAuthorText(message)}}
-        </div>
-    </ion-label>
-  </button>
+  <div ion-item *ngFor="let message of msg.myMessages" (click)="followMessageLink(message)" [class.unread]='message.isUnread == 1'>
+    
+    <ion-grid>
+        <ion-row class="session-tile-header-row" >
+          <ion-col col-1 class="session-thumbnail">
+            <div class="session-thumbnail" [style.backgroundImage]="'url(' + config.getHostBase() + message.sessionThumbnailPath +  + ')'">
+
+            </div>
+          </ion-col>
+
+          <ion-col class="message-body"> 
+              {{message.messageBody}}
+              <p class="message-details" >{{getAuthorText(message)}}, {{util.formatDateDiffToNow(message.messageCreated)}}</p>
+          </ion-col>
+          <ion-col col-1 class="arrow-icon">
+              <ion-icon name="arrow-forward"></ion-icon>
+          </ion-col>
+          <!-- hier noch button pfeil rein -->
+
+        </ion-row>
+      </ion-grid>
+
+  </div>
 
   
 

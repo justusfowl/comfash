@@ -12,7 +12,6 @@ import { Api } from '../api/api';
 import * as io from 'socket.io-client';
 import * as Rx from 'rxjs/Rx';
 import { WebsocketService } from './websocket';
-import { AuthService } from '../auth/auth';
 import { Message } from '../../models/datamodel';
 
 
@@ -23,7 +22,7 @@ export class MsgService implements OnInit {
     private socket;
     test : any;
     newMessages : any = [];
-    myMessages : any = [];
+    myMessages : Message[];
     
   
     constructor( 
@@ -31,8 +30,7 @@ export class MsgService implements OnInit {
         public toastCtrl: ToastController, 
         private api: Api, 
         private ws : WebsocketService, 
-        public translate: TranslateService, 
-        public auth : AuthService) { 
+        public translate: TranslateService) { 
        
     }
 
@@ -53,15 +51,19 @@ export class MsgService implements OnInit {
                 this.toast(msg.getMessage());
 
                 this.newMessages.push(msg);
-                
-                this.api.getMessages().subscribe(messages => {
-                    this.myMessages = messages;
-                })
-                
             })
 
         }
         
+    }
+ 
+    updateMessages(){
+        this.api.getMessages().subscribe((messages : Array<Message>)=> {
+            
+            let castMsg = messages.map(element => new Message(element));
+
+            this.myMessages = castMsg;
+        })
     }
 
     isNotificationDisabled(){
@@ -73,6 +75,7 @@ export class MsgService implements OnInit {
     }
 
     alert(msg: any){
+
 
         let alert = this.alertCtrl.create({
             title: 'Comfash',

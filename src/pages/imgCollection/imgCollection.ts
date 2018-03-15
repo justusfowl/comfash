@@ -6,7 +6,8 @@ import { Session } from '../../models/datamodel';
 import { Api, ConfigService, MsgService } from '../../providers/providers';
 
 @IonicPage({
-  segment: "imgCollection/:collectionId"
+  segment: "imgCollection/:collectionId", 
+  defaultHistory : ["MyRoomPage"]
 })
 @Component({
   selector: 'page-imgCollection',

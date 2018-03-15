@@ -55,7 +55,12 @@
   "LIST_MASTER_TITLE": "MyRoom",
 
   "COLLECTION_CREATE_TITLE": "New Collection",
+  "COLLECTIONTITLE" : "Title of the collection",
   "PUBLIC": "Public",
+
+  "ALERT_DELETE_TITLE" : "Remove session", 
+  "ALERT_DELETE_MSG" : "Remove this session?",
+
   "ITEM_CREATE_CHOOSE_IMAGE": "Add Image",
 
   "ITEM_NAME_PLACEHOLDER": "Name",
@@ -68,5 +73,14 @@
   "CARDS_TITLE": "Social",
 
   "SEARCH_TITLE": "Search",
-  "SEARCH_PLACEHOLDER": "Search the items list, e.g. \"Donald Duck\""
+  "SEARCH_PLACEHOLDER": "Search the items list, e.g. \"Donald Duck\"",
+
+  "FITTING_STREAM_TITLE" : "FittingStream", 
+
+  "NOTIFICATIONS" : "Notifications", 
+
+  "COMMENT_CREATE_TITLE" : "Comment", 
+
+  "STREAM_HAS_REACTED_TO" : " reacts to ", 
+  "STREAM_HAS_VOTED" : " has voted "
 }

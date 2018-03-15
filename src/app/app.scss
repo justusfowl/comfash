@@ -72,3 +72,157 @@ html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: 
     left: 5px; 
     z-index: 999;
   }
+
+
+  // css for collection tiles 
+
+  page-my-room, page-fitting-stream  {
+
+    .grid, .col, .item-inner {
+        padding: 0 !important;
+    }
+
+    .label{
+        margin: 0 !important;
+    }
+
+    .item{
+        background-color: transparent !important; 
+        padding: 0 0 0 0 !important;
+    }
+    ion-item-sliding{
+      width: 98%;
+    }
+
+    .item-wrapper{
+        background-color: transparent !important;
+        margin: 10px 1%;
+        box-shadow: 0px 0px 7px rgba(0,0,0,0.225);
+    }
+
+    .session-tile{
+        position: relative;
+        height: 300px;
+        width: 100%;
+        background-position: center center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        transition: transform 1s ease-in 0s;
+    }
+  
+    @keyframes animatedBackground {
+      from { background-position: center; }
+      to { background-position: center bottom; }
+    }
+
+    .session-tile-collection-title{
+        color: color($colors, dark-text, base);
+        padding-left: 5px;
+    }
+
+    .session-tile-details{
+        position: absolute;
+        width: 100%; 
+        background-color: color($colors, text, base);
+        bottom: -1px;
+        padding: 5px;
+    }
+
+    .session-tile-row{
+        font-size: 14px; 
+        padding-left: 7px; 
+        padding-right: 7px;
+    }
+
+    .session-tile-info{
+        float: right;
+    }
+
+    .cntFigure{
+        color: color($colors, dark-text, base);
+    }
+
+    .session-tile-details-icon{
+        color: color($colors, dark-text, base);
+    }
+
+    .swipe-btn{
+        color: color($colors, dark-text, base);
+    }
+
+    .swipe-icon{
+        font-size: 40px;
+    }
+
+    .headerBtn{
+        padding-right: 5px;
+    }
+
+    .cnt-new-notifications{
+        position: absolute; 
+        z-index: 102; 
+        color: color($colors, dark-text, base);
+        font-size: 10px; 
+        left: 3px; 
+        top: 13px;
+        width: 100%; 
+        text-align: center;
+    }
+
+    ion-content.has-refresher > .scroll-content{
+        background-color: initial !important;
+    }
+
+    .fab-button{
+        position: fixed; 
+        bottom: 20px; 
+        
+    }
+
+    .fab-button.left{
+        left: 20px; 
+    }
+
+    .fab-button.right{
+        right: 20px; 
+    }
+
+    // tile header 
+
+    ion-col.user-avatar{
+      min-width: 60px;
+    }
+
+    .user-avatar{
+      height: 45px; 
+      width: 45px; 
+      border-radius: 12px; 
+      background-position: top center; 
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .session-tile-header-row{
+      margin: 3px 12px;
+      display: flex; 
+      align-items: center;
+    }
+
+    .session-tile-header{
+      background-color: color($colors, primary, base);
+    }
+
+    .session-tile-header-title{
+      width: 80%;
+    }
+
+    .session-tile-header-title-container{
+        white-space: normal;
+
+    }
+
+    .last-updated{
+      font-size:10px;
+    }
+    
+}

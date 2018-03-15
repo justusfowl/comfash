@@ -2,7 +2,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable, ApplicationRef } from '@angular/core';
 
 
-import { Collection, Session, Comment, Vote } from '../../models/datamodel'
+import { Collection, Session, Comment, Vote, TrendItem } from '../../models/datamodel'
 
 
 import 'rxjs/add/operator/map';
@@ -41,9 +41,9 @@ export class Api {
     this.url = this.config.getAPIBase();
   }
 
-  getCollections(callback = function(){ }){
+  getCollections(userId : string, callback = function(){ }){
 
-    this.http.get<Collection[]>(this.url + '/' + "imgcollection").subscribe(
+    this.http.get<Collection[]>(this.url + '/' + "imgcollection/room/" + userId).subscribe(
       (data) => {
         
         try{
@@ -102,33 +102,14 @@ export class Api {
   }
 
   addCollection(collection: Collection){
-    
-    this.http.post(this.url + "/imgcollection", collection).subscribe(
-      (data) => {
-          console.log(data);
-          this.getCollections();
-      },
-      error => {
-        console.log("error");
-        console.log(error)
-      }
-    )
+    return this.http.post(this.url + "/imgcollection", collection);
   }
 
   deleteCollection(collection: Collection){
 
     let collectionId = collection.getId();
 
-    this.http.delete(this.url + '/imgcollection' + "/" + collectionId).subscribe(
-      (data) => {
-          console.log(data);
-          this.getCollections();
-      },
-      error => {
-        console.log("error");
-        console.log(error)
-      }
-    );
+    return this.http.delete(this.url + '/imgcollection' + "/" + collectionId);
 
   }
 
@@ -211,7 +192,6 @@ export class Api {
         let index = this.selectedCollection.sessions.indexOf(session);
         this.selectedCollection.sessions.splice(index, 1);
 
-        this.getCollections();
       },
       error => {
         this.handleAPIError(error);
@@ -281,10 +261,6 @@ export class Api {
 
   }
 
-
-
-
-
   getUser(searchStr: string){
 
       return this.http.get(this.url + '/' + "user" + "?userSearch=" + searchStr);
@@ -294,6 +270,16 @@ export class Api {
 
   getMessages(){
     return this.http.get(this.url + "/user/messages");
+  }
+
+  markMessageRead(messageId){
+
+    let body = {};
+    this.http.put(this.url + "/user/messages/"+messageId, body);
+  }
+
+  registerDevice(id : any){
+    return this.http.post(this.url + "/user/push/registerDevice", id);
   }
 
 
@@ -364,15 +350,7 @@ getTrendStream(options){
       qry += 'skip=' + options.skip
     }
 
-  this.http.get(this.url + "/stream" + qry).subscribe(
-    (data) => {
-        this.streamItems = data;
-    },
-    error => {
-      console.log("error");
-      console.log(error)
-    }
-  );
+  return this.http.get(this.url + "/stream" + qry)
   
 }
 

@@ -8,7 +8,10 @@
 
       </ion-buttons>
 
-    <ion-title >{{ 'LIST_MASTER_TITLE' | translate }}</ion-title>
+    <ion-title >
+      {{ 'LIST_MASTER_TITLE' | translate }}
+      <p class="room-user-Id">{{roomUserId}}</p>
+    </ion-title>
 
     <ion-buttons end>
 
@@ -56,18 +59,18 @@
                 <ion-icon id="flag-icon_{{item._id}}" name="videocam" class="photo-tile-details-icon flag-icon" [class.active]="item.getId() === api.getSelectedCollectionId().selectedId" ></ion-icon>
             </div>
 
-            <div class="session-tile-collection-title">
-                {{item.collectionTitle}}
-            </div>
-
           <div class="session-tile-details" >
 
             <ion-grid>
               <ion-row class="session-tile-row" >
                 <ion-col>
                     <ion-icon name="unlock" [hidden]="!item.getAccess().public" class="session-tile-details-icon"></ion-icon>
+                  <font class="session-tile-collection-title"> {{item.collectionTitle}} </font>
                 </ion-col>
-                <ion-col>
+
+                
+
+                <ion-col> 
                   <div class="session-tile-info">
                       <font class="cntFigure">
                           {{item.getNoSessions()}}

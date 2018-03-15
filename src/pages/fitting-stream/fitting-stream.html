@@ -1,0 +1,115 @@
+<ion-header>
+
+  <ion-navbar>
+      <ion-buttons>
+          <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+          </button>
+        </ion-buttons>
+
+    <ion-title>{{ 'FITTING_STREAM_TITLE' | translate }}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content (ionScroll)="handleScroll($event)">
+
+    <ion-refresher (ionRefresh)="getTrendStream($event)">
+        <ion-refresher-content
+        pullingIcon="arrow-dropdown"
+        pullingText="Update stream"
+        refreshingSpinner="circles"
+        refreshingText="Refreshing...">
+      </ion-refresher-content>
+    </ion-refresher>
+
+  <ion-list>
+    <ion-item-sliding #slideItem *ngFor="let item of api.streamItems">
+      <ion-item >
+        <div class="session-tile-header">
+            <ion-grid>
+              <ion-row class="session-tile-header-row" >
+                <ion-col col-1 class="user-avatar">
+                  <div class="user-avatar" [style.backgroundImage]="'url(' + config.getHostBase() + item.itemCreatorAvatarPath +  + ')'">
+
+                  </div>
+
+                </ion-col>
+
+                <ion-col class="session-tile-header-title"> 
+                    <div class="session-tile-header-title-container">
+                      <a class="stream-message-title-highlight-item item-creator" (click)="goToItemCreator(item)" > {{item.itemCreator}} </a> 
+                      <span class="stream-message-title"> {{getTitleMessage(item)}} </span>
+
+                      <a class="stream-message-title-highlight-item  item-owner" (click)="goToColOwner(item)" > @{{item.colOwner}}</a> 
+                      <a class="stream-message-title-highlight-item  item-title" (click)="goToImgCollection(item)" >#{{item.collectionTitle}} </a> 
+
+                    </div>
+                    <p class="last-updated" >{{util.formatDateDiffToNow(item.refDate)}}</p>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+        </div>
+        <div class="session-tile">
+
+            <div class="session-tile-content" >  
+              <video class="video-background" preload="auto" playsinline webkit-playsinline [poster]="config.getHostBase() + item.sessionThumbnailPath" [src]="config.getHostBase() + item.sessionItemPath" type="video/mp4"></video>
+            
+              <div class="session-item-vote"  [hidden]="item.itemType != 1" [class.vote-up]="item.voteType == 1" [class.vote-down]="item.voteType == 0" >
+                  <ion-icon name="thumbs-down" class="session-item-vote-icon"  [hidden]="item.voteType != 0" ></ion-icon>
+                  <ion-icon name="thumbs-up" class="session-item-vote-icon" [hidden]="item.voteType != 1"></ion-icon>
+                  
+              </div> 
+
+            </div>
+
+              <ion-grid class="session-tile-details">
+ 
+                <div class="session-item-comment"  [hidden]="item.itemType != 2">
+                    <ion-icon name="quote" class="session-item-comment-icon"></ion-icon>
+                    
+                    {{item.commentText}}
+                </div>
+
+
+                <ion-row class="session-tile-row" >
+                  <ion-col>
+                      <ion-icon name="thumbs-up" class="session-tile-details-icon"></ion-icon>
+                      <font class="cntFigure">
+                          {{util.formatToPercent(item.votesAvg)}} ({{item.votesCtn}})
+                      </font>
+                     
+                  </ion-col>
+
+                  <ion-col> 
+                    <div class="session-tile-info">
+                        <font class="cntFigure">
+                            {{item.commentCtn}}
+                        </font>
+                        <ion-icon name="text" class="session-tile-details-icon"></ion-icon>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+            
+          </div>
+      </ion-item>
+
+      <ion-item-options side="left">
+          <button class="swipe-btn" ion-button >
+            <ion-icon class="heart" name="heart"></ion-icon>
+            MARK
+          </button>
+      </ion-item-options>
+  
+  
+      </ion-item-sliding> 
+  </ion-list>
+
+  <ion-infinite-scroll (ionInfinite)="infiniteScroll($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+    
+</ion-content>
+

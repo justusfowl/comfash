@@ -54,7 +54,9 @@ export class LoginPage {
     this.auth.login(this.account.userId, this.account.password).subscribe(
       (data) => {
         this.msg.initMsgService();
-        this.navCtrl.setRoot(MainPage);
+        this.navCtrl.setRoot(MainPage, {
+          userId : this.auth.getUserId()
+        });
       },
       error => {
 

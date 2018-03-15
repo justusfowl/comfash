@@ -11,6 +11,8 @@ export class ConfigService {
     private API : string = "/api/v" + this.apiVersion;
     private apiProtocol : string = 'https';
 
+    public autoPlayStream : boolean = false;
+
 
     constructor() {
        

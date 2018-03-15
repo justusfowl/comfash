@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { MsgService, AuthService } from '../../providers/providers';
+import { MsgService, AuthService, ConfigService, UtilService, Api } from '../../providers/providers';
+import { Message } from '../../models/datamodel';
 
 /**
  * Generated class for the NotificationsPage page.
@@ -16,7 +17,14 @@ import { MsgService, AuthService } from '../../providers/providers';
 })
 export class NotificationsPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public msg: MsgService, private auth: AuthService) {
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams, 
+    public msg: MsgService, 
+    private auth: AuthService, 
+    public config : ConfigService,
+    public util : UtilService, 
+    private api: Api) {
 
     
   }
@@ -24,11 +32,18 @@ export class NotificationsPage {
   ionViewDidLoad() {
     console.log("notifications page loaded and deleted new messages")
     this.msg.newMessages.length = 0;
+    this.msg.updateMessages();
   }
 
-  followMessageLink(message ){
+  followMessageLink(message : Message){
 
-    let linkURL = JSON.parse(message.linkUrl);
+    // mark message as read
+
+    message.setReadStatus(0);
+
+    this.api.markMessageRead(message.getId());
+
+    let linkURL = message.getLinkUrl();
 
     let targetPage = linkURL.targetPage;
     let params = linkURL.params;

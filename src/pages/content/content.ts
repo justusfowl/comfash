@@ -6,7 +6,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
 import { Collection, Session, Comment, Vote } from '../../models/datamodel';
 
-import { Api, AuthService, ConfigService } from '../../providers/providers';
+import { Api, AuthService, ConfigService, UtilService } from '../../providers/providers';
 
 import * as $ from 'jquery';
 window['$'] = window['jQuery'] = $;
@@ -51,7 +51,8 @@ export class ContentPage implements AfterViewInit {
     private api : Api, 
     public sanitizer : Sanitizer, 
     private auth : AuthService, 
-    public config : ConfigService) {
+    public config : ConfigService, 
+    public util : UtilService) {
 
     this.compareItems.length = 0; 
 

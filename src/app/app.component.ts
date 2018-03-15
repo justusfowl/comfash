@@ -36,8 +36,13 @@ export class MyApp {
   */
 
   pages : any[] = [
-    { title: 'MyRoom', component: 'MyRoomPage' },
-    { title: 'FittingStream', component: 'CardsPage' },
+    { title: 'MyRoom', 
+      component: 'MyRoomPage', 
+      params : {
+                  userId : this.auth.getUserId()
+                } 
+    },
+    { title: 'FittingStream', component: 'FittingStreamPage' },
     { title: 'Notifications', component: 'NotificationsPage' },
     { title: 'Settings', component: 'SettingsPage' }
   ]
@@ -67,16 +72,29 @@ export class MyApp {
     // Enable to debug issues:
     // window["plugins"].OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
 
-    var notificationOpenedCallback = function(jsonData) {
-      console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+
+    var callbackForNotifications = function(jsonData) {
+        console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
     };
 
-    if (window["plugins"]){
+    
+    try{
+
       window["plugins"].OneSignal
-        .startInit("56791b6b-28da-4dde-9ee0-6e4e057313d4")
-        .handleNotificationOpened(notificationOpenedCallback)
-        .endInit();
+
+      .startInit("56791b6b-28da-4dde-9ee0-6e4e057313d4")
+  
+      .handleNotificationOpened(callbackForNotifications)
+
+      .endInit();
+
+
     }
+    catch(err){
+        console.log(JSON.stringify(err))
+    }
+
+
 
     });
 
@@ -172,7 +190,13 @@ export class MyApp {
   openPage(page) {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component);
+
+    if (page.params){
+      this.nav.setRoot(page.component, page.params);
+    }else{
+      this.nav.setRoot(page.component);
+    }
+    
   }
 
   doLogout(){
@@ -224,5 +248,9 @@ export class MyApp {
     }catch(err){
       return "";
     }
+  }
+
+  getDevice(){
+
   }
 }

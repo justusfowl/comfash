@@ -281,11 +281,14 @@ export class Comment {
   commentId: number;
   yRatio : number;
   xRatio : number;
-  commentCreated: Date = new Date(); 
+  commentCreated: Date ; 
   commentText : String = ''; 
   commentUrl: String = '';
   sessionId: number;
   prcSessionItem : number;
+
+  commentUserId : string; 
+  commentUserName : string; 
 
   displayBoolHidden : boolean = false; 
 
@@ -298,11 +301,22 @@ export class Comment {
     this.sessionId = fields.sessionId
     this.prcSessionItem = fields.prcSessionItem || null;
 
+    this.commentUserId = fields.commentUserId || null;
+    this.commentUserName = fields.commentUserName || null;
+
+    this.commentCreated = fields.commentCreated || new Date();
 
   }
 
   getId(){
     return this.commentId;
+  }
+  getUsername(){
+    return this.commentUserName;
+  }
+
+  getDate(){
+    return this.commentCreated;
   }
 
   calculateDisplay(currentPrcSessionItem){
@@ -443,6 +457,7 @@ export class Comment {
     messageBody : string;
     messageCreated : Date;
     linkUrl : any;
+    sessionThumbnailPath : string;
   
   
     constructor(fields : any) {
@@ -453,10 +468,121 @@ export class Comment {
       this.messageBody = fields.messageBody; 
       this.linkUrl = JSON.parse(fields.linkUrl);
       this.messageCreated = fields.messageCreated;
+      this.sessionThumbnailPath = fields.sessionThumbnailPath  || '/img/hangersbg.png';
     }
 
     getMessage() : string{
       return this.messageBody;
     }
+
+    getId(){
+      return this.messageId;
+    }
+
+    setReadStatus(status){
+      this.isUnread = status;
+    }
+
+    getLinkUrl(){
+      return this.linkUrl;
+    }
+  }
+
+  export interface Message {
+    messageId: number;
+    isUnread : boolean;
+    senderName : string;
+    receiverName : string;
+    messageBody : string;
+    messageCreated : Date;
+    linkUrl : any;
   }
   
+
+  // ## stream Items  ##
+
+  export class TrendItem {
+
+    commentId: number; 
+    sessionId: number; 
+    userId : string; 
+    itemCreator : string; 
+    itemCreatorAvatarPath : string; 
+    sessionItemPath : string; 
+    sessionThumbnailPath : string;
+
+    collectionTitle: string; 
+    collectionId : string;
+    colOwner: string; 
+    colOwnerId : string; 
+    commentCtn: number; 
+    votesCtn: number; 
+    votesAvg: number; 
+    refDate : Date;
+    itemType: number; 
+    
+    commentText: string; 
+    commentCreated : Date; 
+    
+    voteChanged : Date;
+    voteType: number;
+
+
+  
+    constructor(fields : any) {
+
+      // defining the item type (e.g. 1 = vote)
+      this.itemType = fields.itemType;
+
+      // referred session
+      this.sessionId = fields.sessionId;
+      this.sessionItemPath = fields.sessionItemPath; 
+      this.sessionThumbnailPath = fields.sessionThumbnailPath  || '/img/hangersbg.png';
+
+      // referred collection
+      this.collectionTitle = fields.collectionTitle;
+      this.collectionId = fields.collectionId;
+      this.colOwner = fields.colOwner;
+      this.colOwnerId = fields.colOwnerId; 
+
+      // userId of the creator of the comment/vote /...
+      this.userId = fields.userId;
+
+      // username of the creator + avatar
+      this.itemCreator = fields.itemCreator;
+      this.itemCreatorAvatarPath = fields.itemCreatorAvatarPath  || '/img/hangersbg.png';
+
+      
+      // stats on the session / collection
+      this.commentCtn = fields.commentCtn;
+      this.votesCtn = fields.votesCtn;
+      this.votesAvg = fields.votesAvg;
+      
+      // comment details
+      this.commentId = fields.commentId  || null;
+      this.commentText = fields.commentText  || null;
+      this.commentCreated = fields.commentCreated  || null;
+
+      // vote details
+      this.voteChanged = fields.voteChanged  || null;
+      this.voteType = fields.voteType  || null;
+
+      // date of creation of the item (disregarding the itemType)
+      this.refDate = fields.refDate; 
+
+    }
+
+    getItemOwnerId(){
+      return this.colOwnerId;
+    }
+
+    getCollectionId(){
+      return this.collectionId;
+    }
+
+    getItemCreatorId(){
+      return this.userId;
+    }
+
+
+  }

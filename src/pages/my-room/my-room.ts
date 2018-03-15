@@ -1,18 +1,25 @@
 import { Component } from '@angular/core';
-import { IonicPage, ModalController, NavController, MenuController } from 'ionic-angular';
+import { IonicPage, ModalController, NavController, MenuController, NavParams } from 'ionic-angular';
 
 import { Collection } from '../../models/datamodel';
 import { Api, AuthService, MsgService, ConfigService } from '../../providers/providers';
 
 
-@IonicPage()
+@IonicPage({
+  segment: "my-room/:userId"
+})
 @Component({
   selector: 'page-my-room',
   templateUrl: 'my-room.html'
 })
 export class MyRoomPage {
 
-  constructor(public navCtrl: NavController, 
+  roomUserId : string = "";
+  isMyRoom : boolean;
+
+  constructor(
+    public navCtrl: NavController, 
+    navParams: NavParams,
     public api: Api, 
     public modalCtrl: ModalController, 
     public msg : MsgService, 
@@ -22,7 +29,21 @@ export class MyRoomPage {
 
     this.menu.enable(true,'mainmenu');
 
-    this.api.getCollections();
+    let userId = navParams.get('userId');
+
+    if (!userId){
+      userId = this.auth.getUserId();
+    }
+    
+    this.roomUserId = userId;
+
+    if (userId == this.auth.getUserId()){
+      this.isMyRoom = true;
+    }else{
+      this.isMyRoom = false;
+    }
+
+    this.api.getCollections(userId);
   }
 
   /**
@@ -45,12 +66,15 @@ export class MyRoomPage {
 
         newCollection.sharedWithUsers = collection.sharedWithUsers;
 
-        console.log("new collection"); 
-        console.log(newCollection)
+        this.api.addCollection(newCollection).subscribe(
+          (data) => {
+            this.api.getCollections(this.auth.getUserId());
+          },
+          error => {
+            this.api.handleAPIError(error);
+          }
+        );
 
-        //console.log(newCollection);
-        this.api.addCollection(newCollection);
-        //this.items.add(item);
       }
     })
     
@@ -62,7 +86,14 @@ export class MyRoomPage {
    */
   deleteCollection(collection: Collection, slidingItem) {
 
-    this.api.deleteCollection(collection);
+    this.api.deleteCollection(collection).subscribe(
+      (data) => {
+        this.api.getCollections(this.auth.getUserId());
+      },
+      error => {
+        this.api.handleAPIError(error);
+      }
+    );
     slidingItem.close();
     //this.items.delete(item);
   }
@@ -79,7 +110,7 @@ export class MyRoomPage {
 
     this.api.selectedCollection = item;
 
-    this.navCtrl.setRoot('ImgCollectionPage', {
+    this.navCtrl.push('ImgCollectionPage', {
       collection: item, 
       collectionId : item.getId()
     });
