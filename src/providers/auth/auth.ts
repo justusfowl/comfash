@@ -1,10 +1,9 @@
 
-import { Storage } from '@ionic/storage';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
 
 import { Api } from '../api/api'
-
+import { OneSignal } from '@ionic-native/onesignal';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +19,8 @@ export class AuthService {
 
     public testDeviceId : string = "";
 
-    constructor(private store : Storage, private api: Api) {
+    constructor(private api: Api, 
+        public oneSignal : OneSignal) {
 
         if (this.getToken()){
             this.isAuth = true;
@@ -73,10 +73,8 @@ export class AuthService {
         // Retrieve the OneSignal user id and the device token
 
         try{
-
-            window['plugins'].OneSignal.getIds((id)=>this.setDeviceToken(id));
-
-
+            
+            this.oneSignal.getIds().then(data => this.setDeviceToken(data));
         }
         catch(err){
             console.log(JSON.stringify(err))
@@ -122,6 +120,31 @@ export class AuthService {
             this.api.handleAPIError(error);
         })
     }
+
+
+
+    checkProfile(item : any, profile){
+
+        try{
+
+        
+            if (profile == 'owner'){
+
+                if (item.getUserId() == this.getUserId()){
+                    return true;
+                } else{
+                    return false;
+                }
+
+            }
+
+        }catch(err){
+            console.log(err);
+        }
+
+    }
+
+
 
 
 }

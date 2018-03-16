@@ -1,0 +1,45 @@
+<ion-content no-sroll no-bounce>
+ 
+    <ion-grid>
+        <ion-row>
+
+            
+
+            <ion-col>
+                <button class="emoticons-btn" (click)="share(-50)" ion-button  icon-only>
+                    <div class="emoticons" >
+                        3
+                      </div>
+                </button>
+            </ion-col>
+            <ion-col >
+                <button class="emoticons-btn" (click)="share(25)" ion-button  icon-only>
+                    <div class="emoticons" >
+                        2
+                      </div>
+                </button>
+            </ion-col>
+            <ion-col >
+                <button class="emoticons-btn" (click)="share(75)" ion-button  icon-only>
+                    <ion-icon name="thumbs-up"></ion-icon>
+                </button>
+            </ion-col>
+            <ion-col >
+                <button class="emoticons-btn" (click)="share(100)" ion-button  icon-only>
+                    <div class="emoticons" >
+                        B
+                      </div>
+                </button>
+            </ion-col>
+
+
+            <ion-col col-1 *ngIf="hasVote">
+                <div class="unvote">
+                    <ion-icon class="unvote-icon" name="trash" (click)="unvote()"></ion-icon>
+                </div>
+            </ion-col>
+            
+        </ion-row>
+    </ion-grid>
+ 
+</ion-content>

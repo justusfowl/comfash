@@ -1,11 +1,7 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IonicPage, NavController, ToastController, ViewController } from 'ionic-angular';
-
 import { User, Api, MsgService } from '../../providers/providers';
-import { MainPage } from '../pages';
-
-
 
 @IonicPage()
 @Component({

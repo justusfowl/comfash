@@ -1,12 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
-
-import { Item } from '../../models/item';
-import { Api, ConfigService, UtilService } from '../../providers/providers';
-
+import { IonicPage, NavController, PopoverController} from 'ionic-angular';
+import { Api, ConfigService, UtilService, AuthService } from '../../providers/providers';
 import { TranslateService } from '@ngx-translate/core';
-import { TrendItem } from '../../models/datamodel';
-
+import { TrendItem, Vote } from '../../models/datamodel';
 
 @IonicPage()
 
@@ -30,7 +26,9 @@ export class FittingStreamPage {
     public navCtrl: NavController, 
     public api: Api, 
     public config: ConfigService, 
-    public util : UtilService) {
+    public util : UtilService, 
+    private popoverCtrl: PopoverController, 
+    private auth : AuthService) {
 
     this.getTrendStream();
 
@@ -67,7 +65,53 @@ export class FittingStreamPage {
 
     this.getTrendStream(scroller);
 
+  } 
+
+  showReactions(ev: any, trendItem : TrendItem){
+
+    let hasVote = false;
+    if (trendItem.myVoteType){
+      hasVote = true;
+    }
+ 
+      let reactions = this.popoverCtrl.create('ReactionsPage', {
+        "hasVote" : hasVote
+      });
+
+      reactions.onDidDismiss((voteType : number) => {
+        if (voteType) {
+
+          let vote = new Vote({
+            sessionId : trendItem.getSessionId(), 
+            voteType : voteType, 
+            userId : this.auth.getUserId()
+          });
+
+          trendItem.myVoteType = voteType;
+
+          this.api.upsertVote(trendItem.getCollectionId(), trendItem.getSessionId(), vote)
+  
+        }else{
+          // unvote = voteType = 0
+  
+          this.api.deleteVote(trendItem.getCollectionId(), trendItem.getSessionId()).subscribe( data => {
+            trendItem.myVoteType = null;
+          })
+  
+          // this.api.unvote();
+        }
+      })
+
+      reactions.present({
+          ev: ev
+      });
+
   }
+
+  like(){
+      console.log("like");
+  }
+
 
   openItem(item) {
 
@@ -155,6 +199,12 @@ export class FittingStreamPage {
     });
   }
 
+  goToSessionCompare(item: TrendItem){
+    this.navCtrl.push('ContentPage', {
+      collectionId : item.getCollectionId(),
+      compareSessionIds: [item.getSessionId()]
+    });
 
+  }
 
 }

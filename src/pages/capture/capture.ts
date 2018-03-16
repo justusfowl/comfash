@@ -9,16 +9,10 @@ import { CameraPreview, CameraPreviewOptions } from '@ionic-native/camera-previe
 
 import { Api, ConfigService } from '../../providers/providers';
 
-import {LZStringService} from 'ng-lz-string';
-
-import * as $ from 'jquery';
-
-import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
+import { FileTransfer, FileUploadOptions } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
 
 import { AuthService } from '../../providers/providers'
-
-declare var cordova : any;
 
 @IonicPage({
   segment: "capture/:collectionId"
@@ -59,25 +53,17 @@ export class CapturePage {
     public navCtrl: NavController, 
     public navParams: NavParams, 
     platform: Platform, 
-    public viewCtrl: ViewController,    
-    public _sanitizer : DomSanitizer,   
+    public viewCtrl: ViewController,
     public api: Api, 
     private cameraPreview: CameraPreview, 
-    public lz: LZStringService, 
     private transfer: FileTransfer, 
-    private _file: File, 
     public config : ConfigService, 
     private auth: AuthService) {
-    
-    var compressed = this.lz.compress("This is a test string");
-    
-    console.log(compressed)
     
     this.srcNav = navParams.get('srvNav'); 
 
     this.collectionId = navParams.get('collectionId');
 
-    
     platform.ready().then(() => {
     
       this.startLiveCam();
@@ -126,13 +112,12 @@ export class CapturePage {
 
     let endpoint = this.config.getAPIBase() + '/' + "imgcollection/" + this.collectionId + "/session";
 
-    let fileName = fileData.substring(fileData.indexOf("comfash_"), fileData.length);
-
     let date = new Date(); 
 
     let newSession = new Session({
       sessionId : date.getTime() * 999999,
-      sessionItemPath : fileData
+      sessionItemPath : fileData, 
+      userId : this.auth.getUserId()
     });
 
     newSession.flagIsTmp = true;
@@ -146,72 +131,30 @@ export class CapturePage {
 
     fileTransfer.upload(fileData, endpoint , options, true)
     .then((data) => {
-      console.log("successfully uploading the video");
 
-      console.warn("hier muss noch ein refresh stattfinden bevor man zurück zur page kommt");
+      console.log("successfully uploading the video done");
 
-      //this.api.syncToSession(this.collectionId, newSession.getId(), data);
 
-      this.api.loadCollection(this.collectionId, true)
+      let loadCollection : any = this.api.loadCollection(this.collectionId, true);
+      let comp = this;
 
-      //comp.navBack();
+      loadCollection.observable.subscribe(
+        (data) => {
+
+          // handlLoad every time sine froced = true
+
+          comp.api.handleLoadCollection(data);
+        },
+        error => {
+          comp.api.handleAPIError(error);
+        }
+      )
+
  
     }, (err) => {
       console.log("error in uploading the video");
       console.log(err);
     })
-
-    
-  /*
-    this._file.checkFile(this._file.dataDirectory, fileName).then((correct : boolean) => {
-      if(correct){
-
-          this._file.readAsDataURL(this._file.dataDirectory,  fileName).then((base64) => {
-            console.log("SuCCESSS")  
-            console.log(base64); 
-
-
-            let newSession = new Session({
-              sessionId : date.getTime() * 999999,
-              sessionItemPath : this._sanitizer.bypassSecurityTrustUrl(base64)
-            })
-
-            newSession.flagIsTmp = true;
-
-            this.api.addSessionToCollection(this.collectionId, newSession); 
-
-            console.log("SuCCESSSful added") 
-            comp.navBack();
-
-          }).catch((err) => {
-              console.log("Fehler in datei oder sowas");
-              console.log(err);
-          });
-      } else {
-          console.log("Datei konnte nicht gefunden werden");
-      }
-  }).catch((err) => {
-      console.log("Äußerster fehler");
-      console.log(err);
-  });
-
-
-
-    fileTransfer.upload(fileData, endpoint , options, true)
-    .then((data) => {
-      console.log("successfully uploading the video");
-
-      console.warn("hier muss noch ein refresh stattfinden bevor man zurück zur page kommt");
-
-      this.api.loadCollection(this.collectionId, true, comp.navBack.bind(this))
-      //comp.navBack();
- 
-    }, (err) => {
-      console.log("error in uploading the video");
-      console.log(err);
-    })
-
-    */
     
   }
 

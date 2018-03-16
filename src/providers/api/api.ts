@@ -1,14 +1,10 @@
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable, ApplicationRef } from '@angular/core';
-
-
-import { Collection, Session, Comment, Vote, TrendItem } from '../../models/datamodel'
-
+import { Observable } from 'rxjs/Observable';
+import { Collection, Session, Comment, Vote } from '../../models/datamodel'
 
 import 'rxjs/add/operator/map';
 import { ConfigService } from '../config/config';
-
-import { FirstRunPage  } from '../../pages/pages';
 
 
 /**
@@ -32,7 +28,6 @@ export class Api {
   // fitting stream 
 
   public streamItems : any = [];
-
 
   constructor( 
     public http: HttpClient, 
@@ -72,32 +67,37 @@ export class Api {
   }
 
 
-  loadCollection(collectionId: Number, forced = false, callback = function () { }){
+  loadCollection(collectionId: Number, forced = false){
+
+    let returnObj = {};
 
     if (this.selectedCollection.getId() != collectionId || forced){
-
-      this.http.get<Collection>(this.url + '/' + "imgcollection/" + collectionId, {responseType: 'json'}).subscribe(
-        (data) => {
-          if (data[0]){
-            
-            let loadedCol = new Collection(data[0]);
-            loadedCol.castSessions();
-            this.selectedCollection = loadedCol;
-
-            callback();
-
-          }else{
-            console.log("no collection data received for collectionId " + collectionId)
-          }
-          
-        },
-        error => {
-          this.handleAPIError(error);
-        }
-      )
+      returnObj["observable"] = this.http.get<Collection>(this.url + '/' + "imgcollection/" + collectionId, {responseType: 'json'})
+      returnObj["isQry"] = true;
+      return returnObj;
 
     }else{
-      return this.selectedCollection;
+
+      let collection = this.selectedCollection; 
+
+      returnObj["observable"] = new Observable(observer => {
+          observer.next(collection);
+      });
+      returnObj["isQry"] = false;
+
+      return returnObj
+    }
+  }
+
+  handleLoadCollection(data){
+    if (data[0]){
+            
+      let loadedCol = new Collection(data[0]);
+      loadedCol.castSessions();
+      this.selectedCollection = loadedCol;
+
+    }else{
+      console.log("no collection data received in api.loadCollection(:collectionId)")
     }
   }
 
@@ -141,6 +141,8 @@ export class Api {
  * @param forceDelete 
  */
   toggleCompareSession(session : Session, forceDelete = false){
+
+    
 
     let sessionId = session.getId();
     let currIndex = this.compareSessionIds.indexOf(sessionId);
@@ -211,13 +213,16 @@ export class Api {
 
   private getSessionByIdHandler(sessionId){
 
-    let getHandler = function getSessionByIdHandler(session){
+    let getHandler = function getSessionById(session){
       return session.getId() == sessionId;
     }
 
     return getHandler;
   }
-
+  /**
+   * Function to return a collection from within the currently available data of collections
+   * @param collectionId 
+   */
   getCollectionById(collectionId) : Collection{
 
     let getCollectionByIdHandler = this.getCollectionByIdHandler(collectionId);
@@ -236,7 +241,7 @@ export class Api {
 
     let collection = this.selectedCollection;
 
-    let getSessionByIdHandler = this.getCollectionByIdHandler(sessionId);
+    let getSessionByIdHandler = this.getSessionByIdHandler(sessionId);
 
     let session = collection.sessions.find(getSessionByIdHandler);
 
@@ -327,6 +332,13 @@ upsertVote(collectionId : number, sessionId: number, vote : Vote){
   )
 
 }
+
+deleteVote(collectionId : number, sessionId: number){
+
+  return this.http.delete(this.url + "/imgcollection/" + collectionId + "/session/" + sessionId + "/vote");
+
+}
+
 
 upsertUserAvatar(avatar : any){
   return this.post("user/avatar", avatar);

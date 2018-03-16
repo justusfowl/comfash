@@ -4,6 +4,10 @@ page-imgCollection {
         padding : 0 !important;
     }
 
+    .scroll-content{
+        background-color: transparent;
+    }
+
 
   .item-profile {
     width: 100%;
@@ -32,37 +36,54 @@ page-imgCollection {
     //animation-iteration-count: infinite;
 
     box-shadow: 0px 0px 7px rgba(0,0,0,0.225)
-}
+    }
 
-@keyframes animatedBackground {
-  from { background-position: center; }
-  to { background-position: center bottom; }
-}
+    @keyframes animatedBackground {
+    from { background-position: center; }
+    to { background-position: center bottom; }
+    }
 
-.photo-tile-details{
-    position: absolute;
-    width: 100%; 
-    background-color: color($colors, text, base);
-    bottom: 0px;
-    padding: 5px;
-}
+    .photo-tile-details{
+        position: absolute;
+        width: 100%; 
+        background-color: color($colors, text, base);
+        bottom: 0px;
+        padding: 5px;
+    }
 
-.photo-tile-info{
-    float: right;
-    
-}
+    .photo-tile-info{
+        float: right;
+        
+    }
 
-.session-delete{
-    font-size: 16px;
-}
+    .session-delete{
+        font-size: 16px;
+    }
 
-.cntFigure{
-    color: color($colors, dark, base);
-    font-size: 10px;
-}
+    .cntFigure{
+        color: color($colors, dark, base);
+        font-size: 10px;
+    }
 
-.photo-tile-details-icon{
-    color: color($colors, dark, base);
-}
+    .photo-tile-details-icon{
+        color: color($colors, dark, base);
+    }
+
+    .blank-card{
+        display: flex; 
+        align-items: center;
+        margin: 5px;
+        border: 2px dashed;
+        background-color: #f9f9f99c;
+        height: 100px; 
+        color: rgba(color($colors, dark-grey, base), 0.3);
+    }
+
+    .blank-card-add{
+        width: 30%; 
+        text-align: center;
+        font-size: 30px;
+    }
+
 
 }

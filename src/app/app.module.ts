@@ -11,8 +11,6 @@ import { IonicStorageModule, Storage } from '@ionic/storage';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-// Import your library
-import { LZStringModule, LZStringService } from 'ng-lz-string';
 
 import { File } from '@ionic-native/file';
 
@@ -22,6 +20,9 @@ import { ConfigService, User, Api, MsgService, WebsocketService,  Settings, Auth
 
 import { AuthIntercept } from '../providers/api/authintercept'
 import { MyApp } from './app.component';
+
+import { OneSignal } from '@ionic-native/onesignal';
+
 
 //import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 //const config: SocketIoConfig = { url: 'http://192.168.178.142:9999', options: {} };
@@ -63,15 +64,14 @@ export function provideSettings(storage: Storage) {
       }
     }),
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot(),
-    LZStringModule
-    //SocketIoModule.forRoot(config)
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp
   ],
   providers: [
+    OneSignal,
     UtilService,
     MsgService,
     ConfigService,
@@ -87,7 +87,6 @@ export function provideSettings(storage: Storage) {
     { provide: Settings, useFactory: provideSettings, deps: [Storage] },
     // Keep this to enable Ionic's runtime error handling during development
     { provide: ErrorHandler, useClass: IonicErrorHandler }, 
-    LZStringService, 
     File, 
     FileTransfer
   ]

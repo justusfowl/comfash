@@ -8,4 +8,20 @@ page-my-room {
         font-size: 9px; 
         color : color($colors, primary, base);
     }
+
+    .blank-card{
+        display: flex; 
+        align-items: center;
+        margin: 5px;
+        border: 2px dashed;
+        background-color: #f9f9f99c;
+        height: 80px; 
+        color: rgba(color($colors, dark-grey, base), 0.3);
+    }
+
+    .blank-card-add{
+        width: 10%; 
+        text-align: center;
+        font-size: 50px;
+    }
 }

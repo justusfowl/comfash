@@ -1,0 +1,35 @@
+page-reactions {
+ 
+    ion-content {
+        padding: 0;
+    }
+ 
+    button {
+        width: 40px;
+    }
+
+    .content{
+        background-image: unset;
+    }
+
+    .emoticons-btn{
+        width: 100%;
+    }
+
+    .emoticons{
+        font-size: 30px;
+    }
+
+    .unvote{
+        color: darkgrey;
+        height: 100%; 
+        display: flex; 
+        align-items: center;
+        border-left: 1px solid grey;
+    }
+
+    .unvote-icon{
+        padding-left: 5px;
+    }
+ 
+}

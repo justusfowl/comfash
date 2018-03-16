@@ -20,6 +20,39 @@ page-content-turntable{
 
 page-content{
 
+    .loading-icon-box{
+        position: fixed; 
+
+        z-index: 2; 
+
+        background-color: $background-color;
+        transform: translate(50%, 50%);
+        top: 50%; 
+        right: 50%; 
+        border-radius: 12px;
+    }
+
+    @keyframes swinging{
+        0%{transform: rotate(10deg);}
+        50%{transform: rotate(-5deg)}
+        100%{transform: rotate(10deg);}
+    }
+
+    .loading-icon{
+        transform-origin: 50% 0;
+        background-image: url('../assets/img/hanger_white.png');
+        background-size: 50px 50px; 
+        background-repeat: no-repeat;
+        background-position: center center;
+        height: 50px; 
+        width: 50px;
+        animation: swinging 2.5s ease-in-out forwards infinite;
+    }
+
+
+
+
+
     .col{
         padding: 0 !important;
     }
@@ -119,16 +152,31 @@ page-content{
 
     .no-comments{
         font-size: 10px;
-        color: color($colors, dark-text, base);
+        color: color($colors, text, base);
+        padding-right: 5px
     }
 
-    .voting-btn{
-        text-align: center;
+    .session-menu-btn{
+        color: $background-color-light;
+        font-size: 20px; 
+        width:100%;
+        height:30px;
+        width: 65px;
     }
 
-    .isVoteActive{
-        color: color($colors, dark-text, base);
+    .session-menu-btn.right{
+        float:right;
     }
+
+    .session-menu-btn-inner{
+        font-size: 30px;
+    }
+
+    .session-menu-btn.active, .session-menu-btn-inner.active{
+        background-color: $background-color;
+    }
+
+
 
     .comment-list{
         position: fixed; 
@@ -176,6 +224,19 @@ page-content{
         height: 30px !important;
     }
 
+
+    .disable-session{
+        position: absolute; 
+        right: 10%; 
+        top: 3%; 
+        font-size: 20px; 
+        color: color($colors, primary, base);
+        z-index: 120;
+    }
+
+    .disable-session-btn{
+        background-color: transparent;
+    }
     
 
 

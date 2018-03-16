@@ -54,9 +54,14 @@
 
   "LIST_MASTER_TITLE": "MyRoom",
 
+  "BLANK_CARD_ADD_COLLECTION" : "New Collection",
+
   "COLLECTION_CREATE_TITLE": "New Collection",
   "COLLECTIONTITLE" : "Title of the collection",
   "PUBLIC": "Public",
+
+  "BLANK_CARD_ADD_SESSION" : "Session hinzufügen",
+  "BLANK_CARD_NO_SESSION_NO_OWNER" : " has not added any session",
 
   "ALERT_DELETE_TITLE" : "Remove session", 
   "ALERT_DELETE_MSG" : "Remove this session?",
@@ -82,5 +87,5 @@
   "COMMENT_CREATE_TITLE" : "Comment", 
 
   "STREAM_HAS_REACTED_TO" : " reacts to ", 
-  "STREAM_HAS_VOTED" : " has voted "
+  "STREAM_HAS_VOTED" : " rates "
 }

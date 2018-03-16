@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angu
 
 import { Session } from '../../models/datamodel';
 
-import { Api, ConfigService, MsgService } from '../../providers/providers';
+import { Api, ConfigService, MsgService, AuthService } from '../../providers/providers';
 
 @IonicPage({
   segment: "imgCollection/:collectionId", 
@@ -17,9 +17,14 @@ export class ImgCollectionPage implements OnInit{
 
   selectedCollectionId : number;
 
-  constructor(public navCtrl: NavController, navParams: NavParams, public modalCtrl: ModalController, 
-    public api : Api, public config : ConfigService, 
-    public msg : MsgService) {
+  constructor(
+    public navCtrl: NavController, 
+    navParams: NavParams, 
+    public modalCtrl: ModalController, 
+    public api : Api, 
+    public config : ConfigService, 
+    public msg : MsgService, 
+    public auth: AuthService) {
     
     let collectionId = navParams.get('collectionId'); 
 
@@ -27,13 +32,29 @@ export class ImgCollectionPage implements OnInit{
 
     // entweder selectedCollection aus der API gibts (dann nimm) sonst ladt und pack in API
 
-    this.api.loadCollection(collectionId);
+    let loadCollection : any = this.api.loadCollection(collectionId);
+    let comp = this;
+    loadCollection.observable.subscribe(
+      (data) => {
 
-    //this.collection = navParams.get('collection')
+        // only if the query has been made to the API, load data into the api object, otherwise take existing one
+        if (loadCollection.isQry){
+            comp.api.handleLoadCollection(data);
+        }
+
+      },
+      error => {
+        comp.api.handleAPIError(error);
+      }
+    )
  
   }
 
   ngOnInit(){
+
+  }
+
+  checkIsMyCollection(){
 
   }
 
@@ -53,19 +74,11 @@ export class ImgCollectionPage implements OnInit{
 
   addItem() {
     
-
-    let navigate = function (response){
-
-    }
-
-    
     this.navCtrl.push('CapturePage', {
       collection: this.api.selectedCollection, 
       collectionId : this.api.selectedCollection.getId(),
       srvNav : 'session'
     });
-
-    //this.api.addSession(this.api.selectedCollection.getId(), navigate.bind(this));
 
   }
 

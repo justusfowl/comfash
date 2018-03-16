@@ -10,7 +10,7 @@
 
     <ion-title >
       {{ 'LIST_MASTER_TITLE' | translate }}
-      <p class="room-user-Id">{{roomUserId}}</p>
+      <p class="room-user-Id">@{{roomUserId}}</p>
     </ion-title>
 
     <ion-buttons end>
@@ -26,24 +26,24 @@
 
 <ion-content>
   
-  <ion-refresher (ionRefresh)="api.getCollections(($event.complete()))">
+  <ion-refresher (ionRefresh)="api.getCollections(roomUserId, ($event.complete()))">
       <ion-refresher-content
       pullingIcon="arrow-dropdown"
       pullingText="Update MyRoom"
       refreshingSpinner="circles"
       refreshingText="Refreshing...">
     </ion-refresher-content>
-  </ion-refresher>
+  </ion-refresher> 
 
 
-  <ion-fab class="fab-button left" >
+  <ion-fab class="fab-button left" *ngIf="auth.getUserId() == roomUserId">
       <button ion-fab class="swipe-btn" (click)="addItem()">
           <ion-icon class="swipe-icon" name="add"></ion-icon>
         </button>
     </ion-fab>
 
 
-  <ion-fab class="fab-button right" >
+  <ion-fab class="fab-button right" *ngIf="auth.getUserId() == roomUserId">
     <button ion-fab class="swipe-btn" [disabled]="api.getSelectedCollectionId().isSelected" (click)="captureToCollection()">
         <ion-icon class="swipe-icon" name="videocam"></ion-icon>
       </button>
@@ -88,14 +88,14 @@
         </div>
     </ion-item>
 
-    <ion-item-options side="right">
+    <ion-item-options side="right" *ngIf="auth.checkProfile(item, 'owner')">
       <button class="swipe-btn" ion-button (click)="deleteCollection(item, slideItem)">
         <ion-icon class="swipe-icon" name="trash"></ion-icon>
         DELETE
       </button>
     </ion-item-options>
 
-    <ion-item-options side="left">
+    <ion-item-options side="left" *ngIf="auth.checkProfile(item, 'owner')">
         <button class="swipe-btn" ion-button (click)="quickSelectCapture(item, slideItem)">
           <ion-icon class="swipe-icon" name="videocam"></ion-icon>
           SELECT
@@ -104,6 +104,13 @@
 
 
     </ion-item-sliding>
+
+    <div class="blank-card" (click)="addItem()" *ngIf="api.collections.length == 0">
+        <ion-icon class="blank-card-add" name="add">
+        </ion-icon>
+        {{'BLANK_CARD_ADD_COLLECTION' | translate}}
+    </div>
+
   </ion-list>
 
 

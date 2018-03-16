@@ -4,13 +4,17 @@ import { IonicPageModule } from 'ionic-angular';
 
 import { FittingStreamPage } from './fitting-stream';
 
+import { LongPressModule } from 'ionic-long-press';
+
+
 @NgModule({
   declarations: [
     FittingStreamPage,
   ],
   imports: [
     IonicPageModule.forChild(FittingStreamPage),
-    TranslateModule.forChild()
+    TranslateModule.forChild(), 
+    LongPressModule
   ],
   exports: [
     FittingStreamPage

@@ -1,16 +1,11 @@
 import { Component, Sanitizer, AfterViewInit } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
-import { DomSanitizer } from "@angular/platform-browser";
-
+import { IonicPage, NavController, NavParams, ModalController, PopoverController } from 'ionic-angular';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
-
 import { Collection, Session, Comment, Vote } from '../../models/datamodel';
-
 import { Api, AuthService, ConfigService, UtilService } from '../../providers/providers';
-
 import * as $ from 'jquery';
-window['$'] = window['jQuery'] = $;
 
+window['$'] = window['jQuery'] = $;
 
 @IonicPage({
   segment: "content/:collectionId/:compareSessionIds", 
@@ -28,7 +23,6 @@ export class ContentPage implements AfterViewInit {
   compareItems : Session[] = [];
   footerHangers = [];
   prcSessionItem = 10; 
-  testText = "";
   
   comments = [];
 
@@ -41,10 +35,9 @@ export class ContentPage implements AfterViewInit {
   selectedIndex : number = -1; 
   collection : Collection;
 
-  
-
   constructor(
     public navCtrl: NavController, 
+    private popoverCtrl: PopoverController, 
     navParams: NavParams, 
     private screenOrientation: ScreenOrientation, 
     public modalCtrl: ModalController, 
@@ -54,47 +47,60 @@ export class ContentPage implements AfterViewInit {
     public config : ConfigService, 
     public util : UtilService) {
 
-    this.compareItems.length = 0; 
+        this.compareItems.length = 0; 
 
-    // screen orientation not available on ionicDev
-    //this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
+        // screen orientation not available on ionicDev
+        //this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
 
-    // get compare sessions muss auch über die URL möglich se
+        // get compare sessions muss auch über die URL möglich se
 
-    let collectionId = navParams.get('collectionId');
-    let compareSessionIds = [];
+        let collectionId = navParams.get('collectionId');
+        let compareSessionIds = [];
 
-    if (typeof(navParams.get('compareSessionIds')) == "string"){
-      for (const id of navParams.get('compareSessionIds').split(",")){
-          compareSessionIds.push(parseInt(id));
-      }
-    }else{
-      compareSessionIds = navParams.get('compareSessionIds');
-    }
+        if (typeof(navParams.get('compareSessionIds')) == "string"){
+          for (const id of navParams.get('compareSessionIds').split(",")){
+              compareSessionIds.push(parseInt(id));
+          }
+        }else{
+          compareSessionIds = navParams.get('compareSessionIds');
+        }
 
-    let userId = this.auth.getUserId();
-    
-    let onCollectionLoaded = function (){
+        console.info("so far only deep links for sessions of the same collections are possible");
 
-      this.api.compareSessionIds = compareSessionIds;
-      this.api.compareSessions = this.api.selectedCollection.getSessionsById(compareSessionIds);
-      this.calculateFooterHangers();
+        let loadCollection : any = this.api.loadCollection(collectionId);
+        let comp = this;
 
-    };
+        loadCollection.observable.subscribe(
+          (data) => {
 
-    this.api.loadCollection(collectionId, null, onCollectionLoaded.bind(this));
+            // only if the query has been made to the API, load data into the api object, otherwise take existing one
+            if (loadCollection.isQry){
+
+              comp.api.handleLoadCollection(data);
+              
+              comp.api.compareSessionIds = compareSessionIds;
+              comp.api.compareSessions = comp.api.selectedCollection.getSessionsById(compareSessionIds);
+              
+            }
+            
+            // hangers must be calculated everytime
+            comp.calculateFooterHangers();
+          },
+          error => {
+            comp.api.handleAPIError(error);
+          }
+        )
 
    }
 
    ngAfterViewInit(){
-
-    let comp = this; 
-     
-    $('#row-compare-items').bind('touchmove', function (evt : any) {
+    
+      /*
+      $('#row-compare-items').bind('touchmove', function (evt : any) {
         console.log(evt);
-
-      var currentY = evt.originalEvent.touches[0].clientY;
-    });
+        var currentY = evt.originalEvent.touches[0].clientY;
+      });
+      */
 
       setTimeout(function(){ 
         let videos : any = $('video.video-background');
@@ -102,68 +108,46 @@ export class ContentPage implements AfterViewInit {
         for (var i=0; i<videos.length; i++){
           videos[i].pause()
         }
-
-
       }, 1500);
    }
-
-   active(e){
-    this.testText = 'active'; 
-    console.log("active")
-    //console.log(e);
-   }
-
-   checkIfImgActive(index: number, length : number){
-
-    let imgNum = (Math.ceil(length * (this.prcSessionItem / 100))) -1 ;
-
-    if (imgNum == index){
-      return true; 
-    }else{
-      return false;
-    }
-    
-
-   }
    
-
    pressed(e, session : Session){
      
-    // normalize coords to include offset of target element 
+      // normalize coords to include offset of target element 
 
-    let targetElement = e.target.getBoundingClientRect();
-    let currentPrcSessionItem = this.prcSessionItem;
+      let targetElement = e.target.getBoundingClientRect();
+      let currentPrcSessionItem = this.prcSessionItem;
 
-    let coords = {
-      "x" : e.center.x - targetElement.x  < 0 ? 0 : e.center.x - targetElement.x ,
-      "y" : e.center.y - targetElement.y  < 0 ? 0 : e.center.y - targetElement.y 
-    }
-
-
-    let addModal = this.modalCtrl.create('CommentCreatePage');
-    addModal.onDidDismiss(comment => {
-
-      if (comment){
-        let tmpItem = new Comment({
-                commentText : comment.commentText, 
-                userId : this.auth.getUserId(),
-                sessionId : session.getId(), 
-                prcSessionItem : currentPrcSessionItem
-              });
-
-        let viewPort = document.getElementById('row-compare-items');
-
-        tmpItem.calculateRatioFromCoords(coords,viewPort,session);
-
-        this.api.addCommentToSession(this.api.selectedCollection.getId(), session.getId(), tmpItem, session);  
-
+      let coords = {
+        "x" : e.center.x - targetElement.x  < 0 ? 0 : e.center.x - targetElement.x ,
+        "y" : e.center.y - targetElement.y  < 0 ? 0 : e.center.y - targetElement.y 
       }
 
-    });
+      let addModal = this.modalCtrl.create('CommentCreatePage');
+      addModal.onDidDismiss(comment => {
 
-    addModal.present();
+        if (comment){
+          let tmpItem = new Comment({
+                  commentText : comment.commentText, 
+                  userId : this.auth.getUserId(),
+                  sessionId : session.getId(), 
+                  prcSessionItem : currentPrcSessionItem
+                });
+
+          let viewPort = document.getElementById('row-compare-items');
+
+          tmpItem.calculateRatioFromCoords(coords,viewPort,session);
+
+          this.api.addCommentToSession(this.api.selectedCollection.getId(), session.getId(), tmpItem, session);  
+
+        }
+
+      });
+
+      addModal.present();
    }
 
+   /*
    getImgFromSession(session: Session){
 
     let sessionIndex = session.getImgIndexFromPercent(this.prcSessionItem); 
@@ -180,10 +164,10 @@ export class ContentPage implements AfterViewInit {
      }
     
    }
+   */
 
   scaleToFill() {
 
-    let returnScale = "";
     try{
 
         let videoTag : any = $('video.video-background')[0];
@@ -206,7 +190,7 @@ export class ContentPage implements AfterViewInit {
     }
 }
 
-
+  /*
   getImgComment(session: Session){
 
     try{
@@ -217,6 +201,7 @@ export class ContentPage implements AfterViewInit {
      }
 
   }
+  */
 
   calculateFooterHangers(){
 
@@ -370,10 +355,66 @@ export class ContentPage implements AfterViewInit {
 
   }
 
-  checkIfMyVoteIsActive(session : Session, voteType){
+  getMyVoteIcon(session : Session){
+
+    try {
+      let myVote : Vote = session.myVote;
+      return myVote.getVoteIcon(myVote.voteType);
+    }catch(err){
+      return 'K';
+    }
+  }
+
+  showReactions(ev: any, session: Session){
+
+    let hasVote = false;
+    if (session.myVote){
+      hasVote = true;
+    }
+ 
+    let reactions = this.popoverCtrl.create('ReactionsPage', {
+      "hasVote" : hasVote
+    });
+
+    reactions.onDidDismiss((voteType : number) => {
+      if (voteType) {
+
+        let vote = new Vote({
+          sessionId : session.getId(), 
+          voteType : voteType, 
+          userId : this.auth.getUserId()
+        });
+
+        if (session.myVote){
+          session.myVote.voteType = voteType;
+        }else{
+          session.setMyVote(vote);
+        }
+        
+        this.api.upsertVote(this.api.selectedCollection.getId(), session.getId(), vote)
+
+      }else{
+        // unvote = voteType = 0
+
+        this.api.deleteVote(this.api.selectedCollection.getId(), session.getId()).subscribe( data => {
+          delete session.myVote;
+        })
+
+        // this.api.unvote();
+      }
+    })
+
+    reactions.present({
+        ev: ev
+    });
+
+}
+
+
+  checkIfMyVoteIsActive(session : Session){
 
     try { 
-      if (session.myVote.voteType == voteType){
+      if (session.myVote){
         return true;
       }else{
         return false;
@@ -384,17 +425,12 @@ export class ContentPage implements AfterViewInit {
   }
 
   slide(event){
-
-    // set videos to corresponding currentTime
-
     let comp = this;
     const videos : any = document.getElementsByTagName("video");
     for (var i = 0; i<videos.length; i++){
       let element = videos[i];
       element.currentTime = (comp.prcSessionItem / 100) * element.duration;
     }
-
-
   }
 
    navBack(){

@@ -1,4 +1,33 @@
 
+
+
+let getVoteIcon = function (voteType){
+  let icon = "K";
+
+  if (voteType){
+    switch (voteType) {
+      case -50:
+          icon = "3";
+          break;
+      case 25:
+          icon = "2";
+          break;
+      case 75:
+          icon = "K";
+          break;
+      case 100:
+          icon = "B";
+          break;
+  }
+  }
+
+  return icon; 
+
+}
+
+
+
+
 /**
  * The datamodel for the comfash application
  *
@@ -7,6 +36,8 @@
 
 export class Collection {
 
+  userId : string; 
+  userName : string;
   collectionId: number;
   collectionTitle : string;
   collectionCreated: Date;
@@ -19,6 +50,8 @@ export class Collection {
 
   constructor(fields : any) {
 
+    this.userId = fields.userId; 
+    this.userName = fields.userName;
     this.collectionId = fields.collectionId || null;
     this.collectionTitle = fields.collectionTitle || '';
     this.collectionCreated = new Date();
@@ -36,6 +69,10 @@ export class Collection {
 
   getId(){
     return this.collectionId;
+  }
+
+  getUserId(){
+    return this.userId;
   }
 
   getAccess(){
@@ -114,6 +151,7 @@ export class Collection {
 
 export class Session {
 
+  userId : string;
   sessionId: number;
   //images : Image[];
   comments : Comment[];
@@ -134,6 +172,7 @@ export class Session {
   hasVote : boolean = false;
 
   constructor(fields : any) {
+    this.userId = fields.userId  || console.warn("no userId passed to session constructor"); 
     this.sessionId = fields.sessionId || null;
     this.sessionCreated = new Date();
     this.comments = fields.comments || [];
@@ -151,6 +190,11 @@ export class Session {
       this.myVote = newVote;
     }
     
+  }
+
+
+  getUserId(){
+    return this.userId;
   }
 
   castComments(){
@@ -188,6 +232,10 @@ export class Session {
     }
 
 
+  }
+
+  setMyVote(vote : Vote){
+    this.myVote = vote;
   }
 
   getId(){
@@ -271,6 +319,13 @@ export class Vote {
   getUserId(){
     return this.userId;
   }
+
+  getVoteIcon (voteType){
+    // getVoteTypeIcon function is being used for the 
+    return getVoteIcon(voteType);
+  }
+
+  
 
 
 }
@@ -512,7 +567,7 @@ export class Comment {
     sessionThumbnailPath : string;
 
     collectionTitle: string; 
-    collectionId : string;
+    collectionId : number;
     colOwner: string; 
     colOwnerId : string; 
     commentCtn: number; 
@@ -526,6 +581,9 @@ export class Comment {
     
     voteChanged : Date;
     voteType: number;
+
+    myVoteType : number;
+
 
 
   
@@ -564,13 +622,23 @@ export class Comment {
       this.commentCreated = fields.commentCreated  || null;
 
       // vote details
-      this.voteChanged = fields.voteChanged  || null;
-      this.voteType = fields.voteType  || null;
+      this.voteChanged = fields.voteChanged || null;
+      this.voteType = fields.voteType || null;
 
       // date of creation of the item (disregarding the itemType)
       this.refDate = fields.refDate; 
 
+      // what is the vote type (if exists) for the requesting user if he/she has voted 
+      this.myVoteType = fields.myVoteType || null;
+
+
     }
+
+    getVoteIcon (voteType){
+      // getVoteTypeIcon function is being used for the 
+      return getVoteIcon(voteType);
+    }
+
 
     getItemOwnerId(){
       return this.colOwnerId;
@@ -582,6 +650,10 @@ export class Comment {
 
     getItemCreatorId(){
       return this.userId;
+    }
+
+    getSessionId(){
+      return this.sessionId;
     }
 
 

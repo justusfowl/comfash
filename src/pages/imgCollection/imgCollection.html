@@ -8,11 +8,11 @@
       </button>
     </ion-buttons>
     -->
-    <ion-title>{{ api.selectedCollection.collectionTitle }}</ion-title>
+    <ion-title>{{ '@' + api.selectedCollection.userName + '#' + api.selectedCollection.collectionTitle }}</ion-title>
 
     <ion-buttons end>
         
-        <button ion-button icon-only (click)="addItem()">
+        <button ion-button icon-only (click)="addItem()" *ngIf="auth.checkProfile(api.selectedCollection, 'owner')">
           <ion-icon name="videocam"></ion-icon>
         </button> 
     </ion-buttons>
@@ -47,7 +47,7 @@
                 <ion-grid>
                   <ion-row>
                     <ion-col>
-                            <ion-icon name="trash" class="photo-tile-details-icon session-delete" (click)="deleteSession(session)" ></ion-icon>
+                            <ion-icon name="trash" *ngIf="auth.checkProfile(session, 'owner')" class="photo-tile-details-icon session-delete" (click)="deleteSession(session)" ></ion-icon>
                     </ion-col>
                     <ion-col>
 
@@ -67,9 +67,27 @@
                 </ion-grid>
               </div>
             </div>
+      </ion-col> 
+
+      <ion-col *ngIf="api.selectedCollection.sessions.length == 0" >
+          
+          <div class="blank-card" (click)="addItem()" *ngIf="auth.checkProfile(api.selectedCollection, 'owner')" >
+              <ion-icon class="blank-card-add" name="videocam">
+              </ion-icon>
+              {{'BLANK_CARD_ADD_SESSION' | translate}}
+          </div>
+
+          <div class="blank-card" *ngIf="!auth.checkProfile(api.selectedCollection, 'owner')" >
+              <ion-icon class="blank-card-add" name="videocam">
+              </ion-icon>
+              {{api.selectedCollection.userName}} {{'BLANK_CARD_NO_SESSION_NO_OWNER' | translate}}
+          </div>
       </ion-col>
+
     </ion-row>
   </ion-grid>
+
+
 </ion-content>
 <ion-footer>
   <ion-toolbar>

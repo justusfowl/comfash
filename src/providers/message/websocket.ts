@@ -1,7 +1,6 @@
 import 'rxjs/add/operator/toPromise';
 
 import { Injectable } from '@angular/core';
-import { AlertController, ToastController } from 'ionic-angular';
 
 import { Observable } from 'rxjs/Observable';
 

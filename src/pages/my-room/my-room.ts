@@ -19,7 +19,7 @@ export class MyRoomPage {
 
   constructor(
     public navCtrl: NavController, 
-    navParams: NavParams,
+    public navParams: NavParams,
     public api: Api, 
     public modalCtrl: ModalController, 
     public msg : MsgService, 
@@ -27,9 +27,16 @@ export class MyRoomPage {
     public menu: MenuController,
     public config: ConfigService) {
 
+  }
+
+  /**
+   * The view loaded, let's query our items for the list
+   */
+  ionViewDidLoad() { 
+    
     this.menu.enable(true,'mainmenu');
 
-    let userId = navParams.get('userId');
+    let userId = this.navParams.get('userId');
 
     if (!userId){
       userId = this.auth.getUserId();
@@ -44,13 +51,6 @@ export class MyRoomPage {
     }
 
     this.api.getCollections(userId);
-  }
-
-  /**
-   * The view loaded, let's query our items for the list
-   */
-  ionViewDidLoad() { 
-    
   }
 
   /**

@@ -1,16 +1,12 @@
 import 'rxjs/add/operator/toPromise';
 
 import { Injectable, OnInit } from '@angular/core';
-import { AlertController, ToastController, App } from 'ionic-angular';
+import { AlertController, ToastController } from 'ionic-angular';
 
 import { TranslateService } from '@ngx-translate/core';
 
-import { Observable } from 'rxjs/Observable';
 import { Api } from '../api/api';
 
-
-import * as io from 'socket.io-client';
-import * as Rx from 'rxjs/Rx';
 import { WebsocketService } from './websocket';
 import { Message } from '../../models/datamodel';
 
@@ -19,7 +15,6 @@ import { Message } from '../../models/datamodel';
 export class MsgService implements OnInit {
 
     public groups : any;
-    private socket;
     test : any;
     newMessages : any = [];
     myMessages : Message[];

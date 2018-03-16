@@ -1,5 +1,11 @@
 <ion-content >
     
+
+  <div class="loading-icon-box">
+    <div class="loading-icon">
+
+    </div>
+  </div>
   
     <ion-buttons class="btn-header">
       <button ion-button icon-only (click)="navBack()">
@@ -15,7 +21,11 @@
               <source src="https://player.vimeo.com/external/85569724.sd.mp4?s=43df5df0d733011263687d20a47557e4">
             </video>
             -->
-
+            <div class="disable-session">
+                <button class="disable-session-btn" ion-button icon-only (click)="api.toggleCompareSession(session)">
+                    <ion-icon name="close" ></ion-icon>
+                </button>
+            </div>
 
             <video  class="video-background" autoplay preload="auto" playsinline webkit-playsinline  [poster]="config.getHostBase() + session.getThumbnail()" [src]="config.getHostBase() + session.getSessionItemPath()" type="video/mp4"></video>
           
@@ -27,18 +37,25 @@
 
             <ion-grid class="session-details">
               <ion-row>
-                <ion-col col-6>
-                    <font class="no-comments" [hidden]="session.getCommentsDisplay(prcSessionItem).length == 0" >{{session.getCommentsDisplay(prcSessionItem).length}}</font>
-                    <ion-icon name="chatboxes" [hidden]="session.getCommentsDisplay(prcSessionItem).length == 0" class="bookmark-icon" (click)="enableComments(i)"></ion-icon>
+                <ion-col col-4>
+                    <button class="session-menu-btn" [class.active]="enableCommentList"  [hidden]="session.getCommentsDisplay(prcSessionItem).length == 0"  (click)="enableComments(i)"  ion-button icon-left clear small>
+                        
+                        <font class="no-comments"  >{{session.getCommentsDisplay(prcSessionItem).length}}</font>
+                        <ion-icon name="chatboxes"  class="bookmark-icon" ></ion-icon>
+                    </button>    
+
                 </ion-col>
+
                 <ion-col>
                 </ion-col>
-                <ion-col col-2 class="voting-btn">
-                    <ion-icon name="thumbs-up" class="vote-icon vote-up" (click)="voteChange(1, session)" [class.isVoteActive]="checkIfMyVoteIsActive(session, 1)"></ion-icon>
-                </ion-col>
-                <ion-col col-2 class="voting-btn">
-                    <ion-icon name="thumbs-down" class="vote-icon vote-down" (click)="voteChange(0, session)" [class.isVoteActive]="checkIfMyVoteIsActive(session, 0)"></ion-icon>
-                </ion-col>
+
+                <ion-col col-4 class="voting-btn">
+                    <button class="session-menu-btn right" [class.active]="session.myVote" ion-long-press [interval]="400" (click)="showReactions($event, session)"  ion-button icon-left clear small>
+                        <div class="emoticons session-menu-btn-inner">
+                            {{getMyVoteIcon(session)}}
+                        </div>  
+                      </button>
+                  </ion-col>
               </ion-row>
             </ion-grid>
 

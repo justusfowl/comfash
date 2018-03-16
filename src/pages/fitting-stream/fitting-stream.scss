@@ -37,24 +37,36 @@ page-fitting-stream {
         padding: 5px;
         font-size: 14px;
         font-style: italic;
+        position: absolute; 
+        top: 0; 
+        width: 100%; 
+        background-color: rgba($background-color-light, 0.8);
     }
+
     .session-item-comment-icon{
         font-size: 25px; 
         color: rgba(color($colors, primary-accent, base), 0.25); 
         padding-right: 10px;
+        padding-left: 10px;
     }
 
 
     .session-item-vote{
+        color: rgba(color($colors, primary-accent, base), 1); 
+        font-size: 30px;
+        /*
         position: absolute; 
-        bottom: 13%;
+        top: 0;
         right: 10px;
         display: flex; 
         align-items: center;
+
         
-        border-radius: 4px;
+        border-radius: 2px;
         height: 40px; 
-        width: 40px; 
+        padding: 5px;
+        background-color : color($colors, primary, base); 
+        */
     }
 
     .session-item-vote-icon{

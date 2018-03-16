@@ -1,9 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Camera } from '@ionic-native/camera';
 import { IonicPage, NavController, ViewController } from 'ionic-angular';
 
-import { Api } from '../../providers/providers';
+import { Api, AuthService } from '../../providers/providers';
 
 @IonicPage()
 @Component({
@@ -25,9 +24,9 @@ export class CollectionCreatePage {
 
   constructor(public navCtrl: NavController, 
     public viewCtrl: ViewController, 
-    formBuilder: FormBuilder, 
     public camera: Camera, 
-    public api: Api) {
+    public api: Api, 
+    public auth: AuthService) {
 
       this.newCollectionTitle = ""; 
       this.isPublic = false; 
@@ -69,7 +68,9 @@ export class CollectionCreatePage {
     let newCollection = {
       collectionTitle : this.newCollectionTitle, 
       sharedWithUsers : this.usersSelected, 
-      isPublic : this.isPublic
+      isPublic : this.isPublic, 
+      userId : this.auth.getUserId(),
+      userName : this.auth.getUsername()
     }
 
     this.viewCtrl.dismiss(newCollection);

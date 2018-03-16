@@ -3,6 +3,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Config, Nav, Platform } from 'ionic-angular';
+import { OneSignal } from '@ionic-native/onesignal';
 
 import { FirstRunPage, MainPage } from '../pages/pages';
 import { Settings, WebsocketService } from '../providers/providers';
@@ -19,22 +20,6 @@ export class MyApp {
 
   @ViewChild(Nav) nav: Nav;
 
-  /*
-  pages: any[] = [
-    { title: 'Tutorial', component: 'TutorialPage' },
-    { title: 'Welcome', component: 'WelcomePage' },
-    { title: 'Tabs', component: 'TabsPage' },
-    { title: 'Cards', component: 'CardsPage' },
-    { title: 'Content', component: 'ContentPage' },
-    { title: 'Login', component: 'LoginPage' },
-    { title: 'Signup', component: 'SignupPage' },
-    { title: 'Master Detail', component: 'ListMasterPage' },
-    { title: 'Menu', component: 'MenuPage' },
-    { title: 'Settings', component: 'SettingsPage' },
-    { title: 'Search', component: 'SearchPage' }
-  ]
-  */
-
   pages : any[] = [
     { title: 'MyRoom', 
       component: 'MyRoomPage', 
@@ -46,7 +31,6 @@ export class MyApp {
     { title: 'Notifications', component: 'NotificationsPage' },
     { title: 'Settings', component: 'SettingsPage' }
   ]
-
 
   constructor(
     private translate: TranslateService, 
@@ -60,7 +44,8 @@ export class MyApp {
     private ws : WebsocketService, 
     public camera: Camera, 
     public api: Api, 
-    private cfg : ConfigService) {
+    private cfg : ConfigService, 
+    public oneSignal : OneSignal) {
 
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -68,26 +53,60 @@ export class MyApp {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
 
-      // OneSignal Code start:
-    // Enable to debug issues:
-    // window["plugins"].OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
-
-
     var callbackForNotifications = function(jsonData) {
-        console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+        alert('notificationOpenedCallback: ' + JSON.stringify(jsonData));
     };
 
     
     try{
 
-      window["plugins"].OneSignal
+      this.oneSignal.startInit("56791b6b-28da-4dde-9ee0-6e4e057313d4");
 
-      .startInit("56791b6b-28da-4dde-9ee0-6e4e057313d4")
+      this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.None);
+      this.oneSignal.handleNotificationReceived().subscribe((data: any) => {
+      
+        console.log(JSON.stringify(data));
+
+        this.msg.toast(data.payload.body);
+
+      });
+
+    this.oneSignal.handleNotificationOpened().subscribe((data: any) => {
+
+      console.log(JSON.stringify(data));
+
+      let linkURLData = data.notification.payload.additionalData;
+      let targetPage = linkURLData.targetPage;
+      let params = linkURLData.params;
   
-      .handleNotificationOpened(callbackForNotifications)
+      this.nav.push(targetPage, params);
 
-      .endInit();
+      
 
+    });
+
+    this.oneSignal.endInit();
+
+    /*
+      var iosSettings = {};
+      iosSettings["kOSSettingsKeyAutoPrompt"] = true;
+      iosSettings["kOSSettingsKeyInAppLaunchURL"] = false;
+
+
+      window["plugins"].OneSignal.startInit("56791b6b-28da-4dde-9ee0-6e4e057313d4").iOSSettings(iosSettings)
+  
+      window["plugins"].OneSignal.handleNotificationOpened(callbackForNotifications)
+
+      window["plugins"].OneSignal.handleNotificationReceived()
+      window["plugins"].OneSignal.subscribe((msg) =>
+      {
+        // Log data received from the push notification service
+        alert('Notification received');
+        console.dir(msg);
+      })
+
+      window["plugins"].OneSignal.endInit();
+      */
 
     }
     catch(err){

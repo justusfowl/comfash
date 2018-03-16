@@ -32,11 +32,8 @@
               <ion-row class="session-tile-header-row" >
                 <ion-col col-1 class="user-avatar">
                   <div class="user-avatar" [style.backgroundImage]="'url(' + config.getHostBase() + item.itemCreatorAvatarPath +  + ')'">
-
                   </div>
-
                 </ion-col>
-
                 <ion-col class="session-tile-header-title"> 
                     <div class="session-tile-header-title-container">
                       <a class="stream-message-title-highlight-item item-creator" (click)="goToItemCreator(item)" > {{item.itemCreator}} </a> 
@@ -44,50 +41,69 @@
 
                       <a class="stream-message-title-highlight-item  item-owner" (click)="goToColOwner(item)" > @{{item.colOwner}}</a> 
                       <a class="stream-message-title-highlight-item  item-title" (click)="goToImgCollection(item)" >#{{item.collectionTitle}} </a> 
-
                     </div>
                     <p class="last-updated" >{{util.formatDateDiffToNow(item.refDate)}}</p>
+                </ion-col>
+                <ion-col col-1>
+                    <div (click)="goToSessionCompare(item)">
+                      <ion-icon name="arrow-forward" ></ion-icon>
+                    </div>
                 </ion-col>
               </ion-row>
             </ion-grid>
         </div>
         <div class="session-tile">
-
             <div class="session-tile-content" >  
               <video class="video-background" preload="auto" playsinline webkit-playsinline [poster]="config.getHostBase() + item.sessionThumbnailPath" [src]="config.getHostBase() + item.sessionItemPath" type="video/mp4"></video>
-            
-              <div class="session-item-vote"  [hidden]="item.itemType != 1" [class.vote-up]="item.voteType == 1" [class.vote-down]="item.voteType == 0" >
-                  <ion-icon name="thumbs-down" class="session-item-vote-icon"  [hidden]="item.voteType != 0" ></ion-icon>
-                  <ion-icon name="thumbs-up" class="session-item-vote-icon" [hidden]="item.voteType != 1"></ion-icon>
-                  
-              </div> 
+              <div class="session-item-comment "  [hidden]="item.itemType != 2">
+                  <ion-icon name="quote" class="session-item-comment-icon"></ion-icon>                    
+                  {{item.commentText}}
+              </div>
+
+              <div class="session-item-comment "  [hidden]="item.itemType != 1">
+                  <ion-icon name="quote" class="session-item-comment-icon"></ion-icon>                    
+                  <span class="session-item-vote emoticons" >
+                      {{item.getVoteIcon(item.voteType)}}    
+                  </span> 
+              </div>
+
+              
 
             </div>
-
               <ion-grid class="session-tile-details">
- 
-                <div class="session-item-comment"  [hidden]="item.itemType != 2">
-                    <ion-icon name="quote" class="session-item-comment-icon"></ion-icon>
-                    
-                    {{item.commentText}}
-                </div>
-
-
                 <ion-row class="session-tile-row" >
                   <ion-col>
+                    <!--
                       <ion-icon name="thumbs-up" class="session-tile-details-icon"></ion-icon>
                       <font class="cntFigure">
-                          {{util.formatToPercent(item.votesAvg)}} ({{item.votesCtn}})
+                          {{util.formatToPercent(item.votesAvg)}} ()
                       </font>
-                     
+                    -->
+                      <button class="session-tile-info-btn"  ion-long-press [interval]="400" (click)="showReactions($event, item)"  ion-button icon-left clear small>
+                        
+                        <div class="emoticons session-tile-info-icon">
+                            {{item.getVoteIcon(item.myVoteType)}}
+                        </div>  
+                        {{item.myVoteTypeq}}
+                        <div>{{item.votesCtn}} Votes</div>
+                      </button>
+
+
                   </ion-col>
 
                   <ion-col> 
                     <div class="session-tile-info">
+                        <button (click)="like()" class="session-tile-info-btn"  ion-button icon-left clear small>
+                          
+                          <div class="cntFigure" >{{item.commentCtn}}</div>
+                          <ion-icon name="text"></ion-icon>
+                        </button>
+                        <!--
                         <font class="cntFigure">
                             {{item.commentCtn}}
                         </font>
                         <ion-icon name="text" class="session-tile-details-icon"></ion-icon>
+                      -->
                     </div>
                   </ion-col>
                 </ion-row>
