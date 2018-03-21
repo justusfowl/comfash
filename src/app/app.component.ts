@@ -22,10 +22,7 @@ export class MyApp {
 
   pages : any[] = [
     { title: 'MyRoom', 
-      component: 'MyRoomPage', 
-      params : {
-                  userId : this.auth.getUserId()
-                } 
+      component: 'MyRoomPage'
     },
     { title: 'FittingStream', component: 'FittingStreamPage' },
     { title: 'Notifications', component: 'NotificationsPage' },
@@ -40,7 +37,7 @@ export class MyApp {
     private statusBar: StatusBar, 
     private splashScreen: SplashScreen, 
     private msg : MsgService, 
-    private auth: AuthService, 
+    public auth: AuthService, 
     private ws : WebsocketService, 
     public camera: Camera, 
     public api: Api, 
@@ -53,35 +50,35 @@ export class MyApp {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
 
-    var callbackForNotifications = function(jsonData) {
-        alert('notificationOpenedCallback: ' + JSON.stringify(jsonData));
-    };
-
     
     try{
-
+      
       this.oneSignal.startInit("56791b6b-28da-4dde-9ee0-6e4e057313d4");
 
       this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.None);
       this.oneSignal.handleNotificationReceived().subscribe((data: any) => {
-      
-        console.log(JSON.stringify(data));
 
-        this.msg.toast(data.payload.body);
+        let message = data.payload.body;
+        this.msg.toast(message);
 
+        this.msg.newMessages.push(message);
+        
       });
 
     this.oneSignal.handleNotificationOpened().subscribe((data: any) => {
 
       console.log(JSON.stringify(data));
 
-      let linkURLData = data.notification.payload.additionalData;
+      let linkURLData = data.notification.payload.additionalData.linkUrl;
       let targetPage = linkURLData.targetPage;
       let params = linkURLData.params;
-  
-      this.nav.push(targetPage, params);
 
-      
+      if (this.auth.getAuthStatus()){
+        this.nav.push(targetPage, params);
+      }else{
+        this.nav.setRoot("LoginPage");
+      }
+
 
     });
 
@@ -210,8 +207,11 @@ export class MyApp {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
 
-    if (page.params){
-      this.nav.setRoot(page.component, page.params);
+    if (page.component == 'MyRoomPage'){
+      let params = {
+        userId : this.auth.getUserId()
+      }
+      this.nav.setRoot(page.component, params);
     }else{
       this.nav.setRoot(page.component);
     }

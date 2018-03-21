@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { IonicPage, NavParams, ViewController } from 'ionic-angular';
 import { Api } from '../../providers/providers';
-import { Vote } from '../../models/datamodel';
  
 @IonicPage()
 @Component({
@@ -13,10 +12,8 @@ export class ReactionsPage {
     hasVote : boolean = false;
  
     constructor(
-      private navCtrl: NavController, 
       private navParams: NavParams, 
-      private viewCtrl: ViewController, 
-      private api: Api) {
+      private viewCtrl: ViewController) {
 
 
         let hasVote  = navParams.get('hasVote');

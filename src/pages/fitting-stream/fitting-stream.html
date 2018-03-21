@@ -60,11 +60,14 @@
                   {{item.commentText}}
               </div>
 
-              <div class="session-item-comment "  [hidden]="item.itemType != 1">
-                  <ion-icon name="quote" class="session-item-comment-icon"></ion-icon>                    
-                  <span class="session-item-vote emoticons" >
+              <div class="session-item-vote "  [hidden]="item.itemType != 1">     
+                  <i [className]="'fas session-item-vote-foreign-vote fa-' + item.getVoteIcon(item.voteType)" ></i>            
+                  <!--
+                  <span class="emoticons session-item-vote-foreign-vote" >
                       {{item.getVoteIcon(item.voteType)}}    
                   </span> 
+
+                -->
               </div>
 
               
@@ -80,11 +83,9 @@
                       </font>
                     -->
                       <button class="session-tile-info-btn"  ion-long-press [interval]="400" (click)="showReactions($event, item)"  ion-button icon-left clear small>
-                        
-                        <div class="emoticons session-tile-info-icon">
-                            {{item.getVoteIcon(item.myVoteType)}}
-                        </div>  
-                        {{item.myVoteTypeq}}
+
+                        <i [className]="'fas session-tile-info-icon fa-' + item.getVoteIcon(item.myVoteType)" ></i> 
+
                         <div>{{item.votesCtn}} Votes</div>
                       </button>
 

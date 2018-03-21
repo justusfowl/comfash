@@ -11,6 +11,7 @@
     <ion-title >
       {{ 'LIST_MASTER_TITLE' | translate }}
       <p class="room-user-Id">@{{roomUserId}}</p>
+
     </ion-title>
 
     <ion-buttons end>
@@ -24,6 +25,15 @@
 
 </ion-header>
 
+
+<button color="primary" class="cf-fab-btn left" (click)="addItem()" *ngIf="auth.getUserId() == roomUserId">
+    <ion-icon class="cf-fab-btn-icon" name="add"></ion-icon>
+</button>
+
+<button color="primary" class="cf-fab-btn right" *ngIf="auth.getUserId() == roomUserId" [disabled]="api.getSelectedCollectionId().isSelected" (click)="captureToCollection()">
+    <ion-icon class="cf-fab-btn-icon" name="videocam"></ion-icon>
+</button>
+
 <ion-content>
   
   <ion-refresher (ionRefresh)="api.getCollections(roomUserId, ($event.complete()))">
@@ -35,10 +45,15 @@
     </ion-refresher-content>
   </ion-refresher> 
 
+ 
 
+
+<!--
   <ion-fab class="fab-button left" *ngIf="auth.getUserId() == roomUserId">
-      <button ion-fab class="swipe-btn" (click)="addItem()">
-          <ion-icon class="swipe-icon" name="add"></ion-icon>
+      <button ion-fab (click)="addItem()">
+          <ion-icon name="add"></ion-icon>
+
+         
         </button>
     </ion-fab>
 
@@ -48,7 +63,7 @@
         <ion-icon class="swipe-icon" name="videocam"></ion-icon>
       </button>
   </ion-fab>
-  
+-->
 
    <ion-list>
     <ion-item-sliding #slideItem *ngFor="let item of api.collections">

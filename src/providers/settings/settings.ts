@@ -13,8 +13,8 @@ export class Settings {
   _defaults: any;
   _readyPromise: Promise<any>;
 
-  constructor(public storage: Storage, defaults: any) {
-    this._defaults = defaults;
+  constructor(public storage: Storage) {
+    //this._defaults = defaults;
   }
 
   load() {

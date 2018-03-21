@@ -51,14 +51,13 @@
 
                 <ion-col col-4 class="voting-btn">
                     <button class="session-menu-btn right" [class.active]="session.myVote" ion-long-press [interval]="400" (click)="showReactions($event, session)"  ion-button icon-left clear small>
-                        <div class="emoticons session-menu-btn-inner">
-                            {{getMyVoteIcon(session)}}
-                        </div>  
+
+                        <i [className]="'fas session-menu-btn-inner fa-' + session.getMyVoteIcon()" ></i> 
+
                       </button>
                   </ion-col>
               </ion-row>
             </ion-grid>
-
             <div class="compare-pic-comment" *ngFor="let comment of session.comments" (click)="selectComment(i, comment)" [class.active]="checkCommentActive(comment)" [hidden]="comment.calculateDisplay(prcSessionItem)" [style]="sanitizer.bypassSecurityTrustStyle(comment.getScalledCommentPos('row-compare-items',session))" >
             </div>
 

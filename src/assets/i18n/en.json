@@ -60,7 +60,7 @@
   "COLLECTIONTITLE" : "Title of the collection",
   "PUBLIC": "Public",
 
-  "BLANK_CARD_ADD_SESSION" : "Session hinzufügen",
+  "BLANK_CARD_ADD_SESSION" : "Add session",
   "BLANK_CARD_NO_SESSION_NO_OWNER" : " has not added any session",
 
   "ALERT_DELETE_TITLE" : "Remove session", 
@@ -83,9 +83,17 @@
   "FITTING_STREAM_TITLE" : "FittingStream", 
 
   "NOTIFICATIONS" : "Notifications", 
+  "NEW_NOTIFICATION_FROM" : "New notification from: ",
 
   "COMMENT_CREATE_TITLE" : "Comment", 
 
-  "STREAM_HAS_REACTED_TO" : " reacts to ", 
-  "STREAM_HAS_VOTED" : " rates "
+
+
+
+
+  "COL_HAS_INVITED" : " asks for support of ",
+  "HAS_REACTED_TO" : " reacts to ", 
+  "HAS_VOTED" : " rates "
+
+
 }

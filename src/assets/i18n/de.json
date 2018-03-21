@@ -71,10 +71,15 @@
   "FITTING_STREAM_TITLE" : "FittingStream", 
 
   "NOTIFICATIONS" : "Benachrichtigungen", 
+  "NEW_NOTIFICATION_FROM" : "Neue Nachricht von: ",
 
   "COMMENT_CREATE_TITLE" : "Kommentar", 
 
-  "STREAM_HAS_REACTED_TO" : " reagiert auf ", 
-  "STREAM_HAS_VOTED" : " bewertet "
+
+
+
+  "COL_HAS_INVITED" : " bittet um Unterstützung bei ",
+  "HAS_REACTED_TO" : " reagiert auf ", 
+  "HAS_VOTED" : " bewertet "
 
 }

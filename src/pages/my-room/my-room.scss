@@ -24,4 +24,29 @@ page-my-room {
         text-align: center;
         font-size: 50px;
     }
+
+    .cf-fab-btn{
+        position: fixed;
+        bottom: 15px; 
+        border-radius: 50px;
+        color: white;
+        z-index:9999;
+        height: 50px; 
+        width: 50px;
+        background-color: color($colors, primary, base);
+    }
+
+    .cf-fab-btn.left{
+        left: 15px;
+    }
+
+    .cf-fab-btn.right{
+        right: 15px;
+    }
+
+    .cf-fab-btn-icon{
+        width: 100%;
+        text-align: center;
+        font-size: 30px;
+    }
 }

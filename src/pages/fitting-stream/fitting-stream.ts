@@ -168,13 +168,13 @@ export class FittingStreamPage {
 
     switch(item.itemType) {
       case 1:
-          msg = this.translate.instant('STREAM_HAS_VOTED');
+          msg = this.translate.instant('HAS_VOTED');
           break;
       case 2:
-          msg = this.translate.instant('STREAM_HAS_REACTED_TO');
+          msg = this.translate.instant('HAS_REACTED_TO');
           break;
       default:
-        msg = this.translate.instant('STREAM_HAS_REACTED_TO');
+        msg = this.translate.instant('HAS_REACTED_TO');
     }
 
     return msg;

@@ -160,7 +160,13 @@ html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: 
     .session-tile-info-icon{
         padding-left: 5px; 
         padding-right: 5px;
-        font-size: 22px;
+        font-size: 15px;
+    }
+
+
+    .session-tile-info-icon.voteActive{
+        color: color($colors, primary, base);
+        font-size: 20px;
     }
 
     .cntFigure{
@@ -212,6 +218,10 @@ html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: 
 
     .fab-button.right{
         right: 20px; 
+    }
+
+    .button{
+        border-radius: 0;
     }
 
     // tile header 

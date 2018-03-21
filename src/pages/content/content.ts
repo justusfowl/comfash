@@ -361,7 +361,7 @@ export class ContentPage implements AfterViewInit {
       let myVote : Vote = session.myVote;
       return myVote.getVoteIcon(myVote.voteType);
     }catch(err){
-      return 'K';
+      return 'thumbs-up';
     }
   }
 
@@ -397,7 +397,7 @@ export class ContentPage implements AfterViewInit {
         // unvote = voteType = 0
 
         this.api.deleteVote(this.api.selectedCollection.getId(), session.getId()).subscribe( data => {
-          delete session.myVote;
+          session.removeMyVote();
         })
 
         // this.api.unvote();

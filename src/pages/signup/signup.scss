@@ -2,14 +2,19 @@
 
 page-signup {
 
+  .content, .content-ios{
+    background-color: $background-color;
+    background-image: unset;
+  }
+
     position: absolute !important; 
     top: 50% !important; 
     opacity: 0.95 !important; 
 
   .main-cont{
-    height: 100vh; 
-    background-color: rgba($background-color,0.8) !important;
-    padding-top: 40vh; 
+    //height: 100vh; 
+    //background-color: rgba($background-color,0.8) !important;
+    //padding-top: 40vh; 
   }
 
   .header{

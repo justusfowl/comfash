@@ -45,7 +45,7 @@
           </ion-col>
 
           <ion-col class="message-body"> 
-              {{message.messageBody}}
+              @{{message.getAuthorName()}} {{ message.messageBody | translate }} #{{message.collectionTitle}}
               <p class="message-details" >{{getAuthorText(message)}}, {{util.formatDateDiffToNow(message.messageCreated)}}</p>
           </ion-col>
           <ion-col col-1 class="arrow-icon">

@@ -2,6 +2,11 @@
 
 page-login {
 
+    .content, .content-ios{
+        background-color: $background-color;
+        background-image: url('../assets/img/overlay.png');
+      }
+
     overflow-y: hidden;
 
     .hangers-bg{
@@ -18,18 +23,17 @@ page-login {
     .login-form{ 
         position: relative;
         top: 60%;
-        background: $background-color;
+        //background: $background-color;
         z-index: 6;
         opacity: 0.8;
-        height:80vh;
     } 
 
     .comfash-logo{
         position: absolute;
-        top: 7%;
+        top: 0;
         margin: auto;
-        z-index: 2;
-        background: url('../assets/img/cf_logo.png') no-repeat transparent;
+        z-index: 9;
+        background: url('../assets/img/cf_logo_pink.png') no-repeat transparent;
         background-size: 70%;
         background-position: center center;
         width: 100%;

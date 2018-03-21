@@ -157,7 +157,7 @@ page-content{
     }
 
     .session-menu-btn{
-        color: $background-color-light;
+        color: rgba($background-color-light, 0.5);
         font-size: 20px; 
         width:100%;
         height:30px;
@@ -173,10 +173,9 @@ page-content{
     }
 
     .session-menu-btn.active, .session-menu-btn-inner.active{
-        background-color: $background-color;
+        background-color: rgba(color($colors, text, base), 0.2);
+        color: color($colors, primary-accent, base);
     }
-
-
 
     .comment-list{
         position: fixed; 

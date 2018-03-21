@@ -23,6 +23,12 @@
 
 <ion-content padding>
 
+  <ion-list-header>
+    
+    Application settings
+    
+  </ion-list-header>
+
     <ion-list>
         <ion-item>
           <ion-label>Autoplay FittingStream</ion-label>
@@ -30,6 +36,30 @@
             [(ngModel)]='config.autoPlayStream'
             ></ion-toggle>
         </ion-item>
+
+
       </ion-list>
+
+      <ion-list-header>
+    
+        Dev settings
+        
+      </ion-list-header>
+    
+      <ion-list>
+
+  
+          <ion-item>
+            <ion-label>Env: {{config.getEnvironment()}}</ion-label>
+            
+          </ion-item>
+  
+          <ion-item text-wrap>
+            <ion-label>APIBase: {{config.getAPIBase()}} </ion-label>
+            
+          </ion-item>
+  
+        </ion-list>
+        
 
 </ion-content>

@@ -1,17 +1,9 @@
-import { Component, Sanitizer } from '@angular/core';
-import { DomSanitizer } from "@angular/platform-browser";
-
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform, ViewController } from 'ionic-angular';
-
 import { Session } from '../../models/datamodel';
-
 import { CameraPreview, CameraPreviewOptions } from '@ionic-native/camera-preview';
-
 import { Api, ConfigService } from '../../providers/providers';
-
 import { FileTransfer, FileUploadOptions } from '@ionic-native/file-transfer';
-import { File } from '@ionic-native/file';
-
 import { AuthService } from '../../providers/providers'
 
 @IonicPage({
@@ -261,13 +253,8 @@ export class CapturePage {
     console.log("navigating back");
     this.stopPreviewCam();
 
-    if (this.srcNav == 'session' || this.srcNav == undefined){
-      this.navCtrl.setRoot('ImgCollectionPage', {
-        collectionId : this.collectionId
-      });
-    }else if (this.srcNav == 'myRoom'){
-      this.navCtrl.setRoot('MyRoomPage');
-    }
+    this.navCtrl.pop();
+
    }
 
 }

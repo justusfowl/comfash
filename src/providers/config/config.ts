@@ -28,6 +28,9 @@ export class ConfigService {
 
     }
 
+    getEnvironment(){
+        return this.environment;
+    }
 
     getHostURL (){
         return this.hostURL;

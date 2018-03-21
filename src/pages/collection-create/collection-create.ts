@@ -39,11 +39,6 @@ export class CollectionCreatePage {
 
   }
 
-  makePrivate(){
-    console.log("make private not implemented yet");
-    document.getElementById('container-access-groups').classList.toggle("hidden")
-  }
-
   isReadyToSave(){
     if (this.newCollectionTitle.length > 0){
       return true; 
@@ -85,9 +80,7 @@ export class CollectionCreatePage {
       this.api.getUser(userSearch).subscribe(users => {
         comp.userSearchList = users;
       }, 
-      error => {
-        console.log("error in searching the users")
-      });
+      error => this.api.handleAPIError(error));
     }
   }
 

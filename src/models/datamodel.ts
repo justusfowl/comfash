@@ -2,21 +2,21 @@
 
 
 let getVoteIcon = function (voteType){
-  let icon = "K";
+  let icon = "thumbs-up";
 
   if (voteType){
     switch (voteType) {
       case -50:
-          icon = "3";
+          icon = "frown voteActive";
           break;
       case 25:
-          icon = "2";
+          icon = "meh voteActive";
           break;
       case 75:
-          icon = "K";
+          icon = "thumbs-up voteActive";
           break;
       case 100:
-          icon = "B";
+          icon = "heart voteActive";
           break;
   }
   }
@@ -171,6 +171,8 @@ export class Session {
   myVote : Vote;
   hasVote : boolean = false;
 
+  voteStats : any; 
+
   constructor(fields : any) {
     this.userId = fields.userId  || console.warn("no userId passed to session constructor"); 
     this.sessionId = fields.sessionId || null;
@@ -181,6 +183,8 @@ export class Session {
     this.height = fields.height || 0;
     this.width = fields.width || 0;
     this.sessionThumbnailPath = fields.sessionThumbnailPath || '/img/hangersbg.png';
+
+    this.voteStats = fields.voteStats || {"count" : 0, "avg" : null};
 
 
     // per default there is not any vote by the user but if there is, parse it
@@ -217,12 +221,16 @@ export class Session {
         return voteItem;
       }
     });
+
+    this.getMyVote();
   }
 
-  getMyVote(userId : string){
+  getMyVote(userId = "deprecated"){
+
+    let myUserId = this.userId;
 
     let getHandler = function getVoteFindHandler(vote){
-      return vote.getUserId() == userId;
+      return vote.getUserId() == myUserId;
     }
 
     let myVote = this.votes.find(getHandler);
@@ -234,8 +242,23 @@ export class Session {
 
   }
 
+  getMyVoteIcon(){
+    try {
+      let myVote : Vote = this.myVote;
+      return myVote.getVoteIcon(myVote.voteType);
+    }catch(err){
+      return 'thumbs-up';
+    }
+  }
+
   setMyVote(vote : Vote){
     this.myVote = vote;
+    this.hasVote = true;
+  }
+
+  removeMyVote(){
+    delete this.myVote;
+    this.hasVote = false;
   }
 
   getId(){
@@ -513,6 +536,7 @@ export class Comment {
     messageCreated : Date;
     linkUrl : any;
     sessionThumbnailPath : string;
+    collectionTitle : string;
   
   
     constructor(fields : any) {
@@ -524,6 +548,11 @@ export class Comment {
       this.linkUrl = JSON.parse(fields.linkUrl);
       this.messageCreated = fields.messageCreated;
       this.sessionThumbnailPath = fields.sessionThumbnailPath  || '/img/hangersbg.png';
+      this.collectionTitle = fields.collectionTitle;
+    }
+
+    getAuthorName(){
+      return this.senderName;
     }
 
     getMessage() : string{
