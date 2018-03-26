@@ -13,7 +13,21 @@ export class UtilService {
 
     formatToPercent(floatVal){
 
-        return (floatVal * 100 ).toFixed(0) + "%";
+        try{
+            return (floatVal * 100 ).toFixed(0) + "%";
+        }catch(err){
+            return " - %";
+        }
+
+    }
+
+    formatIntToPercent(intVal){
+        try{
+            return (intVal).toFixed(0) + "%";
+        }catch(err){
+            return " - %";
+        }
+        
     }
 
 

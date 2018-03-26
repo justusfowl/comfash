@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angu
 
 import { Session } from '../../models/datamodel';
 
-import { Api, ConfigService, MsgService, AuthService } from '../../providers/providers';
+import { Api, ConfigService, MsgService, AuthService, UtilService } from '../../providers/providers';
 
 @IonicPage({
   segment: "imgCollection/:collectionId", 
@@ -16,6 +16,7 @@ import { Api, ConfigService, MsgService, AuthService } from '../../providers/pro
 export class ImgCollectionPage implements OnInit{
 
   selectedCollectionId : number;
+  sortDirection : boolean = true;
 
   constructor(
     public navCtrl: NavController, 
@@ -24,7 +25,8 @@ export class ImgCollectionPage implements OnInit{
     public api : Api, 
     public config : ConfigService, 
     public msg : MsgService, 
-    public auth: AuthService) {
+    public auth: AuthService, 
+    public util: UtilService) {
     
     let collectionId = navParams.get('collectionId'); 
 
@@ -41,6 +43,8 @@ export class ImgCollectionPage implements OnInit{
         if (loadCollection.isQry){
             comp.api.handleLoadCollection(data);
         }
+
+        this.sortSessionsByVotes();
 
       },
       error => {
@@ -99,6 +103,33 @@ export class ImgCollectionPage implements OnInit{
 
     this.msg.presentConfirm(acceptHandler.bind(this))
 
+  }
+
+  sortSessionsByVotes(){
+
+    let factor;
+
+    if (this.sortDirection){
+      this.sortDirection = false;
+      factor = -1;
+    }else{
+      this.sortDirection = true;
+      factor = 1;
+    }
+    
+
+    // Sortierung nach Wert
+    this.api.selectedCollection.sessions.sort(function (a, b) {
+ 
+      if (a.voteStats.avg > b.voteStats.avg) {
+        return 1 * factor;
+      }
+      if (a.voteStats.avg < b.voteStats.avg) {
+        return -1 * factor;
+      }
+      // a muss gleich b sein
+      return 0;
+    });
   }
 
   navBack(){

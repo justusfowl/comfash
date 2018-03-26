@@ -41,6 +41,7 @@
     "cordova": "^8.0.0",
     "cordova-background-video": "git+https://github.com/mlingos/backgroundvideo.git",
     "cordova-ios": "4.5.4",
+    "cordova-plugin-camera": "^4.0.2",
     "cordova-plugin-camera-preview": "^0.9.0",
     "cordova-plugin-device": "^2.0.1",
     "cordova-plugin-file": "^6.0.1",
@@ -85,7 +86,8 @@
         "CAMERA_USAGE_DESCRIPTION": " ",
         "MICROPHONE_USAGE_DESCRIPTION": " "
       },
-      "onesignal-cordova-plugin": {}
+      "onesignal-cordova-plugin": {},
+      "cordova-plugin-camera": {}
     },
     "platforms": [
       "ios"

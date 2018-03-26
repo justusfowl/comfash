@@ -1,23 +1,6 @@
 @import "../../theme/variables";
 
 
-page-content-turntable{
-    .turntable {
-        display: inline-block;
-        margin: 0px; }
-      .turntable ul {
-        padding: 0px;
-        margin: 0px; }
-      .turntable ul li {
-        list-style-type: none;
-        display: none; }
-      .turntable ul li img {
-        width: 100%; }
-      .turntable ul li.active {
-        display: block; }
-}
-
-
 page-content{
 
     .loading-icon-box{
@@ -49,8 +32,16 @@ page-content{
         animation: swinging 2.5s ease-in-out forwards infinite;
     }
 
+    .votes-stats-container{
+        display: flex; 
+        align-items: center;
+    }
 
-
+    .votes-stats{
+        font-size: 12px;
+        width: 100%; 
+        text-align: center;
+    }
 
 
     .col{
@@ -169,11 +160,11 @@ page-content{
     }
 
     .session-menu-btn-inner{
-        font-size: 30px;
+        font-size: 20px;
     }
 
     .session-menu-btn.active, .session-menu-btn-inner.active{
-        background-color: rgba(color($colors, text, base), 0.2);
+        /*background-color: rgba(color($colors, text, base), 0.2);*/
         color: color($colors, primary-accent, base);
     }
 

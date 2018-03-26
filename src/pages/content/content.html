@@ -46,14 +46,17 @@
 
                 </ion-col>
 
-                <ion-col>
+                <ion-col class="votes-stats-container">
+                  <div class="votes-stats" [hidden]="!session.voteStats.count">
+                      {{util.formatIntToPercent(session.voteStats.avg)}} / {{session.voteStats.count}}
+                      <ion-icon name="thumbs-up" ></ion-icon>
+                  </div>
+                   
                 </ion-col>
 
                 <ion-col col-4 class="voting-btn">
                     <button class="session-menu-btn right" [class.active]="session.myVote" ion-long-press [interval]="400" (click)="showReactions($event, session)"  ion-button icon-left clear small>
-
                         <i [className]="'fas session-menu-btn-inner fa-' + session.getMyVoteIcon()" ></i> 
-
                       </button>
                   </ion-col>
               </ion-row>

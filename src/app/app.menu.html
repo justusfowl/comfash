@@ -20,10 +20,11 @@
             
         </div>
             <ion-list>
-            <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
+            <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)" [hidden]="p.title=='Login' && auth.getAuthStatus()">
                 {{p.title}}
             </button>
-            <button menuClose ion-item (click)="doLogout()">
+
+            <button menuClose ion-item (click)="doLogout()" [hidden]="!auth.getAuthStatus()">
             {{ 'LOGOUT' | translate }}
             </button>
             </ion-list>

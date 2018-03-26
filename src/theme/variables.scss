@@ -4,7 +4,11 @@ $font-path: "../assets/fonts";
 $fa-font-path : $font-path + "/font-awesome";
 
 @import "../assets/css/fa-scss/fontawesome.scss";
+
 @import "../assets/css/fa-scss/fa-solid.scss";
+@import "../assets/css/fa-scss/fa-regular.scss";
+
+// @import "../assets/css/font-roboto/roboto-font.scss";
 
 @import "ionic.globals";
 
@@ -102,3 +106,5 @@ $popover-md-width: 95%;
 
 @import "roboto";
 @import "noto-sans";
+
+$font-family-base: "Roboto";

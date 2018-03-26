@@ -31,7 +31,7 @@ export class LoginPage {
     public toastCtrl: ToastController,
     public translateService: TranslateService, public modalCtrl: ModalController, public menu: MenuController, private msg: MsgService) {
 
-    this.menu.enable(false,'mainmenu');
+    //this.menu.enable(false,'mainmenu');
 
     this.translateService.get('LOGIN_ERROR').subscribe((value) => {
       this.loginErrorString = value;

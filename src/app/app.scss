@@ -19,6 +19,7 @@
 // automatically applied to the <body> element in the app.
 
 
+
 @font-face {
     font-family: 'Emoticons';
     font-weight: 300;
@@ -46,14 +47,49 @@
 
 html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: transparent !important; }
 
-.flag-compare{
+.flag{
     position: absolute; 
     height: 40px; 
     width: 30px; 
     display: flex; 
     align-items: center; 
-    right: 5px; 
     background: color($colors, light-grey, base);
+}
+
+.flag-compare{
+    right: 5px; 
+  }
+
+  .flag-vote{
+    right: 45px; 
+  }
+
+  .flag-vote.highly-rated{
+    height: 50px; 
+    width: 40px;
+    background: color($colors, primary, base);
+  }
+
+  .flag-vote-figure{
+      font-size: 12px;
+      width: 100%; 
+      text-align: center; 
+      position: absolute; 
+      top: 8px;
+  }
+
+
+  .flag-vote-figure.highly-rated{
+      font-size: 14px;
+  }
+
+  .flag-vote-icon{
+    position: absolute; 
+    bottom: 2px;
+    color: white;
+    font-size: 13px;
+    width: 100%; 
+    text-align: center; 
   }
   
   .flag-icon{
@@ -66,12 +102,20 @@ html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: 
     color: white;
   }
   
-  .flag-compare.active{
+  .flag.active{
     background: color($colors, primary, base);
   }
   
   .footer-btns{
     text-align: center;
+  }
+
+  .footer-btns-button{
+      width: 48%;
+  }
+
+  .footer-btns-button.left{
+
   }
 
   .content, .content-ios{

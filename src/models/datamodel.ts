@@ -242,6 +242,18 @@ export class Session {
 
   }
 
+  getIsHighlyRated(){
+    try{
+      if (this.voteStats.count > 0 && this.voteStats.avg > 60){
+        return true; 
+      }else{
+        return false;
+      }
+    }catch(err){
+      return false;
+    }
+  }
+
   getMyVoteIcon(){
     try {
       let myVote : Vote = this.myVote;

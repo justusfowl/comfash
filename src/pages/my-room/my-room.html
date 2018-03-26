@@ -70,7 +70,7 @@
       <ion-item>
         <div class="session-tile" [style.backgroundImage]="'url(' + config.getHostBase() + item.getThumbnail() + ')'" (click)="openItem(item)">
 
-            <div id="flag_{{item._id}}" class="flag-compare" [class.active]="item.getId() === api.getSelectedCollectionId().selectedId">
+            <div id="flag_{{item._id}}" class="flag-compare flag" [class.active]="item.getId() === api.getSelectedCollectionId().selectedId">
                 <ion-icon id="flag-icon_{{item._id}}" name="videocam" class="photo-tile-details-icon flag-icon" [class.active]="item.getId() === api.getSelectedCollectionId().selectedId" ></ion-icon>
             </div>
 

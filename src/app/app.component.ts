@@ -26,7 +26,8 @@ export class MyApp {
     },
     { title: 'FittingStream', component: 'FittingStreamPage' },
     { title: 'Notifications', component: 'NotificationsPage' },
-    { title: 'Settings', component: 'SettingsPage' }
+    { title: 'Settings', component: 'SettingsPage' },
+    { title: 'Login', component: 'LoginPage' }
   ]
 
   constructor(
@@ -83,27 +84,6 @@ export class MyApp {
     });
 
     this.oneSignal.endInit();
-
-    /*
-      var iosSettings = {};
-      iosSettings["kOSSettingsKeyAutoPrompt"] = true;
-      iosSettings["kOSSettingsKeyInAppLaunchURL"] = false;
-
-
-      window["plugins"].OneSignal.startInit("56791b6b-28da-4dde-9ee0-6e4e057313d4").iOSSettings(iosSettings)
-  
-      window["plugins"].OneSignal.handleNotificationOpened(callbackForNotifications)
-
-      window["plugins"].OneSignal.handleNotificationReceived()
-      window["plugins"].OneSignal.subscribe((msg) =>
-      {
-        // Log data received from the push notification service
-        alert('Notification received');
-        console.dir(msg);
-      })
-
-      window["plugins"].OneSignal.endInit();
-      */
 
     }
     catch(err){

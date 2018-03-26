@@ -154,7 +154,7 @@ export class CapturePage {
     this.cameraPreview.switchCamera();
 
     if (this.captureCamera == 'front'){
-      this.captureCamera = 'back'; 
+      this.captureCamera = 'BACK'; 
     }else{
       this.captureCamera = 'front';
     }
