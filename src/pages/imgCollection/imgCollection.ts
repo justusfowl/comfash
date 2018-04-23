@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 
-import { Session } from '../../models/datamodel';
+import { Session, localSession } from '../../models/datamodel';
 
-import { Api, ConfigService, MsgService, AuthService, UtilService } from '../../providers/providers';
+import { Api, ConfigService, MsgService, AuthService, UtilService, LocalSessionsService } from '../../providers/providers';
 
 @IonicPage({
   segment: "imgCollection/:collectionId", 
@@ -18,6 +18,10 @@ export class ImgCollectionPage implements OnInit{
   selectedCollectionId : number;
   sortDirection : boolean = true;
 
+  collectionUserId : string;
+
+  localSessionsArray : Session[];
+
   constructor(
     public navCtrl: NavController, 
     navParams: NavParams, 
@@ -26,7 +30,8 @@ export class ImgCollectionPage implements OnInit{
     public config : ConfigService, 
     public msg : MsgService, 
     public auth: AuthService, 
-    public util: UtilService) {
+    public util: UtilService, 
+    private localSessions : LocalSessionsService) {
     
     let collectionId = navParams.get('collectionId'); 
 
@@ -35,9 +40,12 @@ export class ImgCollectionPage implements OnInit{
     // entweder selectedCollection aus der API gibts (dann nimm) sonst ladt und pack in API
 
     let loadCollection : any = this.api.loadCollection(collectionId);
+
     let comp = this;
     loadCollection.observable.subscribe(
       (data) => {
+
+        this.collectionUserId = this.api.selectedCollection.getUserId();
 
         // only if the query has been made to the API, load data into the api object, otherwise take existing one
         if (loadCollection.isQry){
@@ -55,10 +63,6 @@ export class ImgCollectionPage implements OnInit{
   }
 
   ngOnInit(){
-
-  }
-
-  checkIsMyCollection(){
 
   }
 
@@ -86,6 +90,12 @@ export class ImgCollectionPage implements OnInit{
 
   }
 
+  captureCameraPicture(sourceType){
+    let collectionId = this.api.selectedCollection.getId(); 
+
+    this.localSessions.captureCameraPicture(collectionId, sourceType);
+  }
+
   compareItems(){
 
     this.navCtrl.push('ContentPage', {
@@ -93,6 +103,12 @@ export class ImgCollectionPage implements OnInit{
       collectionId : this.api.selectedCollection.getId(), 
       compareSessionIds: this.api.compareSessionIds
     });
+  }
+
+  deleteLocalSession(localSession : localSession){
+
+    this.localSessions.deleteLocalSession(localSession.getFileName())
+
   }
 
   deleteSession(session : Session){
@@ -121,10 +137,10 @@ export class ImgCollectionPage implements OnInit{
     // Sortierung nach Wert
     this.api.selectedCollection.sessions.sort(function (a, b) {
  
-      if (a.voteStats.avg > b.voteStats.avg) {
+      if (a.voteAvg > b.voteAvg) {
         return 1 * factor;
       }
-      if (a.voteStats.avg < b.voteStats.avg) {
+      if (a.voteAvg < b.voteAvg) {
         return -1 * factor;
       }
       // a muss gleich b sein

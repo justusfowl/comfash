@@ -19,8 +19,16 @@
           <button ion-button color="primary" block>{{ 'LOGIN_BUTTON' | translate }}</button>
         </div>
 
+        
+
       </ion-list>
     </form>
+
+    <button ion-button icon-right (click)="auth.facebookLogin()" hidden>
+      Login with
+      <ion-icon name="logo-facebook"></ion-icon>
+    </button>
+
 
     <div class="footer-signup" padding (click)="signUp()"> 
       New to comfash? Sign-up <a hred='#' >here</a>

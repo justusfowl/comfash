@@ -2,18 +2,19 @@ import { Component } from '@angular/core';
 import { IonicPage, ModalController, NavController, MenuController, NavParams } from 'ionic-angular';
 
 import { Collection } from '../../models/datamodel';
-import { Api, AuthService, MsgService, ConfigService } from '../../providers/providers';
+import { Api, AuthService, MsgService, ConfigService, UtilService, LocalSessionsService } from '../../providers/providers';
+
 
 
 @IonicPage({
-  segment: "my-room/:userId"
+  segment: "room/:userId"
 })
 @Component({
   selector: 'page-my-room',
   templateUrl: 'my-room.html'
 })
 export class MyRoomPage {
-
+  roomUserName : string = "";
   roomUserId : string = "";
   isMyRoom : boolean;
 
@@ -25,7 +26,9 @@ export class MyRoomPage {
     public msg : MsgService, 
     public auth: AuthService,
     public menu: MenuController,
-    public config: ConfigService) {
+    public config: ConfigService, 
+    public util : UtilService, 
+    private localSessions : LocalSessionsService) {
 
   }
 
@@ -42,7 +45,7 @@ export class MyRoomPage {
       userId = this.auth.getUserId();
     }
     
-    this.roomUserId = userId;
+    this.loadUserBase(userId);
 
     if (userId == this.auth.getUserId()){
       this.isMyRoom = true;
@@ -51,6 +54,18 @@ export class MyRoomPage {
     }
 
     this.api.getCollections(userId);
+  }
+
+  loadUserBase(userId) {
+    this.roomUserId = userId; 
+    this.api.getUserProfileBase(userId).subscribe(
+      (data : any) => {
+        this.roomUserName = data.userName;
+      },
+      error => {
+        this.api.handleAPIError(error);
+      }
+    );
   }
 
   /**
@@ -62,18 +77,23 @@ export class MyRoomPage {
     addModal.onDidDismiss(collection => {
       if (collection) {
 
-        let newCollection = new Collection(collection);
+        this.api.getCollections(this.auth.getUserId());
 
-        newCollection.sharedWithUsers = collection.sharedWithUsers;
+      }
+    })
+    
+    addModal.present();
+  }
 
-        this.api.addCollection(newCollection).subscribe(
-          (data) => {
-            this.api.getCollections(this.auth.getUserId());
-          },
-          error => {
-            this.api.handleAPIError(error);
-          }
-        );
+  itemSettings(collection : Collection, slidingItem) {
+    
+    slidingItem.close();
+
+    let addModal = this.modalCtrl.create('CollectionCreatePage', {"collection": collection})  ;
+    addModal.onDidDismiss(collection => {
+      if (collection) {
+
+        this.api.getCollections(this.auth.getUserId());
 
       }
     })
@@ -115,6 +135,15 @@ export class MyRoomPage {
       collectionId : item.getId()
     });
   }
+
+  takePictureToCollection(){
+
+    let collectionId = this.api.getSelectedCollectionId().selectedId; 
+
+    this.localSessions.captureCameraPicture(collectionId);
+
+  }
+
 
   captureToCollection(){
 

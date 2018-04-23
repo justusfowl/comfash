@@ -21,7 +21,7 @@ $fa-font-path : $font-path + "/font-awesome";
 // http://ionicframework.com/docs/v2/theming/overriding-ionic-variables/
 
 $text-color:        rgba(233,233,231,1);
-$background-color: rgba(51, 67, 75, 1); 
+$background-color: #33434b; 
 
 $background-color-dark: rgb(27, 38, 43);
 $background-color-light: #e8e8e8;
@@ -107,4 +107,4 @@ $popover-md-width: 95%;
 @import "roboto";
 @import "noto-sans";
 
-$font-family-base: "Roboto";
+$font-family-base: "Roboto" !default;

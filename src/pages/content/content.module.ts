@@ -4,18 +4,17 @@ import { IonicPageModule } from 'ionic-angular';
 
 import { ContentPage } from './content';
 
-import { LongPressModule } from 'ionic-long-press';
 
-
+import { DynamicSessionItemModule } from '../../comp/session-item/session-item.module';
 
 @NgModule({
   declarations: [
-    ContentPage,
+    ContentPage
   ],
   imports: [
     IonicPageModule.forChild(ContentPage),
     TranslateModule.forChild(), 
-    LongPressModule
+    DynamicSessionItemModule
   ],
   exports: [
     ContentPage

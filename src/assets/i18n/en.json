@@ -58,6 +58,7 @@
 
   "COLLECTION_CREATE_TITLE": "New Collection",
   "COLLECTIONTITLE" : "Title of the collection",
+  "COLLECTIONDESCRIPTION" : "Description",
   "PUBLIC": "Public",
 
   "BLANK_CARD_ADD_SESSION" : "Add session",
@@ -72,6 +73,8 @@
   "ITEM_ABOUT_PLACEHOLDER": "About",
 
   "DONE_BUTTON": "Done",
+  "SAVE_BUTTON" : "Save",
+
   "CANCEL_BUTTON": "Cancel",
   "DELETE_BUTTON": "Delete",
 
@@ -88,7 +91,9 @@
   "COMMENT_CREATE_TITLE" : "Comment", 
 
 
-
+  "SELECT" : "SELECT",
+  "DELETE" : "DELETE",
+  "SETTINGS": "SETTINGS",
 
 
   "COL_HAS_INVITED" : " asks for support of ",

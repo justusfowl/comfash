@@ -2,9 +2,13 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform, ViewController } from 'ionic-angular';
 import { Session } from '../../models/datamodel';
 import { CameraPreview, CameraPreviewOptions } from '@ionic-native/camera-preview';
-import { Api, ConfigService } from '../../providers/providers';
+import { Api, ConfigService, LocalSessionsService } from '../../providers/providers';
 import { FileTransfer, FileUploadOptions } from '@ionic-native/file-transfer';
-import { AuthService } from '../../providers/providers'
+import { AuthService } from '../../providers/providers'; 
+import { DomSanitizer } from '@angular/platform-browser';
+
+import { Camera } from '@ionic-native/camera';
+
 
 @IonicPage({
   segment: "capture/:collectionId"
@@ -41,6 +45,8 @@ export class CapturePage {
   newSession : Session;
   srcNav : any;  
 
+  previewPicture : any;
+
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams, 
@@ -48,20 +54,37 @@ export class CapturePage {
     public viewCtrl: ViewController,
     public api: Api, 
     private cameraPreview: CameraPreview, 
+    public camera: Camera,
     private transfer: FileTransfer, 
     public config : ConfigService, 
-    private auth: AuthService) {
-    
+    private auth: AuthService,
+    private localSessions : LocalSessionsService, 
+    private sanitizer:DomSanitizer) {
+
+    let userId = this.auth.getUserId();
+
     this.srcNav = navParams.get('srvNav'); 
 
     this.collectionId = navParams.get('collectionId');
 
     platform.ready().then(() => {
+
+
     
       this.startLiveCam();
       
     }); 
   }
+
+
+  testLoadLocalSession(filename){
+    let self = this;
+    this.localSessions.getLocalSession(filename).then(data => {
+          self.previewPicture = self.sanitizer.bypassSecurityTrustResourceUrl(data);
+          console.log(data.substr(0,25))
+    })
+  }
+
 
   startLiveCam(){
     this.cameraPreview.startCamera(this.cameraPreviewOpts).then(
@@ -78,12 +101,52 @@ export class CapturePage {
 
   }
 
+  getCameraPicture(){
+    let self = this; 
+
+    if (Camera['installed']()) {
+      this.camera.getPicture({
+        destinationType: this.camera.DestinationType.DATA_URL,
+        targetWidth: window.outerWidth,
+        targetHeight:window.outerHeight
+      }).then((data) => {
+
+        this.previewPicture = 'data:image/png;base64,' + data;
+
+        self.localSessions.storeImage(this.collectionId, data, "image/png");
+
+
+      }, (err) => {
+        alert('Unable to take photo');
+      })
+    } else {
+      console.log("click?"!);
+    }
+  }
+
+  takePicture(){
+
+    let self = this; 
+
+    let options = this.cameraPreviewOpts; 
+    options.width = options.width * 20;
+    options.height = options.height * 20;
+        // take a picture
+    this.cameraPreview.takePicture(options).then((imageData) => {
+      this.previewPicture = 'data:image/png;base64,' + imageData;
+
+      self.localSessions.storeImage(this.collectionId, imageData, "image/png");
+
+    }, (err) => {
+      console.log(err);
+    });
+
+  }
+
   stopPreviewCam(){
     this.cameraPreview.stopCamera();
   }
   
-  
-
   upload(fileData) {
 
   var comp = this;

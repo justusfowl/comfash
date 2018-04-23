@@ -39,10 +39,15 @@
     background-color: $background-color;
 } 
 
+.footer .toolbar-background-ios{
+    background-color:  color($colors, creme, base);
+}
+
 .toolbar-title.toolbar-title-ios,
 .toolbar-title.toolbar-title-wp,
 .toolbar-title.toolbar-title-md{
     color: map-get($colors,light);
+    font-weight: 200;
 }
 
 html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: transparent !important; }
@@ -161,7 +166,7 @@ html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: 
 
     .session-tile{
         position: relative;
-        height: 300px;
+        height: 400px;
         width: 100%;
         background-position: center center;
         background-size: cover;
@@ -186,6 +191,25 @@ html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: 
         bottom: -1px;
         padding: 5px;
     }
+
+    .session-tile-details .info .center{
+        text-align: center;
+    }
+
+    .session-tile-details .info .title{
+        font-family: Roboto; 
+        font-weight: 100;
+        font-size: 25px;
+        color: $text-color;
+    }
+
+    .session-tile-details .info .date{
+        font-size: 10px;
+        color: color($colors, light-grey, base);
+
+    }
+
+
 
     .session-tile-row{
         font-size: 14px; 
@@ -214,17 +238,26 @@ html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: 
     }
 
     .cntFigure{
-        color: color($colors, dark-text, base);
+        color: color($colors, text, base);
         padding-right: 5px; 
         padding-left: 5px;
     }
 
     .session-tile-details-icon{
-        color: color($colors, dark-text, base);
+        color: color($colors, text, base);
     }
 
     .swipe-btn{
         color: color($colors, dark-text, base);
+        width: 75px;
+    }
+
+    .swipe-btn span{
+        font-size:10px;
+    }
+
+    .swipe-btn.border-left{
+        border-left: 1px solid #ffffff42 !important;
     }
 
     .swipe-icon{
@@ -311,4 +344,5 @@ html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: 
 
 .popover-wrapper .popover-content {
     box-shadow: 0px 3px 15px 0px rgba(0,0,0,0.25);
+    border-radius: 0 !important;
 }

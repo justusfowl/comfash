@@ -6,10 +6,12 @@ import { AuthService } from './auth/auth';
 import { Settings } from './settings/settings';
 import { User } from './user/user';
 import { UtilService } from './util/util';
+import { LocalSessionsService } from './api/local.sessions';
 
 export {
     ConfigService,
     Api,
+    LocalSessionsService,
     MsgService,
     WebsocketService,
     AuthService,

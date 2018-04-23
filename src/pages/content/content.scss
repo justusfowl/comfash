@@ -3,6 +3,15 @@
 
 page-content{
 
+    .force-no-scroll{
+        position: fixed !important;
+        overflow: hidden !important; 
+    }
+
+    .scroll-content{
+        padding:0 !important;
+    }
+
     .loading-icon-box{
         position: fixed; 
 
@@ -32,203 +41,19 @@ page-content{
         animation: swinging 2.5s ease-in-out forwards infinite;
     }
 
-    .votes-stats-container{
-        display: flex; 
-        align-items: center;
-    }
-
-    .votes-stats{
-        font-size: 12px;
-        width: 100%; 
-        text-align: center;
-    }
-
-
-    .col{
-        padding: 0 !important;
-    }
-   
-    .video-container{
-        height: 100%;
-        overflow: hidden;
-    }
-
-    .video-background { /* class name used in javascript too */
-        width: 100%; /* width needs to be set to 100% */
-        height: 100%; /* height needs to be set to 100% */
-        object-position: center;
-        object-fit: cover;
-    }
-
-
     #row-compare-items{
-        height: calc(100vh - 40px);
-        position: fixed; 
-        top: 0;
-        transition: all 0.5s; 
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        z-index:120;
+        display: flex;
+        height: 80vh;
     }
 
-    #row-compare-items.comment-list-active{
-        height: calc(85vh - 40px);
+    session-item {
+        display: inline-flex;
     }
 
-    .compare-item-pic{
+    .session-item-item{
         height: 100%;
         width: 100%;
-        background-position: center center;
-        background-size: cover;
-        background-repeat: no-repeat;
+        object-fit: cover;
     }
-
-    .compare-item-pic{
-        display: flex; 
-        align-items: center;
-
-    }
-
-    .tmp-no{
-        position: absolute;
-        top: 20px;
-        width: 100%; 
-        text-align: center; 
-        font-size: 8px; 
-        color: #ffffffcf;
-    }
-
-    .compare-pic-comment{
-        position: absolute; 
-        padding: 4px;
-        background-color: $background-color;
-        background-image: url('../assets/img/hanger_white.png');
-        background-size: 20px 20px; 
-        background-repeat: no-repeat;
-        background-position: center center;
-        width: 30px; 
-        height: 30px;
-        border-radius: 10px; 
-        opacity: 0.3;
-    }
-
-    .compare-pic-comment.active{
-        opacity: 1;
-    }
-
-
-
-    .flag-comment{
-        position: absolute; 
-        top: 41%;
-        background-image: url('../assets/img/hanger_white.png');
-        background-size: cover; 
-        background-position: center center;
-        width: 20px; 
-        height: 20px;
-        transform: rotate(15deg);
-    }
-
-    .hanger-container{
-        width: 100%; 
-        margin-left: 5px; 
-        margin-right: 5px;
-    }
-
-    .session-details{
-        position: absolute; 
-        bottom: 0;
-        background-color: rgba(color($colors, primary, base), 0.8);
-        font-size: 150%;
-    }
-
-    .no-comments{
-        font-size: 10px;
-        color: color($colors, text, base);
-        padding-right: 5px
-    }
-
-    .session-menu-btn{
-        color: rgba($background-color-light, 0.5);
-        font-size: 20px; 
-        width:100%;
-        height:30px;
-        width: 65px;
-    }
-
-    .session-menu-btn.right{
-        float:right;
-    }
-
-    .session-menu-btn-inner{
-        font-size: 20px;
-    }
-
-    .session-menu-btn.active, .session-menu-btn-inner.active{
-        /*background-color: rgba(color($colors, text, base), 0.2);*/
-        color: color($colors, primary-accent, base);
-    }
-
-    .comment-list{
-        position: fixed; 
-        overflow: scroll; 
-        bottom: 40px; 
-        height: 0px;
-        width:100%;
-        transition: all 0.5s;
-        margin: 0;
-        background-color: $background-color-dark;
-    }
-
-    .comment-list.active{
-        height: 15vh;
-    }
-
-    .item-selected{
-        animation-name: comment-list-selected;
-        animation-duration: 0.5s
-    }
-
-    @keyframes comment-list-selected {
-        0% {background-color: $background-color-dark;}
-        20% {background-color: #e6b8b0;} 
-        100% {background-color: $background-color-dark;} 
-    }
-
-
-    .comment-list-item{
-        width: 100%; 
-        height: auto;
-        border-bottom: 1px solid #d2d1d124;
-        padding: 5px;
-        padding-top: 10px; 
-        font-size: 12px;
-    }
-
-    .comment-list-item-detail{
-        color: #a5a5a5;
-        text-align: right;
-        font-size: 10px;
-    }
-
-    .session-slider{
-        height: 30px !important;
-    }
-
-
-    .disable-session{
-        position: absolute; 
-        right: 10%; 
-        top: 3%; 
-        font-size: 20px; 
-        color: color($colors, primary, base);
-        z-index: 120;
-    }
-
-    .disable-session-btn{
-        background-color: transparent;
-    }
-    
-
-
 
 }

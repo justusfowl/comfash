@@ -13,9 +13,9 @@
       </button>
     </ion-buttons>
     <ion-buttons end>
-      <button ion-button (click)="done()" [disabled]="!isReadyToSave(newCollectionTitle)" strong>
+      <button ion-button (click)="saveCollection()" strong>
         <span color="primary" showWhen="ios">
-          {{ 'DONE_BUTTON' | translate }}
+          {{ 'SAVE_BUTTON' | translate }}
         </span>
         <ion-icon name="md-checkmark" showWhen="core,android,windows"></ion-icon>
       </button>
@@ -27,31 +27,46 @@
 <ion-content>
 
 
-    <ion-item>
-      <ion-label floating>{{ 'COLLECTIONTITLE' | translate }}</ion-label>
-      <ion-input name="newCollectionTitle" [(ngModel)]="newCollectionTitle" type="text"></ion-input>
-    </ion-item>
+    <form [formGroup]="collectionForm">
 
-    <ion-item>
-      <ion-label>{{ 'PUBLIC' | translate }}</ion-label>
-      <ion-toggle  [(ngModel)]="isPublic" ></ion-toggle>
-    </ion-item>
+      <ion-item>
+        <ion-label floating>{{ 'COLLECTIONTITLE' | translate }}</ion-label>
+
+        <ion-input  formControlName="collectionTitle" name="collectionTitle" type="text"></ion-input>
+
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>{{ 'COLLECTIONDESCRIPTION' | translate }}</ion-label>
+
+        <ion-input  formControlName="collectionDescription" name="collectionDescription" type="text"></ion-input>
+
+      </ion-item>
+
+      <ion-item>
+        <ion-label>{{ 'PUBLIC' | translate }}</ion-label>
+        <ion-select formControlName="privacyStatus" name="privacyStatus" >
+          <ion-option *ngFor="let o of privacyOptions" [value]="o.value" >{{o.option}}</ion-option>
+        </ion-select>
+      </ion-item>
+    
+    </form>
 
     <ion-item>
       <p>Einladen</p>
       <div class="selected-users-container">
-          <div class="selected-user" *ngFor="let userId of userIdsSelected" (click)="removeUser(userId)" >
-              {{userId}}
+          <div class="selected-user" *ngFor="let friend of sharedWithUsers; let i = index;" (click)="removeFriend(friend, i)" >
+              {{friend.userName}}
               <ion-icon name='close-circle'></ion-icon>
           </div>
       </div>
-      <ion-searchbar [(ngModel)]="userSearch" (ionInput)="getUserSearch($event)"></ion-searchbar>
+      <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="searchChanged($event)"></ion-searchbar>
     </ion-item>
 
-    <ion-item *ngFor="let user of userSearchList">
-        <div (click)="toggleUserInvite(user)" >
-          {{user.userId}}
-          <ion-icon name="checkmark" [hidden]="checkIfUserIsSelected(user)" item-right></ion-icon>
+    <ion-item *ngFor="let result of tmpSearchlist; let i = index;">
+        <div (click)="toggleFriend(result)" >
+            {{result.userName}}
+          <ion-icon name="checkmark" [hidden]="getIfCheckedHidden(result)" item-right></ion-icon>
         </div>
     </ion-item>
 

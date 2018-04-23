@@ -50,9 +50,10 @@ export class LoginPage {
 
   // Attempt to login in through our User service
   doLogin() {
-    
-    this.auth.login(this.account.userId, this.account.password).subscribe(
+
+    this.auth.login(this.account.userId, this.account.password).then(
       (data) => {
+
         this.msg.initMsgService();
         this.navCtrl.setRoot(MainPage, {
           userId : this.auth.getUserId()
@@ -60,16 +61,17 @@ export class LoginPage {
       },
       error => {
 
-      this.addInvalidPasswordStyle();
+        this.addInvalidPasswordStyle();
 
-      let toast = this.toastCtrl.create({
-        message: this.loginErrorString,
-        duration: 1000,
-        position: 'top'
-      });
-      toast.present();
+        let toast = this.toastCtrl.create({
+          message: this.loginErrorString,
+          duration: 1000,
+          position: 'top'
+        });
+        toast.present();
       }
     )
+
 
   }
 

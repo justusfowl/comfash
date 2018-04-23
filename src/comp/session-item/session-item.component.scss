@@ -1,0 +1,40 @@
+@import "../../theme/variables";
+
+
+session-item-image{
+
+    .session-item-container{
+        position: relative;
+    }
+
+    .session-details{
+        position: absolute; 
+        bottom: 0px;
+        background-color: #ffffff9c;
+    }
+
+    .right{
+        float: right !important;
+    }
+
+    .voting-btn{
+        display: flex; 
+        align-items: center;
+        color: color($colors, dark-text, base);
+        justify-content: space-between;
+    }
+
+    .session-menu-btn{
+        font-size: 2em; 
+        padding-right: 5px;
+        padding-left: 5px;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+
+    .session-menu-btn.active{
+        color: color($colors, primary, base);
+        border-radius: 2px; 
+        background-color: #d1d1d1;
+    }
+}

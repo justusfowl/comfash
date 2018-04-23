@@ -2,7 +2,7 @@ import { Component, Sanitizer, AfterViewInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, PopoverController } from 'ionic-angular';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { Collection, Session, Comment, Vote } from '../../models/datamodel';
-import { Api, AuthService, ConfigService, UtilService } from '../../providers/providers';
+import { Api, AuthService, ConfigService, UtilService, LocalSessionsService } from '../../providers/providers';
 import * as $ from 'jquery';
 
 window['$'] = window['jQuery'] = $;
@@ -20,7 +20,7 @@ window['$'] = window['jQuery'] = $;
 })
 export class ContentPage implements AfterViewInit {
 
-  compareItems : Session[] = [];
+  compareItems  = [];
   footerHangers = [];
   prcSessionItem = 10; 
   
@@ -45,7 +45,8 @@ export class ContentPage implements AfterViewInit {
     public sanitizer : Sanitizer, 
     private auth : AuthService, 
     public config : ConfigService, 
-    public util : UtilService) {
+    public util : UtilService, 
+    private localSession: LocalSessionsService) {
 
         this.compareItems.length = 0; 
 
@@ -65,33 +66,43 @@ export class ContentPage implements AfterViewInit {
           compareSessionIds = navParams.get('compareSessionIds');
         }
 
-        console.info("so far only deep links for sessions of the same collections are possible");
+        this.api.compareSessionIds = compareSessionIds;
 
-        let loadCollection : any = this.api.loadCollection(collectionId);
-        let comp = this;
+        let onlineSessionIds = compareSessionIds.filter(function (value){
+          if (!this.util.isTmpId(value)){
+            return value
+          }
+        }.bind(this));
 
-        loadCollection.observable.subscribe(
-          (data) => {
+        let localSessionIds = compareSessionIds.filter(function (value){
+          if (this.util.isTmpId(value)){
+            return value
+          }
+        }.bind(this));
 
-            // only if the query has been made to the API, load data into the api object, otherwise take existing one
-            if (loadCollection.isQry){
+        // get local sessions
+        let localSessions = this.localSession.loadLocalSessionByIds(localSessionIds);
+        
 
-              comp.api.handleLoadCollection(data);
-              
-              comp.api.compareSessionIds = compareSessionIds;
-              comp.api.compareSessions = comp.api.selectedCollection.getSessionsById(compareSessionIds);
-              
-            }
-            
-            // hangers must be calculated everytime
-            comp.calculateFooterHangers();
+        // load online session
+        this.api.getSessions(onlineSessionIds).subscribe(
+          (data : Session[]) => {
+
+            this.compareItems = localSessions;
+
+            data.forEach(element => {
+              let s = new Session(element);
+              this.compareItems.push(s);
+            });
+
           },
           error => {
-            comp.api.handleAPIError(error);
+            this.api.handleAPIError(error);
           }
-        )
+        );
 
    }
+
 
    ngAfterViewInit(){
     
@@ -109,6 +120,10 @@ export class ContentPage implements AfterViewInit {
           videos[i].pause()
         }
       }, 1500);
+   }
+
+   onCommentClick(event){
+     console.log("comment got clicked", event)
    }
    
    pressed(e, session : Session){
@@ -359,7 +374,8 @@ export class ContentPage implements AfterViewInit {
 
     try {
       let myVote : Vote = session.myVote;
-      return myVote.getVoteIcon(myVote.voteType);
+      console.warn("hier noch richtige icons einsetzen!")
+      return 'thumbs-up';
     }catch(err){
       return 'thumbs-up';
     }

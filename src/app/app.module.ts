@@ -16,12 +16,24 @@ import { File } from '@ionic-native/file';
 
 import { FileTransfer } from '@ionic-native/file-transfer';
 
-import { ConfigService, User, Api, MsgService, WebsocketService,  Settings, AuthService, UtilService } from '../providers/providers';
+import { 
+  ConfigService, 
+  User, 
+  Api, 
+  LocalSessionsService,
+  MsgService, 
+  WebsocketService,  
+  Settings, 
+  AuthService, 
+  UtilService } from '../providers/providers';
 
 import { AuthIntercept } from '../providers/api/authintercept'
 import { MyApp } from './app.component';
 
 import { OneSignal } from '@ionic-native/onesignal';
+
+import { Facebook } from '@ionic-native/facebook';
+
 
 
 //import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
@@ -64,6 +76,7 @@ export function createTranslateLoader(http: HttpClient) {
     AuthService,
     WebsocketService,
     Api,
+    LocalSessionsService,
     { provide: HTTP_INTERCEPTORS, useClass : AuthIntercept, multi: true},
     User,
     Camera,
@@ -73,7 +86,8 @@ export function createTranslateLoader(http: HttpClient) {
     // Keep this to enable Ionic's runtime error handling during development
     { provide: ErrorHandler, useClass: IonicErrorHandler }, 
     File, 
-    FileTransfer
-  ]
+    FileTransfer, 
+    Facebook
+  ],
 })
 export class AppModule { }

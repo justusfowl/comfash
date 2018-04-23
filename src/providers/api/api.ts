@@ -89,11 +89,24 @@ export class Api {
     }
   }
 
+  getCollectionDetails(collectionId : number){
+    return this.http.get<Collection>(this.url + "/imgcollection/" + collectionId + "/detail");
+  }
+
+  updateCollectionDetails(collection: Collection){
+    return this.http.put(this.url + '/' + "imgcollection/" + collection.getId(), collection)
+  }
+
   handleLoadCollection(data){
     if (data[0]){
             
       let loadedCol = new Collection(data[0]);
+
+      let collectionId = loadedCol.getId();
+    
       loadedCol.castSessions();
+
+
       this.selectedCollection = loadedCol;
 
     }else{
@@ -179,6 +192,14 @@ export class Api {
 
     });
 
+  }
+
+  getSessions(sessions : any){
+    let qryParam = {
+      "session" : sessions
+    }; 
+
+    return this.http.get<Session[]>(this.url + "/imgcollection/sessions/", {"params" : qryParam})
   }
 
   deleteSession(collection: Collection, session: Session){
@@ -270,6 +291,10 @@ export class Api {
 
       return this.http.get(this.url + '/' + "user" + "?userSearch=" + searchStr);
       
+  }
+
+  getUserProfileBase(userId : string){
+    return this.http.get(this.url + "/user/profile/" + userId)
   }
 
 
@@ -368,6 +393,10 @@ getTrendStream(options){
 
 post(endpoint: string, body: any, reqOpts?: any) {
     return this.http.post(this.url + '/' + endpoint, body, reqOpts);
+  }
+
+  postAuth(endpoint: string, body: any, reqOpts?: any) {
+    return this.http.post(endpoint, body, reqOpts);
   }
 
   

@@ -1,3 +1,39 @@
+
+<ion-content class="force-no-scroll" ion-fixed no-bounce no-scroll>
+    
+      <ion-buttons class="btn-header">
+        <button ion-button icon-only (click)="navBack()">
+          <ion-icon name="arrow-back"></ion-icon>
+        </button>
+      </ion-buttons>
+
+      <ion-row no-bounce no-scrolling id="row-compare-items"> 
+
+        <session-item 
+          *ngFor="let session of compareItems; let i = index;"
+          [type]="session.sessionItemType" 
+          [context]="session"
+          [height]="99"
+          [totalCnt]="compareItems.length" 
+          [index]="i"
+          (onCommentClick)="onCommentClick($event)"
+          >
+          
+        </session-item>
+      </ion-row>
+
+      <ion-list id="tag-list" class="tag-list" >
+          <div class="tag-list-item" *ngFor="let comment of getCommentsForSelectedSession();" [hidden]="comment.calculateDisplay(prcSessionItem)" (click)="highlightComment(comment)">
+                  {{comment.commentText}}
+                  <div class="comment-list-item-detail">
+                    {{comment.getUsername()}}, {{util.formatDateDiffToNow(comment.getDate())}}
+                  </div>
+          </div>
+      </ion-list>
+  
+  </ion-content>
+
+<!--
 <ion-content >
     
 
@@ -16,11 +52,6 @@
       <ion-col col *ngFor="let session of api.compareSessions; let i = index;">
           <div class="video-container" [style.width]="(100 / api.compareSessions.length) + 'vw'" ion-long-press [interval]="400" (onPressStart)="pressed($event, session)" >
 
-            <!--
-            <video  preload="auto"  playsinline webkit-playsinline type="video/mp4" muted>
-              <source src="https://player.vimeo.com/external/85569724.sd.mp4?s=43df5df0d733011263687d20a47557e4">
-            </video>
-            -->
             <div class="disable-session">
                 <button class="disable-session-btn" ion-button icon-only (click)="api.toggleCompareSession(session)">
                     <ion-icon name="close" ></ion-icon>
@@ -28,12 +59,6 @@
             </div>
 
             <video  class="video-background" autoplay preload="auto" playsinline webkit-playsinline  [poster]="config.getHostBase() + session.getThumbnail()" [src]="config.getHostBase() + session.getSessionItemPath()" type="video/mp4"></video>
-          
-            <!--
-            <div class="tmp-no">
-              % {{prcSessionItem}}, sess # {{session.getId()}} 
-            </div>
-          -->
 
             <ion-grid class="session-details">
               <ion-row>
@@ -48,7 +73,7 @@
 
                 <ion-col class="votes-stats-container">
                   <div class="votes-stats" [hidden]="!session.voteStats.count">
-                      {{util.formatIntToPercent(session.voteStats.avg)}} / {{session.voteStats.count}}
+                      {{util.formatIntToPercent(session.voteAvg)}} / {{session.voteCnt}}
                       <ion-icon name="thumbs-up" ></ion-icon>
                   </div>
                    
@@ -61,12 +86,14 @@
                   </ion-col>
               </ion-row>
             </ion-grid>
+            
             <div class="compare-pic-comment" *ngFor="let comment of session.comments" (click)="selectComment(i, comment)" [class.active]="checkCommentActive(comment)" [hidden]="comment.calculateDisplay(prcSessionItem)" [style]="sanitizer.bypassSecurityTrustStyle(comment.getScalledCommentPos('row-compare-items',session))" >
             </div>
 
           </div>
       </ion-col>
     </ion-row>
+
     <ion-list id="comment-list" class="comment-list" >
         <div [id]="'comment-list_' + comment.getId()" class="comment-list-item" *ngFor="let comment of getCommentsForSelectedSession();" [hidden]="comment.calculateDisplay(prcSessionItem)" (click)="highlightComment(comment)">
                 {{comment.commentText}}
@@ -75,7 +102,9 @@
                 </div>
         </div>
     </ion-list>
+
 </ion-content>
+
 
 <ion-footer>
   <ion-toolbar>
@@ -86,3 +115,4 @@
   </ion-toolbar>
 
 </ion-footer>
+-->

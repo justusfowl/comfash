@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import { ConfigService } from '../../providers/providers';
+import { ConfigService, LocalSessionsService } from '../../providers/providers';
 
 /**
  * Generated class for the SettingsPage page.
@@ -11,7 +11,7 @@ import { ConfigService } from '../../providers/providers';
  */
 
 @IonicPage()
-@Component({
+@Component({ 
   selector: 'page-settings',
   templateUrl: 'settings.html',
 })
@@ -20,11 +20,16 @@ export class SettingsPage {
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams, 
-    public config: ConfigService) {
+    public config: ConfigService, 
+    private localSessions : LocalSessionsService) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad SettingsPage');
+  }
+
+  deleteLocalUserData(){ 
+    this.localSessions.deleteLocalSessions();
   }
 
 }

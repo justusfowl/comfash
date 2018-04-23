@@ -1,13 +1,18 @@
 
 
 import { Injectable } from '@angular/core';
+import { ConfigService } from '../config/config';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Injectable()
 export class UtilService {
 
 
 
-    constructor() {
+    constructor(
+        private cfg : ConfigService, 
+        private sanitizer:DomSanitizer
+    ) {
        
     }
 
@@ -28,6 +33,14 @@ export class UtilService {
             return " - %";
         }
         
+    }
+
+    sanitizeStyle(value){ 
+        return this.sanitizer.bypassSecurityTrustStyle(value);
+    }
+
+    sanitizeResource(value){ 
+        return this.sanitizer.bypassSecurityTrustResourceUrl(value);
     }
 
 
@@ -67,6 +80,22 @@ export class UtilService {
 
         return diff.toFixed(0) + desc + text; 
 
+    }
+
+    wrapHostBase(path : string){
+
+        return this.cfg.getHostBase() + "/data" + path;
+
+    }
+
+    isTmpId(id : any){
+        let idString = id.toString(); 
+
+        if (idString.indexOf("tmp") > -1){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 

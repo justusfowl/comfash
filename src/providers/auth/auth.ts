@@ -5,13 +5,18 @@ import 'rxjs/add/operator/toPromise';
 import { Api } from '../api/api'
 import { OneSignal } from '@ionic-native/onesignal';
 
+import * as auth0 from 'auth0-js';
+import { Facebook } from '@ionic-native/facebook';
+
+
 @Injectable()
 export class AuthService {
   
     private userName : string = "";
     private userId : string = "";
     //private userBirthDate : string
-    private token : string = "";
+    private id_token : string = "";
+    private accessToken : string = "";
 
     private isAuth : boolean = false;
 
@@ -19,17 +24,35 @@ export class AuthService {
 
     public testDeviceId : string = "";
 
-    constructor(private api: Api, 
-        public oneSignal : OneSignal) {
+    public auth0Config = {
+        clientID: 'IEFi9KoFw0QdQbtoXoCcD523MZ3OVULr',
+        domain: 'comfash.eu.auth0.com',
+        responseType: 'token id_token',
+        audience: 'https://comfash.eu.auth0.com/api/v2/',
+        redirectUri: 'https://comfash.com/',
+        scope: 'openid profile email' 
+      }
+
+    private Auth0 : any;
+
+    constructor(
+        private api: Api, 
+        public oneSignal : OneSignal,
+        private fb: Facebook) {
 
         if (this.getToken()){
             this.isAuth = true;
         }
 
+        this.Auth0 = new auth0.WebAuth({
+            clientID: 'IEFi9KoFw0QdQbtoXoCcD523MZ3OVULr',
+            domain: 'comfash.eu.auth0.com'
+          });
+
 
     }
  
-    login(userId : string, password : string){
+    loginOld(userId : string, password : string){
 
         let data = {
             userId : userId, 
@@ -42,6 +65,80 @@ export class AuthService {
         
     }
 
+    public facebookLogin(){
+        this.fb.login(['public_profile', 'user_friends', 'email'])
+            .then(res => {
+            if(res.status === "connected") {
+                this.isAuth = true;
+                console.log(res.authResponse);
+            } else {
+                this.isAuth = false;
+            }
+            })
+            .catch(e => console.log('Error logging into Facebook', e));
+    }
+
+    public login(username: string, password: string) {
+
+        return new Promise<any>((resolve, reject) => {
+        
+            this.Auth0.client.login({
+                client_id: this.auth0Config.clientID,
+                username: username,
+                email: username,
+                password: password,
+                audience : this.auth0Config.audience,
+                realm: 'Username-Password-Authentication',
+                scope: this.auth0Config.scope
+            }, (err, authResult) => {
+                if (err){
+                    console.error(err);
+                    this.api.handleAPIError(err);
+                    reject(err)
+                    return;
+                }else{
+                    console.log("authenticated");
+                    console.log(authResult);
+                    authResult["id_token"] = authResult.idToken;
+
+                    this.Auth0.client.userInfo(authResult.accessToken, (error, user) => {
+                        if (error){
+                            console.log(error);
+                            this.api.handleAPIError(error);
+                            reject(error);
+                        }else{
+                            console.log(user);
+
+                            authResult["userId"] = user["https://app.comfash.com/cf_id"];
+                            this.handleLoginSuccess(authResult)
+
+                            this.api.getUserProfileBase(authResult["userId"]).subscribe(
+                                (data : any) => {
+
+                                  authResult["userName"] = data.userName;
+
+                                  resolve(this.handleProfileSuccess(authResult));
+
+                                },
+                                error => {
+                                  this.api.handleAPIError(error);
+                                }
+                              );
+
+
+                            
+                        }
+                    })
+
+                }
+
+
+            })
+
+        });
+
+      }
+
 
     logout(){
         this.isAuth = false;
@@ -49,36 +146,41 @@ export class AuthService {
         return true; // this.store.clear();
     }
 
+    handleProfileSuccess(data){
+        this.userName = data.userName;
+        this.userAvatarPath = data.userAvatarPath;
+
+        window.localStorage.setItem('userName', data.userName);
+        window.localStorage.setItem('avatar', data.userAvatarPath);
+
+        return;
+    }
+
     handleLoginSuccess(data){
 
         this.userId = data.userId; 
-        this.userName = data.userName; 
-        this.token = data.token;
-        this.userAvatarPath = data.userAvatarPath;
-
-        /*
-        this.store.set('userId', data.userId);
-        this.store.set('userName', data.userName); 
-        this.store.set('jwt', data.token); 
-        */
+        
+        this.id_token = data.id_token;
+        this.accessToken = data.accessToken;
+        
 
         window.localStorage.setItem('userId', data.userId);
-        window.localStorage.setItem('userName', data.userName);
-        window.localStorage.setItem('jwt', data.token);
-        window.localStorage.setItem('avatar', data.userAvatarPath);
+        
+        window.localStorage.setItem('accessToken', data.accessToken);
+        window.localStorage.setItem('id_token', data.id_token);
 
         this.isAuth = true;
 
-
         // Retrieve the OneSignal user id and the device token
 
-        try{
-            
+        try{  
             this.oneSignal.getIds().then(data => this.setDeviceToken(data));
         }
         catch(err){
             console.log(JSON.stringify(err))
         }
+
+        return;
 
         
     }
@@ -103,7 +205,7 @@ export class AuthService {
     }
 
     getToken () : string {
-        return window.localStorage.getItem('jwt');
+        return window.localStorage.getItem('id_token');
         // return this.token;
     }
 

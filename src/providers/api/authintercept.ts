@@ -39,7 +39,8 @@ export class AuthIntercept implements HttpInterceptor {
        token = auth.getToken();
     }
 
-    return req.clone({ setHeaders: { 'x-access-token' : token } });
+    return req.clone({ setHeaders: { 'Authorization' : "Bearer " + token } });
+
   }
   // Response Interceptor
   private catch401(error: HttpErrorResponse): Observable<any> {

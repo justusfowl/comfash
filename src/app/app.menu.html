@@ -20,7 +20,7 @@
             
         </div>
             <ion-list>
-            <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)" [hidden]="p.title=='Login' && auth.getAuthStatus()">
+            <button class="menu-item" menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)" [hidden]="p.title=='Login' && auth.getAuthStatus()">
                 {{p.title}}
             </button>
 

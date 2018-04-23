@@ -101,5 +101,9 @@
     </plugin>
     <plugin name="onesignal-cordova-plugin" spec="^2.3.1" />
     <plugin name="cordova-plugin-camera" spec="^4.0.2" />
+    <plugin name="cordova-plugin-facebook4" spec="^1.10.1">
+        <variable name="APP_ID" value="1597049303683543" />
+        <variable name="APP_NAME" value="Comfash" />
+    </plugin>
     <engine name="ios" spec="4.5.4" />
 </widget>

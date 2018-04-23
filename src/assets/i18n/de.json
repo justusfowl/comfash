@@ -7,6 +7,10 @@
   "BIRTHDATE": "Geburtsdatum",
   "EMAIL": "Email",
   "LOGIN": "Anmelden",
+
+
+  "SAVE_BUTTON" : "Speichern",
+
   "SIGNUP": "Registrieren",
   "CANCEL_BUTTON": "Schließen",
 
@@ -52,6 +56,7 @@
 
   "COLLECTION_CREATE_TITLE": "Neue Collektion",
   "COLLECTIONTITLE" : "Titel der Collektion",
+  "COLLECTIONDESCRIPTION" : "Beschreibung",
   "PUBLIC": "Öffentlich",
 
 
@@ -75,6 +80,9 @@
 
   "COMMENT_CREATE_TITLE" : "Kommentar", 
 
+  "SELECT" : "AUSWÄHLEN",
+  "DELETE" : "LÖSCHEN",
+  "SETTINGS": "DETAILS",
 
 
 

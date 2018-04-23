@@ -21,6 +21,12 @@
 
   <div id="onAirCapture" hidden class="recordingIcon"></div>
 
+  <img [src]="previewPicture">
+  
+  <div *ngFor="let i of localSessions.userLocalSessions" (click)="testLoadLocalSession(i.name)" >
+    {{i.itemPath}}
+  </div>
+
 
   
 </ion-content>
@@ -28,11 +34,25 @@
 <ion-footer id="footer" >
   <ion-toolbar>
     <ion-row >
-      <ion-col col >
-        <div id="btn-switch-cam" class="btn-footer-cam" (click)="switchCam()" >
+
+    <ion-col col >
+      <div id="btn-switch-cam" class="btn-footer-cam" (click)="getCameraPicture()" >
+          <ion-icon name="add-circle"></ion-icon>
+      </div>
+      </ion-col>
+      
+    <ion-col col >
+      <div id="btn-switch-cam" class="btn-footer-cam" (click)="takePicture()" >
+          <ion-icon name="ios-camera-outline"></ion-icon>
+      </div>
+      </ion-col>
+
+    <ion-col col >
+        <div id="btn-take-picture" class="btn-footer-cam" (click)="switchCam()" >
             <ion-icon name="ios-reverse-camera-outline"></ion-icon>
         </div>
     </ion-col>
+
     <ion-col col >
         <div id="btn-capture" class="btn-footer-capture" (click)="startCountdown()" >
             <ion-icon name="ios-videocam-outline"></ion-icon>

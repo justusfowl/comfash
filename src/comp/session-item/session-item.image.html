@@ -1,0 +1,24 @@
+
+<div class="session-item-container" [style.width]="(100 / totalCnt) + 'vw'" [style.height]="height + 'vh'" >
+    <img class="session-item-item" [src]="getItemSessionPath(itemSessionPath)">
+
+    <ion-grid class="session-details" [hidden]="flagIsTmp">
+        <ion-row>
+            <ion-col class="voting-btn">
+                <ion-icon class="session-menu-btn right"  icon-left clear small
+                name="ios-chatbubbles-outline" 
+                (click)="hasCommentClicked(context)"></ion-icon>
+                
+                <div class="votes-stats">
+                    {{util.formatIntToPercent(context.voteAvg)}} / {{context.voteCnt}}
+                </div>
+                <ion-icon class="session-menu-btn right" [class.active]="context.myVote" ion-long-press 
+                [interval]="400" 
+                (click)="showReactions($event, context)"   icon-right clear small
+                name="ios-thumbs-up-outline" ></ion-icon>
+
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</div>
+    

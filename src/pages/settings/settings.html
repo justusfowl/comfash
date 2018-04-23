@@ -56,10 +56,21 @@
   
           <ion-item text-wrap>
             <ion-label>APIBase: {{config.getAPIBase()}} </ion-label>
-            
+          </ion-item>
+
+          <ion-item>
+              <button ion-button (click)="deleteLocalUserData()">Lokale Daten löschen?</button>
+          </ion-item>
+
+          <ion-item text-wrap>
+            <ion-label># lokale Dateien: {{localSessions.userLocalSessions.length}}</ion-label>
+          </ion-item>
+          
+
+          <ion-item *ngFor="let i of localSessions.userLocalSessions">
+              <ion-label>{{i.itemPath}}</ion-label>
           </ion-item>
   
         </ion-list>
-        
 
 </ion-content>
