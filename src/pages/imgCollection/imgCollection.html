@@ -80,15 +80,15 @@
                           <font class="cntFigure">
                               {{session.getNoVotes()}}
                             </font>
-                          <ion-icon class="photo-tile-details-icon" [class.active]="session.myVote" ion-long-press 
+                          <ion-icon class="photo-tile-details-icon vote" [class.active]="session.hasVote" ion-long-press 
                           [interval]="400" 
                           (click)="showReactions($event, session)"   icon-right clear small
-                          name="ios-thumbs-up-outline" ></ion-icon>
+                          [name]="voteHdl.getVoteIcon(session)" ></ion-icon>
 
                           <font class="cntFigure">
                               {{session.getNoComments()}}
                           </font>
-                          <ion-icon name="text" class="photo-tile-details-icon"></ion-icon>
+                          <ion-icon name="ios-text-outline" class="photo-tile-details-icon"></ion-icon>
                       </div>
                     </ion-col>
                   </ion-row>

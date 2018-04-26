@@ -4,23 +4,88 @@
 
 page-session-settings {
 
+    .preview-container{
+        position: relative;
+    }
+
     .preview-image-large{
-        height: 60vh; 
-        width: 100vw; 
-        object-fit: cover; 
+        
+        height: 70vh !important; 
+        width: 94vw !important; 
+        object-fit: contain; 
         object-position: center;
+        max-width: unset;
+
+        margin: 3vw;
+
+        filter: drop-shadow(0px 25px 30px rgba(35, 35, 35, 0.7));
+
+    }
+
+    .spinner {
+
+        padding: 5px; 
+        background-color: white;
+        color: color($colors, primary, base);
+        display: inline-block;
+        -webkit-font-smoothing: antialiased;
+        margin-right: 10px;
+        font-size: 2.5rem;
+        position: absolute; 
+        top: 20px;
+        border-radius: 25px;
+        right: 6vw;
+        animation: spin 1.9s infinite linear;
+        -webkit-transform-origin: 50% 50%;
+        -moz-transform-origin: 50% 50%;
+        -o-transform-origin: 50% 50%;
+        transform-origin: 50% 50%;
+    }
+
+    @keyframes spin {
+        from {transform:rotate(0deg);}
+        to {transform:rotate(360deg);}
+    }
+
+
+    .preview-image-small{
+        height: 70px !important; 
+        width: 70px !important; 
+        border-radius: 20px;
+        object-fit: cover;
     }
 
     .option-list{
         display: flex;
+        overflow: scroll;
 
     }
+
+    .footer-area{
+        position: absolute; 
+        bottom: 0;
+        width: 100vw;
+        border-top: 1px solid rgba(35, 35, 35, 0.7);
+    }
     
+        
+    .filter-option:first-child{
+        border-right: 1px dashed #b8b8b8;
+        padding-right: 15px;
+    }
+
     .filter-option{
         display: inline-flex;
         padding: 5px;
         margin: 5px;
         color: white;
-        background-color: rgba($background-color, 0.4)
     }
+
+    .filter-option.active .preview-image-small{
+        transform: scale(1.15);
+        border: 2px solid white;
+        filter: drop-shadow(0px 25px 30px rgba(35, 35, 35, 0.7));
+    }
+
+    
 }

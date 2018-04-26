@@ -16,6 +16,10 @@ import { File } from '@ionic-native/file';
 
 import { FileTransfer } from '@ionic-native/file-transfer';
 
+import { Network } from '@ionic-native/network';
+import { BackgroundFetch } from '@ionic-native/background-fetch';
+
+
 import { 
   ConfigService, 
   User, 
@@ -85,6 +89,8 @@ export function createTranslateLoader(http: HttpClient) {
     CameraPreview,
     SplashScreen,
     StatusBar,
+    Network,
+    BackgroundFetch,
     // Keep this to enable Ionic's runtime error handling during development
     { provide: ErrorHandler, useClass: IonicErrorHandler }, 
     File, 

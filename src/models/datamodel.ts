@@ -164,6 +164,7 @@
     src : string;
     flagIsTmp : boolean = true;
     sessionItemType : string;
+    filterOption : any;
 
     constructor(fields : any) {
       this.tmpId = 'tmp_' + Date.now(),
@@ -172,7 +173,8 @@
       this.fullFilePath = fields.fullFilePath;
       this.itemPath = fields.itemName;
       this.src = fields.src
-      this.sessionItemType = fields.sessionItemType
+      this.sessionItemType = fields.sessionItemType; 
+      this.filterOption = fields.filterOption
     }
 
     getId(){
@@ -264,6 +266,7 @@
       if (fields.myVote){
         let newVote = new Vote(fields.myVote); 
         this.myVote = newVote;
+        this.hasVote = true;
       }
       
     }
@@ -467,7 +470,6 @@
     }
   
     getVoteType (){
-      // getVoteTypeIcon function is being used for the 
       return this.voteType
     }
   
@@ -760,8 +762,11 @@
       commentId: number; 
       sessionId: number; 
       userId : string; 
+      // username = itemCreator
+      userName : string; 
       itemCreator : string; 
       itemCreatorAvatarPath : string; 
+
       sessionItemPath : string; 
       sessionThumbnailPath : string;
       sessionCreated : Date;
@@ -812,7 +817,7 @@
   
         // userId of the creator of the comment/vote /...
         this.userId = fields.userId;
-        
+        this.userName = fields.itemCreator;
   
         // username of the creator + avatar
         this.itemCreator = fields.itemCreator;
@@ -873,6 +878,15 @@
   
       getSessionId(){
         return this.sessionId;
+      }
+
+      getMyVoteType(){
+        if (this.myVote){
+          return this.myVote.getVoteType();
+        }else{
+          return false;
+        }
+        
       }
 
       setMyVote(vote : Vote){

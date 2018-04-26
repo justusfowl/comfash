@@ -4,10 +4,10 @@
         <ion-row>
 
             <ion-col class="voting-btns" >
-                <ion-icon class="reaction-icon" (click)="share(-50)" name="ios-thumbs-down-outline" ></ion-icon>
-                <ion-icon class="reaction-icon" (click)="share(25)" name="ios-sad-outline"></ion-icon>
-                <ion-icon class="reaction-icon" (click)="share(75)" name="ios-thumbs-up-outline" ></ion-icon>
-                <ion-icon class="reaction-icon" (click)="share(100)" name="ios-heart-outline" ></ion-icon>
+                <ion-icon class="reaction-icon" [class.active]="-50 == myVoteType"  (click)="share(-50)" name="ios-thumbs-down-outline" ></ion-icon>
+                <ion-icon class="reaction-icon" [class.active]="25 == myVoteType"  (click)="share(25)" name="ios-sad-outline"></ion-icon>
+                <ion-icon class="reaction-icon" [class.active]="75 == myVoteType"  (click)="share(75)" name="ios-thumbs-up-outline" ></ion-icon>
+                <ion-icon class="reaction-icon" [class.active]="100 == myVoteType"  (click)="share(100)" name="ios-heart-outline" ></ion-icon>
 
                 <div class="unvote" *ngIf="hasVote">
                     <ion-icon class="unvote-icon" name="trash" (click)="unvote()"></ion-icon>

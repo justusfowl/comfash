@@ -171,42 +171,7 @@ export class FittingStreamPage {
 
   showReactions(ev: any, trendItem : TrendItem){
 
-    let hasVote = false;
-    if (trendItem.myVoteType){
-      hasVote = true;
-    }
- 
-      let reactions = this.popoverCtrl.create('ReactionsPage', {
-        "hasVote" : hasVote
-      });
-
-      reactions.onDidDismiss((voteType : number) => {
-        if (voteType) {
-
-          let vote = new Vote({
-            sessionId : trendItem.getSessionId(), 
-            voteType : voteType, 
-            userId : this.auth.getUserId()
-          });
-
-          trendItem.myVoteType = voteType;
-
-          this.api.upsertVote(trendItem.getCollectionId(), trendItem.getSessionId(), vote)
-  
-        }else{
-          // unvote = voteType = 0
-  
-          this.api.deleteVote(trendItem.getCollectionId(), trendItem.getSessionId()).subscribe( data => {
-            trendItem.myVoteType = null;
-          })
-  
-          // this.api.unvote();
-        }
-      })
-
-      reactions.present({
-          ev: ev
-      });
+    this.voteHdl.showReactions(ev, trendItem);
 
   }
 

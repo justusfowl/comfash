@@ -421,7 +421,7 @@ post(endpoint: string, body: any, reqOpts?: any) {
   handleAPIError(error){
 
     console.log("Error in API call")
-    console.log(error);
+    console.log(JSON.stringify(error));
 
     let errorCode = error.status;
 

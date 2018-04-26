@@ -125,28 +125,7 @@ export class ImgCollectionPage implements OnInit{
 
   showReactions(ev: any, session: any){
 
-    let hasVote = false;
-    let self = this;
-    
-    if (session.myVote){
-      hasVote = true;
-    }
- 
-    let reactions = this.popoverCtrl.create('ReactionsPage', {
-      "hasVote" : hasVote
-    });
-
-    reactions.onDidDismiss((voteType : number) => {
-        console.log(voteType);
-
-        self.voteHdl.handleVoteClicked(voteType, session);
-
-
-    });
-
-    reactions.present({
-        ev: ev
-    });
+    this.voteHdl.showReactions(ev, session);
 
 }
 

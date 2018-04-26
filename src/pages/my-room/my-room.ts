@@ -35,20 +35,7 @@ export class MyRoomPage {
 
   }
 
-  TESTpresent(){
 
-    let settingsModal = this.modalCtrl.create('SessionSettingsPage');
-
-    settingsModal.onDidDismiss(previewResult => {
-      if (previewResult) {
-
-        console.log(previewResult);
-
-      }
-    })
-    
-    settingsModal.present();
-  }
 
   /**
    * The view loaded, let's query our items for the list
@@ -61,7 +48,6 @@ export class MyRoomPage {
 
     if (!userId){
       userId = this.auth.getUserId();
-      
     }
     
     this.loadUserBase(userId);

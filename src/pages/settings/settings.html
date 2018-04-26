@@ -58,6 +58,11 @@
             <ion-label>APIBase: {{config.getAPIBase()}} </ion-label>
           </ion-item>
 
+            
+          <ion-item text-wrap>
+            <ion-label>Network: {{config.isOnline}},  {{config.networkType}}, {{config.downloadSpeed}} </ion-label>
+          </ion-item>
+
           <ion-item>
               <button ion-button (click)="deleteLocalUserData()">Lokale Daten löschen?</button>
           </ion-item>

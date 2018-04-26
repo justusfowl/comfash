@@ -120,7 +120,10 @@ export class MsgService implements OnInit {
           toast.present();
 
     }
-
+    
+    /**
+     * Method that both returns and presents the toaster at the same time, dismiss => .dismiss();
+     */
     toastLoader(){
 
         let msg = this.translate.instant("PLEASE_WAIT");

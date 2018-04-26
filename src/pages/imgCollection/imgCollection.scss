@@ -69,6 +69,13 @@ page-imgCollection {
         color: color($colors, dark, base);
     }
 
+    .photo-tile-details-icon.vote.active{
+        color: color($colors, primary, base);
+        transform: scale(1.4);
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+
     .blank-card{
         display: flex; 
         align-items: center;

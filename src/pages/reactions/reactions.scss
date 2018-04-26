@@ -43,5 +43,13 @@ page-reactions {
         color: darkgrey;
         font-size: 30px;
     }
+
+
+    .reaction-icon.active{
+        color: color($colors, primary, base);
+        transform: scale(1.4);
+        padding-left: 2px;
+        padding-right: 2px;
+    }
  
 }

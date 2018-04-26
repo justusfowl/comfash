@@ -102,44 +102,12 @@ export class CapturePage {
   }
 
   getCameraPicture(){
-    let self = this; 
-
-    if (Camera['installed']()) {
-      this.camera.getPicture({
-        destinationType: this.camera.DestinationType.DATA_URL,
-        targetWidth: window.outerWidth,
-        targetHeight:window.outerHeight
-      }).then((data) => {
-
-        this.previewPicture = 'data:image/png;base64,' + data;
-
-        self.localSessions.storeImage(this.collectionId, data, "image/png");
-
-
-      }, (err) => {
-        alert('Unable to take photo');
-      })
-    } else {
-      console.log("click?"!);
-    }
+    this.localSessions.captureCameraPicture(this.collectionId);
   }
 
   takePicture(){
 
-    let self = this; 
-
-    let options = this.cameraPreviewOpts; 
-    options.width = options.width * 20;
-    options.height = options.height * 20;
-        // take a picture
-    this.cameraPreview.takePicture(options).then((imageData) => {
-      this.previewPicture = 'data:image/png;base64,' + imageData;
-
-      self.localSessions.storeImage(this.collectionId, imageData, "image/png");
-
-    }, (err) => {
-      console.log(err);
-    });
+    this.localSessions.captureCameraPicture(this.collectionId);
 
   }
 

@@ -2,6 +2,9 @@
 
 import { Injectable } from '@angular/core';
 import { ENV } from '@app/env';
+import { Network } from '@ionic-native/network';
+import { Platform } from 'ionic-angular';
+
 
 @Injectable()
 export class ConfigService {
@@ -16,8 +19,15 @@ export class ConfigService {
 
     private environment : string;
 
+    public isOnline : boolean;
+    public networkType : string;
+    public downloadSpeed : string;
 
-    constructor() {
+
+    constructor(
+        private network : Network,
+        platform: Platform
+    ) {
 
         this.environment = ENV.mode;
         this.hostURL = ENV.hostURL;
@@ -25,6 +35,37 @@ export class ConfigService {
         this.apiVersion = ENV.apiVersion;
 
         console.log("Environment loaded: " + this.environment);
+
+        let self = this;
+
+        platform.ready().then(() => {
+
+            self.networkType = network.type;
+            self.downloadSpeed = network.downlinkMax;
+
+            // watch network for a disconnect
+            this.network.onDisconnect().subscribe(() => {
+                self.isOnline = false;
+                console.log('network was disconnected :-(');
+
+            });
+
+            // watch network for a connection
+            this.network.onConnect().subscribe(() => {
+                self.isOnline = true;
+                console.log('network connected!');
+                // We just got a connection but we need to wait briefly
+                // before we determine the connection type. Might need to wait.
+                // prior to doing any api requests as well.
+                setTimeout(() => {
+                    self.networkType = this.network.type;
+                }, 3000);
+
+            });
+
+        });
+
+
 
     }
 

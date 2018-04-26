@@ -105,6 +105,8 @@
         <variable name="APP_ID" value="1597049303683543" />
         <variable name="APP_NAME" value="Comfash" />
     </plugin>
-    <engine name="ios" spec="4.5.4" />
     <plugin name="cordova-plugin-inappbrowser" spec="^3.0.0" />
+    <plugin name="cordova-plugin-network-information" spec="^2.0.1" />
+    <plugin name="cordova-plugin-background-fetch" spec="^5.3.0" />
+    <engine name="ios" spec="~4.5.4" />
 </widget>

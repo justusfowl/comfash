@@ -6,7 +6,7 @@ import {
 
 import { PopoverController } from 'ionic-angular';
 import { Vote } from '../../models/datamodel';
-import { Api, AuthService, UtilService } from '../../providers/providers';
+import { Api, AuthService, UtilService, VoteHandlerService } from '../../providers/providers';
 
   @Component({
     selector: 'activity-item',
@@ -144,14 +144,24 @@ import { Api, AuthService, UtilService } from '../../providers/providers';
         public util : UtilService, 
         public popoverCtrl : PopoverController, 
         public auth : AuthService, 
-        public api : Api
+        public api : Api, 
+        public voteHdl : VoteHandlerService
+
     ) {
 
         super();
 
     }
 
+    emitVoteType(voteType: number){
+        this.onVoteClick.emit(voteType)
+    }
+
     showReactions(ev: any, session: any){
+
+        this.voteHdl.showReactions(ev, session, this.emitVoteType.bind(this));
+
+        /*
 
         let hasVote = false;
         
@@ -172,6 +182,8 @@ import { Api, AuthService, UtilService } from '../../providers/providers';
         reactions.present({
             ev: ev
         });
+
+        */
     
     }
 
@@ -194,15 +206,21 @@ import { Api, AuthService, UtilService } from '../../providers/providers';
         public util : UtilService, 
         public popoverCtrl : PopoverController, 
         public auth : AuthService, 
-        public api : Api
+        public api : Api, 
+        public voteHdl : VoteHandlerService
     ) {
 
         super();
 
     }
 
-    showReactions(ev: any, session: any){
+    emitVoteType(voteType: number){
+        this.onVoteClick.emit(voteType)
+    }
 
+    showReactions(ev: any, session: any){
+        this.voteHdl.showReactions(ev, session, this.emitVoteType.bind(this));
+        /*
         let hasVote = false;
         
         if (session.myVote){
@@ -222,7 +240,7 @@ import { Api, AuthService, UtilService } from '../../providers/providers';
         reactions.present({
             ev: ev
         });
-    
+        */
     }
 
     testClick(event){

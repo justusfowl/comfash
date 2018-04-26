@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavParams, ViewController } from 'ionic-angular';
-import { Api } from '../../providers/providers';
+import { Api, VoteHandlerService } from '../../providers/providers';
  
 @IonicPage()
 @Component({
@@ -10,14 +10,19 @@ import { Api } from '../../providers/providers';
 export class ReactionsPage {
 
     hasVote : boolean = false;
+    myVoteType : number;
  
     constructor(
-      private navParams: NavParams, 
-      private viewCtrl: ViewController) {
+        private navParams: NavParams, 
+        private viewCtrl: ViewController,
+        public voteHdl: VoteHandlerService) {
 
 
         let hasVote  = navParams.get('hasVote');
         this.hasVote = hasVote;
+
+        let myVoteType  = navParams.get('myVoteType');
+        this.myVoteType = myVoteType;
  
     }
  

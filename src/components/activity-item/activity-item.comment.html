@@ -63,7 +63,7 @@
                         <ion-icon class="session-menu-btn right vote-icon-btn large" [class.active]="context.myVote" ion-long-press 
                         [interval]="400" 
                         (click)="showReactions($event, context)" icon-right clear small
-                        name="ios-thumbs-up-outline" ></ion-icon>
+                        [name]="voteHdl.getVoteIcon(context)" ></ion-icon>
 
                         <!--
                             <ion-icon (click)="testClick($event)" name="thumbs-up" class="session-tile-details-icon"></ion-icon>

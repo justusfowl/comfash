@@ -66,19 +66,84 @@ export class AuthService {
     }
 
     public facebookLogin(){
-        this.fb.login(['public_profile', 'user_friends', 'email'])
-            .then(res => {
-            if(res.status === "connected") {
-                this.isAuth = true;
-                console.log(res.authResponse);
-            } else {
-                this.isAuth = false;
-            }
-            })
-            .catch(e => console.log('Error logging into Facebook', e));
+
+        let self = this; 
+
+        return new Promise<any>((resolve, reject) => {
+            this.fb.login(['public_profile', 'user_friends', 'email'])
+                .then(res => {
+                    if(res.status === "connected") {
+                        this.isAuth = true;
+                        console.log("FACEBOOK AUTHENTICATED ME");
+
+                        const credentials = {
+                            client_id: self.auth0Config.clientID,
+                            access_token: res.authResponse.accessToken,
+                            scope: self.auth0Config.scope,
+                            connection: 'facebook'
+                          };
+
+
+                        console.log(JSON.stringify(res.authResponse));
+                        self.handleAuthSuccess(res.authResponse, resolve, reject);
+                        
+                    } else {
+                        this.isAuth = false;
+                        reject();
+                    }
+                })
+                .catch(e => console.log('Error logging into Facebook', JSON.stringify(e)));
+        });
+
+        
+    }
+
+    testFB(){
+
+        let self = this; 
+
+        return new Promise<any>((resolve, reject) => {
+            this.fb.login(['public_profile', 'user_friends', 'email'])
+                .then(res => {
+                    if(res.status === "connected") {
+                        this.isAuth = true;
+                        console.log("FACEBOOK AUTHENTICATED ME");
+
+                        const credentials = {
+                            client_id: self.auth0Config.clientID,
+                            access_token: res.authResponse.accessToken,
+                            scope: self.auth0Config.scope,
+                            connection: 'facebook'
+                          };
+
+
+                        console.log(JSON.stringify(res.authResponse));
+
+                        self.Auth0.authorize(credentials, (err, authResult) => {
+                            if (err){
+                                console.error(JSON.stringify(err));
+                                reject(err)
+                                return;
+                            }else{
+                                console.log("authenticated");
+                                console.log(JSON.stringify(authResult));
+                                resolve(authResult);
+                            }
+                        })
+                        
+                    } else {
+                        this.isAuth = false;
+                        reject();
+                    }
+                })
+                .catch(e => console.log('Error logging into Facebook', JSON.stringify(e)));
+        });
+
     }
 
     public login(username: string, password: string) {
+
+        let self = this;
 
         return new Promise<any>((resolve, reject) => {
         
@@ -99,46 +164,52 @@ export class AuthService {
                 }else{
                     console.log("authenticated");
                     console.log(authResult);
-                    authResult["id_token"] = authResult.idToken;
-
-                    this.Auth0.client.userInfo(authResult.accessToken, (error, user) => {
-                        if (error){
-                            console.log(error);
-                            this.api.handleAPIError(error);
-                            reject(error);
-                        }else{
-                            console.log(user);
-
-                            authResult["userId"] = user["https://app.comfash.com/cf_id"];
-                            this.handleLoginSuccess(authResult)
-
-                            this.api.getUserProfileBase(authResult["userId"]).subscribe(
-                                (data : any) => {
-
-                                  authResult["userName"] = data.userName;
-                                  authResult["userAvatarPath"] = data.userAvatarPath;
-
-                                  resolve(this.handleProfileSuccess(authResult));
-
-                                },
-                                error => {
-                                  this.api.handleAPIError(error);
-                                }
-                              );
-
-
-                            
-                        }
-                    })
-
+                    self.handleAuthSuccess(authResult, resolve, reject);
                 }
-
-
             })
+        });
+      }
 
+    handleAuthSuccess(authResult, resolve, reject){
+        
+        console.log("THIS IS MY ACCESS TOKEN");
+        console.log(authResult.accessToken);
+
+        
+        this.Auth0.client.userInfo(authResult.accessToken, (error, user) => {
+            if (error){
+                console.log(JSON.stringify(error));
+                this.api.handleAPIError(error);
+                reject(error);
+            }else{
+                
+                console.log(user);
+                authResult["id_token"] = authResult.idToken;
+                authResult["userId"] = user["https://app.comfash.com/cf_id"];
+
+                this.handleLoginSuccess(authResult)
+
+                this.api.getUserProfileBase(authResult["userId"]).subscribe(
+                    (data : any) => {
+
+                      authResult["userName"] = data.userName;
+                      authResult["userAvatarPath"] = data.userAvatarPath;
+
+                      resolve(this.handleProfileSuccess(authResult));
+
+                    },
+                    error => {
+                      this.api.handleAPIError(error);
+                    }
+                  );
+                  
+
+                  resolve(true);
+            }
         });
 
-      }
+
+    }
 
 
     logout(){

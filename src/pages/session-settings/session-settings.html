@@ -1,21 +1,37 @@
 
 <ion-header>
-
   <ion-navbar>
-    <ion-title>{{ 'NEW_OUTFIT' | translate }}</ion-title>
-  </ion-navbar>
+    <ion-buttons start>
+      <button ion-button icon-only (click)="cancel()" >
+        <ion-icon name="trash"></ion-icon>
+        <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+      </button>
 
+    </ion-buttons>
+    <ion-title>{{ 'NEW_OUTFIT' | translate }}</ion-title>
+    <ion-buttons end>
+
+        <button ion-button icon-only (click)="acceptAndStore()">
+            <ion-icon name="checkmark" ></ion-icon>
+        </button>
+
+      </ion-buttons>
+  </ion-navbar>
 </ion-header>
 
 
 <ion-content>
+<div class="preview-container">
+  <img id="preview-img" class="preview-image-large" [src]="util.sanitizeResource(mainImgData)">
+  <ion-icon name="sync" class="spinner" [hidden]="!isProcessing"></ion-icon>
+</div>
 
-  <img id="preview-img" class="preview-image-large" [src]="util.wrapHostBase(testImg)">
+  <!-- <canvas id="preview-canvas" class="preview-image-large"></canvas> -->
 
-  <div class="footer-area">
+  <div ion-fixed class="footer-area">
     <div class="option-list">
-       <div class="filter-option" *ngFor="let filter of filterOptions; let i = index;">
-        {{filter.name}}
+       <div class="filter-option" [class.active]="i == filterIndexSelected" *ngFor="let filter of filterOptions; let i = index;" (click)="addFilter('#preview-img', filter.option)">
+        <img [id]="'thumb_' + i"  class="preview-image-small" [src]="util.sanitizeResource(filter.data)">
       </div>
     </div>
   </div>

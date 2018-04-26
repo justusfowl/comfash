@@ -364,39 +364,46 @@ html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: 
     font-size: 25px;
 }
 
+.vote-icon-btn.active{
+    color: color($colors, primary, base);
+    transform: scale(1.5);
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
 
 /* #### vote button end #### */
 
 
 /* #### loader #### */
 
-.toast-loader .toast-message:after {
-    content: '\f222';
-    color: white;
-    display: inline-block;
-    font-family: "Ionicons";
-    font-style: normal;
-    font-weight: bolder;
-    font-variant: normal;
-    text-transform: none;
-    text-rendering: auto;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    margin-right: 10px;
-    font-size: 2rem;
-    position: absolute; 
-    right: 5px;
-    animation: spin 0.9s infinite linear;
-    -webkit-transform-origin: 50% 50%;
-    -moz-transform-origin: 50% 50%;
-    -o-transform-origin: 50% 50%;
-    transform-origin: 50% 50%;
-  }
+    .toast-loader .toast-message:after {
+        content: '\f222';
+        color: white;
+        display: inline-block;
+        font-family: "Ionicons";
+        font-style: normal;
+        font-weight: bolder;
+        font-variant: normal;
+        text-transform: none;
+        text-rendering: auto;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        margin-right: 10px;
+        font-size: 2rem;
+        position: absolute; 
+        right: 5px;
+        animation: spin 0.9s infinite linear;
+        -webkit-transform-origin: 50% 50%;
+        -moz-transform-origin: 50% 50%;
+        -o-transform-origin: 50% 50%;
+        transform-origin: 50% 50%;
+    }
 
-  @keyframes spin {
-    from {transform:rotate(0deg);}
-    to {transform:rotate(360deg);}
-}
+    @keyframes spin {
+        from {transform:rotate(0deg);}
+        to {transform:rotate(360deg);}
+    }
 
 /* #### loader end #### */
 
