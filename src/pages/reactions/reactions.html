@@ -2,34 +2,18 @@
  
     <ion-grid>
         <ion-row>
-            <ion-col>
-                <button class="emoticons-btn" (click)="share(-50)" ion-button  icon-only>
-                    <i class="fas fa-frown reaction-icon"></i>
-                </button>
-            </ion-col>
-            <ion-col >
-                <button class="emoticons-btn" (click)="share(25)" ion-button  icon-only>
-                    <i class="fas fa-meh reaction-icon"></i>
-                </button>
-            </ion-col>
-            <ion-col >
-                <button class="emoticons-btn" (click)="share(75)" ion-button  icon-only>
-                    <i class="fas fa-thumbs-up reaction-icon"></i>
-                </button>
-            </ion-col>
-            <ion-col >
-                <button class="emoticons-btn" (click)="share(100)" ion-button  icon-only>
-                    <i class="fas fa-heart reaction-icon"></i>
-                </button>
-            </ion-col>
 
+            <ion-col class="voting-btns" >
+                <ion-icon class="reaction-icon" (click)="share(-50)" name="ios-thumbs-down-outline" ></ion-icon>
+                <ion-icon class="reaction-icon" (click)="share(25)" name="ios-sad-outline"></ion-icon>
+                <ion-icon class="reaction-icon" (click)="share(75)" name="ios-thumbs-up-outline" ></ion-icon>
+                <ion-icon class="reaction-icon" (click)="share(100)" name="ios-heart-outline" ></ion-icon>
 
-            <ion-col col-1 *ngIf="hasVote">
-                <div class="unvote">
+                <div class="unvote" *ngIf="hasVote">
                     <ion-icon class="unvote-icon" name="trash" (click)="unvote()"></ion-icon>
                 </div>
+                
             </ion-col>
-            
         </ion-row>
     </ion-grid>
  

@@ -13,120 +13,31 @@
 </ion-header>
 
 
-<ion-content (ionScroll)="handleScroll($event)">
+<ion-content id="fitting-stream-container">
 
-    <ion-refresher (ionRefresh)="getTrendStream($event)">
-        <ion-refresher-content
-        pullingIcon="arrow-dropdown"
-        pullingText="Update stream"
-        refreshingSpinner="circles"
-        refreshingText="Refreshing...">
-      </ion-refresher-content>
-    </ion-refresher>
+  <div ion-fixed class="dot-container">
+    <div class="dot" 
+    [class.isVisible]="visibleIndex == i"
+    *ngFor="let item of api.streamItems; let i = index;"
+    (click)="setVisibleItem(i)">
 
-  <ion-list>
-    <ion-item-sliding #slideItem *ngFor="let item of api.streamItems">
-      <ion-item >
-        <div class="session-tile-header">
-            <ion-grid>
-              <ion-row class="session-tile-header-row" >
-                <ion-col col-1 class="user-avatar">
-                  <div class="user-avatar" [style.backgroundImage]="'url(' + config.getHostBase() + item.itemCreatorAvatarPath +  + ')'">
-                  </div>
-                </ion-col>
-                <ion-col class="session-tile-header-title"> 
-                    <div class="session-tile-header-title-container">
-                      <a class="stream-message-title-highlight-item item-creator" (click)="goToItemCreator(item)" > {{item.itemCreator}} </a> 
-                      <span class="stream-message-title"> {{getTitleMessage(item)}} </span>
+    </div>
+  </div>
 
-                      <a class="stream-message-title-highlight-item  item-owner" (click)="goToColOwner(item)" > @{{item.colOwner}}</a> 
-                      <a class="stream-message-title-highlight-item  item-title" (click)="goToImgCollection(item)" >#{{item.collectionTitle}} </a> 
-                    </div>
-                    <p class="last-updated" >{{util.formatDateDiffToNow(item.refDate)}}</p>
-                </ion-col>
-                <ion-col col-1>
-                    <div (click)="goToSessionCompare(item)">
-                      <ion-icon name="arrow-forward" ></ion-icon>
-                    </div>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-        </div>
-        <div class="session-tile">
-            <div class="session-tile-content" >  
-              <video class="video-background" preload="auto" playsinline webkit-playsinline [poster]="config.getHostBase() + item.sessionThumbnailPath" [src]="config.getHostBase() + item.sessionItemPath" type="video/mp4"></video>
-              <div class="session-item-comment "  [hidden]="item.itemType != 2">
-                  <ion-icon name="quote" class="session-item-comment-icon"></ion-icon>                    
-                  {{item.commentText}}
-              </div>
+  <div ion-fixed id="activity-box" class="activity-box">
+      <activity-item
+      class="act-item"
+      [class.isVisible]="visibleIndex == i"
+      [index]="i"
+      [type]="item.itemType"
+      [context]="item"
+      (onVoteClick)="onVoteClick($event, item)"
+      *ngFor="let item of api.streamItems; let i = index;"
+    >
 
-              <div class="session-item-vote "  [hidden]="item.itemType != 1">     
-                  <i [className]="'fas session-item-vote-foreign-vote fa-' + item.getVoteIcon(item.voteType)" ></i>            
-                  <!--
-                  <span class="emoticons session-item-vote-foreign-vote" >
-                      {{item.getVoteIcon(item.voteType)}}    
-                  </span> 
-
-                -->
-              </div>
-
-              
-
-            </div>
-              <ion-grid class="session-tile-details">
-                <ion-row class="session-tile-row" >
-                  <ion-col>
-                    <!--
-                      <ion-icon name="thumbs-up" class="session-tile-details-icon"></ion-icon>
-                      <font class="cntFigure">
-                          {{util.formatToPercent(item.votesAvg)}} ()
-                      </font>
-                    -->
-                      <button class="session-tile-info-btn"  ion-long-press [interval]="400" (click)="showReactions($event, item)"  ion-button icon-left clear small>
-
-                        <i [className]="'fas session-tile-info-icon fa-' + item.getVoteIcon(item.myVoteType)" ></i> 
-
-                        <div>{{item.votesCtn}} Votes</div>
-                      </button>
-
-
-                  </ion-col>
-
-                  <ion-col> 
-                    <div class="session-tile-info">
-                        <button (click)="like()" class="session-tile-info-btn"  ion-button icon-left clear small>
-                          
-                          <div class="cntFigure" >{{item.commentCtn}}</div>
-                          <ion-icon name="text"></ion-icon>
-                        </button>
-                        <!--
-                        <font class="cntFigure">
-                            {{item.commentCtn}}
-                        </font>
-                        <ion-icon name="text" class="session-tile-details-icon"></ion-icon>
-                      -->
-                    </div>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-            
-          </div>
-      </ion-item>
-
-      <ion-item-options side="left">
-          <button class="swipe-btn" ion-button >
-            <ion-icon class="heart" name="heart"></ion-icon>
-            MARK
-          </button>
-      </ion-item-options>
-  
-  
-      </ion-item-sliding> 
-  </ion-list>
-
-  <ion-infinite-scroll (ionInfinite)="infiniteScroll($event)">
-    <ion-infinite-scroll-content></ion-infinite-scroll-content>
-  </ion-infinite-scroll>
+    </activity-item>
+  </div>
+   
     
 </ion-content>
 

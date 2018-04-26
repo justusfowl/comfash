@@ -39,19 +39,24 @@
     <ion-grid>
         <ion-row class="session-tile-header-row" >
           <ion-col col-1 class="session-thumbnail">
-            <div class="session-thumbnail" [style.backgroundImage]="'url(' + config.getHostBase() + message.sessionThumbnailPath +  + ')'">
+            <div class="sender-avatar-thumbnail" [style.backgroundImage]="'url(' + util.wrapHostBase(message.getSenderAvatar()) + ')'">
 
             </div>
           </ion-col>
 
           <ion-col class="message-body"> 
               @{{message.getAuthorName()}} {{ message.messageBody | translate }} #{{message.collectionTitle}}
-              <p class="message-details" >{{getAuthorText(message)}}, {{util.formatDateDiffToNow(message.messageCreated)}}</p>
+              <p class="message-details" >@{{message.senderName}}, {{util.formatDateDiffToNow(message.messageCreated)}}</p>
           </ion-col>
           <ion-col col-1 class="arrow-icon">
               <ion-icon name="arrow-forward"></ion-icon>
           </ion-col>
-          <!-- hier noch button pfeil rein -->
+
+          <ion-col col-1 class="session-thumbnail">
+            <div class="session-thumbnail" [style.backgroundImage]="'url(' + util.wrapHostBase(message.sessionThumbnailPath) + ')'">
+
+            </div>
+          </ion-col>
 
         </ion-row>
       </ion-grid>

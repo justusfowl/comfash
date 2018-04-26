@@ -56,16 +56,19 @@
 
   "BLANK_CARD_ADD_COLLECTION" : "New Collection",
 
-  "COLLECTION_CREATE_TITLE": "New Collection",
+  "COLLECTION_CREATE_TITLE": "Your Collection",
   "COLLECTIONTITLE" : "Title of the collection",
   "COLLECTIONDESCRIPTION" : "Description",
   "PUBLIC": "Public",
+
+  "NEW_OUTFIT" : "Outfit",
 
   "BLANK_CARD_ADD_SESSION" : "Add session",
   "BLANK_CARD_NO_SESSION_NO_OWNER" : " has not added any session",
 
   "ALERT_DELETE_TITLE" : "Remove session", 
   "ALERT_DELETE_MSG" : "Remove this session?",
+
 
   "ITEM_CREATE_CHOOSE_IMAGE": "Add Image",
 
@@ -78,6 +81,8 @@
   "CANCEL_BUTTON": "Cancel",
   "DELETE_BUTTON": "Delete",
 
+  "PLEASE_WAIT" : "Please wait...",
+
   "CARDS_TITLE": "Social",
 
   "SEARCH_TITLE": "Search",
@@ -89,7 +94,7 @@
   "NEW_NOTIFICATION_FROM" : "New notification from: ",
 
   "COMMENT_CREATE_TITLE" : "Comment", 
-
+  "BE_THE_FIRST_COMMENT" : "Write the first comment",
 
   "SELECT" : "SELECT",
   "DELETE" : "DELETE",
@@ -98,7 +103,20 @@
 
   "COL_HAS_INVITED" : " asks for support of ",
   "HAS_REACTED_TO" : " reacts to ", 
-  "HAS_VOTED" : " rates "
+  "HAS_VOTED" : " rates ", 
+
+  "01" : "jan",
+  "02" : "feb",
+  "03" : "mar",
+  "04" : "apr",
+  "05" : "may",
+  "06" : "jun",
+  "07" : "jul",
+  "08" : "aug",
+  "09" : "sep",
+  "10" : "oct",
+  "11" : "nov",
+  "12" : "dec"
 
 
 }

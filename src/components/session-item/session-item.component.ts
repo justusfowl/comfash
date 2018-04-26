@@ -1,7 +1,7 @@
 import { 
     Component, Input, OnInit, OnDestroy, 
     ViewChild, ViewContainerRef,
-    ComponentFactoryResolver, ComponentRef, Output, EventEmitter
+    ComponentFactoryResolver, ComponentRef, Output, EventEmitter, OnChanges, SimpleChanges
   } from '@angular/core';
 
 import { PopoverController } from 'ionic-angular';
@@ -15,7 +15,7 @@ import { Api, AuthService, UtilService } from '../../providers/providers';
         <div #container ></div>
     `
   })
-  export class DynamicSessionItemComponent implements OnInit, OnDestroy {
+  export class DynamicSessionItemComponent implements OnInit, OnDestroy, OnChanges {
   
     @ViewChild('container', { read: ViewContainerRef })
     container: ViewContainerRef;
@@ -38,7 +38,17 @@ import { Api, AuthService, UtilService } from '../../providers/providers';
     @Output()
     onCommentClick = new EventEmitter<any>();
 
+    @Output()
+    onVoteClick = new EventEmitter<any>();
+
+    @Output()
+    onTagsClick = new EventEmitter<any>();
   
+    @Output()
+    onSessionRemoveClick = new EventEmitter<any>();
+
+    protected myInstance : any;
+
     private mappings = {
         'image': SessionItemComponentImage,
         'video': SessionItemComponentVideo
@@ -90,13 +100,39 @@ import { Api, AuthService, UtilService } from '../../providers/providers';
                 instance.itemSessionPath = this.context.getSessionItemPath();
             }
 
-            instance.onCommentClick.subscribe(value => this.handleCommentClicked(value))
+            instance.onCommentClick.subscribe(value => this.handleCommentClicked(value));
+            instance.onVoteClick.subscribe(value => this.handleVoteClicked(value));
+            instance.onTagsClick.subscribe(value => this.handleTagsClicked(value));
+            instance.onSessionRemoveClick.subscribe(value => this.handleSessionRemove(value));
 
+            this.myInstance = instance;
         }
+    }
+
+    ngOnChanges(changes : SimpleChanges){
+
+        console.log(changes);
+        if (changes["totalCnt"] && this.myInstance){
+            this.myInstance.totalCnt = changes["totalCnt"].currentValue;
+        }
+        
+
     }
 
     handleCommentClicked(value){
         this.onCommentClick.emit(value)
+    }
+
+    handleVoteClicked(value){
+        this.onVoteClick.emit(value)
+    }
+
+    handleTagsClicked(value){
+        this.onTagsClick.emit(value)
+    }
+
+    handleSessionRemove(value){
+        this.onSessionRemoveClick.emit(value)
     }
   
     ngOnDestroy() {
@@ -113,12 +149,22 @@ import { Api, AuthService, UtilService } from '../../providers/providers';
     @Output()
     onCommentClick = new EventEmitter<any>();
 
+    @Output()
+    onVoteClick = new EventEmitter<any>();
+
+    @Output()
+    onTagsClick = new EventEmitter<any>();
+
+    @Output()
+    onSessionRemoveClick = new EventEmitter<any>();
+
     context: any;
     index : any;
     flagIsTmp : boolean = false; 
     itemSessionPath : any;
     totalCnt : number;
     height : number;
+    showsComments : boolean = false;
     
   }
   
@@ -142,7 +188,30 @@ import { Api, AuthService, UtilService } from '../../providers/providers';
 
     }
 
+    getPosInt(position){
+        try{
+            return parseInt((parseFloat(position)*100).toFixed(0));
+        }catch(err){
+            return 50;
+        }
+        
+    }
+
+    hasSessionCloseClicked(context){
+        console.log("HERE")
+        this.onSessionRemoveClick.emit(context)
+    }
+
+    hasTagsClicked(context){
+        this.onTagsClick.emit(context);
+    }
+
     hasCommentClicked(context){
+        if (this.showsComments){
+            this.showsComments = false;
+        }else{
+            this.showsComments = true;
+        }
         this.onCommentClick.emit(context);
     }
 
@@ -158,6 +227,7 @@ import { Api, AuthService, UtilService } from '../../providers/providers';
     showReactions(ev: any, session: any){
 
         let hasVote = false;
+        
         if (session.myVote){
           hasVote = true;
         }
@@ -167,32 +237,9 @@ import { Api, AuthService, UtilService } from '../../providers/providers';
         });
     
         reactions.onDidDismiss((voteType : number) => {
-          if (voteType) {
-    
-            let vote = new Vote({
-              sessionId : session.getId(), 
-              voteType : voteType, 
-              userId : this.auth.getUserId()
-            });
-    
-            if (session.myVote){
-              session.myVote.voteType = voteType;
-            }else{
-              session.setMyVote(vote);
-            }
-            
-            this.api.upsertVote(this.api.selectedCollection.getId(), session.getId(), vote)
-    
-          }else{
-            // unvote = voteType = 0
-    
-            this.api.deleteVote(this.api.selectedCollection.getId(), session.getId()).subscribe( data => {
-              session.removeMyVote();
-            })
-    
-            // this.api.unvote();
-          }
-        })
+            console.log(voteType)
+            this.onVoteClick.emit(voteType)
+        });
     
         reactions.present({
             ev: ev

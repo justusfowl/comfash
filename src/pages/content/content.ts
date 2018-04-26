@@ -1,8 +1,8 @@
-import { Component, Sanitizer, AfterViewInit } from '@angular/core';
+import { Component, Sanitizer, AfterViewInit, ApplicationRef } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, PopoverController } from 'ionic-angular';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { Collection, Session, Comment, Vote } from '../../models/datamodel';
-import { Api, AuthService, ConfigService, UtilService, LocalSessionsService } from '../../providers/providers';
+import { Api, AuthService, ConfigService, UtilService, LocalSessionsService, VoteHandlerService } from '../../providers/providers';
 import * as $ from 'jquery';
 
 window['$'] = window['jQuery'] = $;
@@ -25,9 +25,21 @@ export class ContentPage implements AfterViewInit {
   prcSessionItem = 10; 
   
   comments = [];
+  showsComments : boolean = false;
+  commentText : string;
+
+  height : string = "100";
+
+  selectedSession : any = {};
+
+  tags = [];
+  showsTags : boolean = false;
 
   lastPressedX : any; 
   lastPressedY: any; 
+
+
+
 
   selectedCommentId : number = 0;
   enableCommentList : boolean = false;
@@ -42,11 +54,13 @@ export class ContentPage implements AfterViewInit {
     private screenOrientation: ScreenOrientation, 
     public modalCtrl: ModalController, 
     private api : Api, 
+    private appRef : ApplicationRef,
     public sanitizer : Sanitizer, 
     private auth : AuthService, 
     public config : ConfigService, 
     public util : UtilService, 
-    private localSession: LocalSessionsService) {
+    private localSession: LocalSessionsService, 
+    private voteHdl : VoteHandlerService) {
 
         this.compareItems.length = 0; 
 
@@ -92,6 +106,8 @@ export class ContentPage implements AfterViewInit {
 
             data.forEach(element => {
               let s = new Session(element);
+              s.castTags();
+
               this.compareItems.push(s);
             });
 
@@ -122,10 +138,147 @@ export class ContentPage implements AfterViewInit {
       }, 1500);
    }
 
-   onCommentClick(event){
-     console.log("comment got clicked", event)
+   toggleCommentShow(session, forceClose = false){
+
+      if (this.selectedSession["sessionId"] != session.getId() && !forceClose){
+        this.showsComments = true;
+        this.height = "70";
+        return;
+      }
+
+      if (this.showsComments || forceClose){
+        this.showsComments = false;
+        this.height = "100";
+      }else{
+          this.showsComments = true;
+          this.height = "70";
+      }
+
    }
+
+   toggleTagsShow(session, forceClose = false){
+
+    if (this.selectedSession["sessionId"] != session.getId() && !forceClose){
+      this.showsTags = true;
+      this.height = "70";
+      return;
+    }
+
+    if (this.showsTags || forceClose){
+      this.showsTags = false;
+      this.height = "100";
+    }else{
+        this.showsTags = true;
+        this.height = "70";
+    }
+
+  }
+
+  goToTagSite(url){
+    window.open(url, '_system', 'location=yes')
+  }
+
+   onPurchaseTagsClick(session : Session){
+     console.log(session.tags);
+
+    this.toggleCommentShow(session, true);
+    this.toggleTagsShow(session);
+
+    this.selectedSession = session;
+
+    this.tags = session.tags;
+
+   }
+
+   onSessionRemoveClick(session : Session, index : number){
+
+    console.log("i am in the content.jsremove function");
+    console.log(index)
+    
+    let setNewSession = false;
+
+    if (this.selectedSession["sessionId"] == session.getId()){
+      this.toggleCommentShow(session, true);
+      this.toggleTagsShow(session), true;
+      setNewSession = true;
+    }
+    this.api.toggleCompareSession(session, true);
+    this.compareItems.splice(index, 1);
+
+    if (setNewSession){
+      this.selectedSession = this.compareItems[0];
+    }
+
+
+  }
+
+   onVoteClick(voteType: number, session: Session){
+      this.voteHdl.handleVoteClicked(voteType, session);
+   }
+
+   onCommentClick(session : Session){
+
+    console.log("comment got clicked", session);
+
+    this.toggleTagsShow(session, true);
+    this.toggleCommentShow(session);
+    
+    
+    if (this.showsComments){
+      this.selectedSession = session;
+
+      this.api.getCommentsForSession(session).subscribe(
+        (data : Comment[]) => {
+
+          let resultComments = [];
+
+          data.forEach(element => {
+            let s = new Comment(element);
+            resultComments.push(s);
+          });
+
+          this.comments = resultComments;
+
+          console.log(resultComments);
+
+        },
+        error => {
+          this.api.handleAPIError(error);
+        }
+      );
+    }
+
+   }
+
    
+   addComment(){
+    let session : Session = this.selectedSession; 
+
+    console.log(this.commentText);
+
+    let tmpItem = new Comment({
+          commentText : this.commentText, 
+          userId : this.auth.getUserId(),
+          sessionId : session.getId(),
+          commentUserName : this.auth.getUsername(), 
+          commentUserAvatarPath : this.auth.getUserAvatarPath()
+        });
+
+        this.api.addCommentToSession(session.getCollectionId(), session.getId(), tmpItem).subscribe(
+          (data : any) => {
+
+            this.comments.unshift(tmpItem);
+            this.commentText = "";
+  
+          },
+          error => {
+            this.api.handleAPIError(error);
+          }
+        );
+        
+
+   }
+
    pressed(e, session : Session){
      
       // normalize coords to include offset of target element 
@@ -153,7 +306,7 @@ export class ContentPage implements AfterViewInit {
 
           tmpItem.calculateRatioFromCoords(coords,viewPort,session);
 
-          this.api.addCommentToSession(this.api.selectedCollection.getId(), session.getId(), tmpItem, session);  
+          // this.api.addCommentToSession(this.api.selectedCollection.getId(), session.getId(), tmpItem, session);  
 
         }
 
@@ -380,51 +533,6 @@ export class ContentPage implements AfterViewInit {
       return 'thumbs-up';
     }
   }
-
-  showReactions(ev: any, session: Session){
-
-    let hasVote = false;
-    if (session.myVote){
-      hasVote = true;
-    }
- 
-    let reactions = this.popoverCtrl.create('ReactionsPage', {
-      "hasVote" : hasVote
-    });
-
-    reactions.onDidDismiss((voteType : number) => {
-      if (voteType) {
-
-        let vote = new Vote({
-          sessionId : session.getId(), 
-          voteType : voteType, 
-          userId : this.auth.getUserId()
-        });
-
-        if (session.myVote){
-          session.myVote.voteType = voteType;
-        }else{
-          session.setMyVote(vote);
-        }
-        
-        this.api.upsertVote(this.api.selectedCollection.getId(), session.getId(), vote)
-
-      }else{
-        // unvote = voteType = 0
-
-        this.api.deleteVote(this.api.selectedCollection.getId(), session.getId()).subscribe( data => {
-          session.removeMyVote();
-        })
-
-        // this.api.unvote();
-      }
-    })
-
-    reactions.present({
-        ev: ev
-    });
-
-}
 
 
   checkIfMyVoteIsActive(session : Session){

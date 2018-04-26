@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
-
+import { PopoverController } from 'ionic-angular';
 import { Session, localSession } from '../../models/datamodel';
 
-import { Api, ConfigService, MsgService, AuthService, UtilService, LocalSessionsService } from '../../providers/providers';
+import { Api, ConfigService, MsgService, AuthService, UtilService, LocalSessionsService, VoteHandlerService } from '../../providers/providers';
 
 @IonicPage({
   segment: "imgCollection/:collectionId", 
@@ -31,7 +31,9 @@ export class ImgCollectionPage implements OnInit{
     public msg : MsgService, 
     public auth: AuthService, 
     public util: UtilService, 
-    private localSessions : LocalSessionsService) {
+    private popoverCtrl : PopoverController,
+    private localSessions : LocalSessionsService, 
+    private voteHdl : VoteHandlerService) {
     
     let collectionId = navParams.get('collectionId'); 
 
@@ -120,6 +122,33 @@ export class ImgCollectionPage implements OnInit{
     this.msg.presentConfirm(acceptHandler.bind(this))
 
   }
+
+  showReactions(ev: any, session: any){
+
+    let hasVote = false;
+    let self = this;
+    
+    if (session.myVote){
+      hasVote = true;
+    }
+ 
+    let reactions = this.popoverCtrl.create('ReactionsPage', {
+      "hasVote" : hasVote
+    });
+
+    reactions.onDidDismiss((voteType : number) => {
+        console.log(voteType);
+
+        self.voteHdl.handleVoteClicked(voteType, session);
+
+
+    });
+
+    reactions.present({
+        ev: ev
+    });
+
+}
 
   sortSessionsByVotes(){
 

@@ -34,7 +34,7 @@
       this.collectionId = fields.collectionId || null;
       this.collectionTitle = fields.collectionTitle || '';
       this.collectionDescription = fields.collectionDescription || '';
-      this.collectionCreated = new Date();
+      this.collectionCreated = new Date(fields.collectionCreated) || new Date();
       this.sessions = fields.sessions || [];
       this.privacyStatus = (fields.privacyStatus || 0).toString();
       
@@ -45,7 +45,7 @@
     }
 
     getMonthCreated(){
-      return padStart2("0", this.collectionCreated.getMonth().toString());
+      return padStart2("0", (this.collectionCreated.getMonth() + 1).toString());
     }
 
     getYearCreated(){
@@ -547,6 +547,10 @@
     getUsername(){
       return this.commentUserName;
     }
+
+    getUserAvatarPath(){
+      return this.commentUserAvatarPath;
+    }
   
     getDate(){
       return this.commentCreated;
@@ -685,12 +689,14 @@
       messageId: number;
       isUnread : boolean;
       senderName : string;
+      senderAvatarPath : string;
       receiverName : string;
       messageBody : string;
       messageCreated : Date;
       linkUrl : any;
       sessionThumbnailPath : string;
       collectionTitle : string;
+
     
     
       constructor(fields : any) {
@@ -698,11 +704,16 @@
         this.isUnread = fields.isUnread;
         this.receiverName = fields.receiverName;
         this.senderName = fields.senderName;
+        this.senderAvatarPath = fields.senderAvatarPath;
         this.messageBody = fields.messageBody; 
         this.linkUrl = JSON.parse(fields.linkUrl);
         this.messageCreated = fields.messageCreated;
         this.sessionThumbnailPath = fields.sessionThumbnailPath  || '/img/hangersbg.png';
         this.collectionTitle = fields.collectionTitle;
+      }
+
+      getSenderAvatar(){
+        return this.senderAvatarPath;
       }
   
       getAuthorName(){
@@ -753,14 +764,19 @@
       itemCreatorAvatarPath : string; 
       sessionItemPath : string; 
       sessionThumbnailPath : string;
+      sessionCreated : Date;
+      primeColor : string;
   
       collectionTitle: string; 
       collectionId : number;
+
       colOwner: string; 
       colOwnerId : string; 
-      commentCtn: number; 
-      votesCtn: number; 
-      votesAvg: number; 
+      colOwnerAvatarPath: string;
+
+      commentCnt: number; 
+      voteCnt: number; 
+      voteAvg: number; 
       refDate : Date;
       itemType: number; 
       
@@ -771,7 +787,7 @@
       voteType: number;
   
       myVoteType : number;
-  
+      myVote : Vote;
   
   
     
@@ -784,15 +800,19 @@
         this.sessionId = fields.sessionId;
         this.sessionItemPath = fields.sessionItemPath; 
         this.sessionThumbnailPath = fields.sessionThumbnailPath  || '/img/hangersbg.png';
+        this.sessionCreated = new Date(fields.sessionCreated);
+        this.primeColor = fields.primeColor;
   
         // referred collection
         this.collectionTitle = fields.collectionTitle;
         this.collectionId = fields.collectionId;
         this.colOwner = fields.colOwner;
         this.colOwnerId = fields.colOwnerId; 
+        this.colOwnerAvatarPath = fields.colOwnerAvatarPath  || '/img/hangersbg.png';
   
         // userId of the creator of the comment/vote /...
         this.userId = fields.userId;
+        
   
         // username of the creator + avatar
         this.itemCreator = fields.itemCreator;
@@ -800,9 +820,9 @@
   
         
         // stats on the session / collection
-        this.commentCtn = fields.commentCtn;
-        this.votesCtn = fields.votesCtn;
-        this.votesAvg = fields.votesAvg;
+        this.commentCnt = fields.commentCnt;
+        this.voteCnt = fields.voteCnt;
+        this.voteAvg = fields.voteAvg;
         
         // comment details
         this.commentId = fields.commentId  || null;
@@ -812,6 +832,16 @@
         // vote details
         this.voteChanged = fields.voteChanged || null;
         this.voteType = fields.voteType || null;
+
+        // per default there is not any vote by the user but if there is, parse it
+        if (fields.voteType){
+          this.myVote = new Vote({
+            sessionId : fields.sessionId, 
+            voteType : fields.myVoteType,
+            voteChanged : fields.myVoteChanged, 
+            userId : fields.userId
+          }); 
+        }
   
         // date of creation of the item (disregarding the itemType)
         this.refDate = fields.refDate; 
@@ -819,8 +849,15 @@
         // what is the vote type (if exists) for the requesting user if he/she has voted 
         this.myVoteType = fields.myVoteType || null;
   
-  
-      } 
+      }
+
+      getId(){
+        return this.sessionId;
+      }
+
+      getPrimeColor(){
+        return this.primeColor;
+      }
   
       getItemOwnerId(){
         return this.colOwnerId;
@@ -836,6 +873,17 @@
   
       getSessionId(){
         return this.sessionId;
+      }
+
+      setMyVote(vote : Vote){
+
+        this.voteCnt++;
+        this.myVote = vote;
+      }
+    
+      removeMyVote(){
+        delete this.myVote;
+        this.voteCnt--;
       }
   
   

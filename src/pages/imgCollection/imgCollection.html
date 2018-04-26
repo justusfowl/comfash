@@ -1,18 +1,13 @@
 <ion-header>
 
   <ion-navbar>
-    <!--
-    <ion-buttons>
-      <button ion-button icon-only (click)="navBack()" >
-        <ion-icon name="arrow-back" ></ion-icon>
-      </button>
-    </ion-buttons>
-    -->
-    <ion-title>{{ '@' + api.selectedCollection.userName + '#' + api.selectedCollection.collectionTitle }}</ion-title>
-
+    <ion-title>
+      {{ '#' + api.selectedCollection.collectionTitle }}
+      <p class="sub-page-title">@{{api.selectedCollection.userName}}</p>
+    </ion-title>
     <ion-buttons end>
 
-        <button class="footer-btns-button" ion-button icon-only (click)="compareItems()">
+        <button ion-button icon-only (click)="compareItems()">
           <ion-icon name="git-compare"></ion-icon>
         </button>
         
@@ -34,8 +29,7 @@
   </ion-refresher>
   
   <ion-grid>
-    <ion-row >
-       
+    <ion-row>
       <ion-col  col-6 *ngFor="let indexNo = index; let session of localSessions.userLocalSessions">
           <div class="photo-tile" [style.backgroundImage]="util.sanitizeStyle('url(' + session.src + ')')" (click)="selectCompareSession(session)">
               <div id="flag_{{indexNo}}" class="flag-compare flag" [class.active]="isCompared(session)">
@@ -86,7 +80,10 @@
                           <font class="cntFigure">
                               {{session.getNoVotes()}}
                             </font>
-                            <ion-icon name="thumbs-up" class="photo-tile-details-icon"></ion-icon>
+                          <ion-icon class="photo-tile-details-icon" [class.active]="session.myVote" ion-long-press 
+                          [interval]="400" 
+                          (click)="showReactions($event, session)"   icon-right clear small
+                          name="ios-thumbs-up-outline" ></ion-icon>
 
                           <font class="cntFigure">
                               {{session.getNoComments()}}
@@ -134,15 +131,15 @@
 
 
           <button ion-button icon-only (click)="captureCameraPicture(false)" *ngIf="auth.checkProfile(api.selectedCollection, 'owner')">
-            <ion-icon name="images"></ion-icon>
+            <ion-icon name="ios-images-outline"></ion-icon>
           </button>
 
           <button ion-button icon-only (click)="captureCameraPicture(true)" *ngIf="auth.checkProfile(api.selectedCollection, 'owner')">
-            <ion-icon name="camera"></ion-icon>
+            <ion-icon name="ios-camera-outline"></ion-icon>
           </button>
 
           <button ion-button icon-only (click)="addItem()" *ngIf="auth.checkProfile(api.selectedCollection, 'owner')">
-            <ion-icon name="refresh-circle"></ion-icon>
+            <ion-icon name="ios-refresh-outline"></ion-icon>
           </button>
 
           

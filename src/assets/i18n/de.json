@@ -49,16 +49,18 @@
   "SIGNUP_TITLE": "Registrieren",
   "SIGNUP_ERROR": "Fehler beim Registrieren, bitte überprüfe deine Informationen und versuche es erneut.",
   "SIGNUP_BUTTON": "Registrieren",
+  "PLEASE_WAIT" : "Bitte warte...",
 
   "LIST_MASTER_TITLE": "MyRoom",
 
   "BLANK_CARD_ADD_COLLECTION" : "Collektion hinzufügen",
 
-  "COLLECTION_CREATE_TITLE": "Neue Collektion",
+  "COLLECTION_CREATE_TITLE": "Deine Collektion",
   "COLLECTIONTITLE" : "Titel der Collektion",
   "COLLECTIONDESCRIPTION" : "Beschreibung",
   "PUBLIC": "Öffentlich",
 
+  "NEW_OUTFIT" : "Outfit",
 
   "BLANK_CARD_ADD_SESSION" : "Session hinzufügen",
   "BLANK_CARD_NO_SESSION_NO_OWNER" : " hat noch keine Session hinzugefügt.",
@@ -79,6 +81,7 @@
   "NEW_NOTIFICATION_FROM" : "Neue Nachricht von: ",
 
   "COMMENT_CREATE_TITLE" : "Kommentar", 
+  "BE_THE_FIRST_COMMENT" : "Kommentiere zuerst",
 
   "SELECT" : "AUSWÄHLEN",
   "DELETE" : "LÖSCHEN",
@@ -88,6 +91,19 @@
 
   "COL_HAS_INVITED" : " bittet um Unterstützung bei ",
   "HAS_REACTED_TO" : " reagiert auf ", 
-  "HAS_VOTED" : " bewertet "
+  "HAS_VOTED" : " bewertet ein Outfit ",
+
+  "01" : "jan",
+  "02" : "feb",
+  "03" : "mar",
+  "04" : "apr",
+  "05" : "mai",
+  "06" : "jun",
+  "07" : "jul",
+  "08" : "aug",
+  "09" : "sep",
+  "10" : "okt",
+  "11" : "nov",
+  "12" : "dez"
 
 }

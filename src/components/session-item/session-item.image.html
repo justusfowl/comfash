@@ -1,6 +1,26 @@
 
-<div class="session-item-container" [style.width]="(100 / totalCnt) + 'vw'" [style.height]="height + 'vh'" >
+<div class="session-item-container" [style.width]="(100 / totalCnt) + 'vw'">
     <img class="session-item-item" [src]="getItemSessionPath(itemSessionPath)">
+    
+    <ion-icon 
+        class="close-compare-session"
+        name="close" 
+        (click)="hasSessionCloseClicked(context)"
+        *ngIf="totalCnt > 1"
+    ></ion-icon>
+
+    <ion-icon 
+        class="purchase-tags-available"
+        name="pricetags" 
+        (click)="hasTagsClicked(context)"
+        *ngIf="context.tags.length > 0"
+    ></ion-icon>
+
+    <div class="tag" 
+    *ngFor="let tag of context.tags"
+    [style.top]="getPosInt(tag.yRatio) + '%'"
+    [style.left]="getPosInt(tag.xRatio) + '%'"
+    ></div>
 
     <ion-grid class="session-details" [hidden]="flagIsTmp">
         <ion-row>

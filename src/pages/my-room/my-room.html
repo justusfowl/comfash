@@ -10,7 +10,7 @@
 
     <ion-title >
       {{ 'LIST_MASTER_TITLE' | translate }}
-      <p class="room-user-Id">@{{roomUserName}}</p>
+      <p class="sub-page-title">@{{roomUserName}}</p>
 
     </ion-title>
 
@@ -20,6 +20,15 @@
         <div class="cnt-new-notifications"> {{msg.newMessages.length}}</div>   
           <ion-icon name="chatboxes" ></ion-icon>
       </button>
+
+      <button ion-button icon-only (click)="TESTpresent()" >
+            <ion-icon name="sync" ></ion-icon>
+      </button>
+
+
+
+      
+
     </ion-buttons>
   </ion-navbar>
 
@@ -38,7 +47,7 @@
     <ion-icon class="cf-fab-btn-icon" name="refresh-circle"></ion-icon>
 </button>
 
-<ion-content>
+<ion-content (ionScroll)="onContentScroll($event)">
   
   <ion-refresher (ionRefresh)="api.getCollections(roomUserId, ($event.complete()))">
       <ion-refresher-content
@@ -69,7 +78,34 @@
   </ion-fab>
 -->
 
-   <ion-list>
+
+  <ion-row ion-fixed >
+    <div id="profile-area" class="profile-area" [class.isFixed]="profileFixed">
+        <img class="profile-background" [src]="util.sanitizeResource(util.wrapHostBase(auth.getUserAvatarPath()))">
+
+        <div class="profile-avatar" 
+        [style.backgroundImage]="'url(' + util.wrapHostBase(auth.getUserAvatarPath()) + ')'">
+        </div>
+
+        <div class="profile-user">
+            @{{roomUserName}}
+        </div>
+
+        <div class="badge-container">
+            <div class="badge">
+                <ion-icon name="bookmark"></ion-icon>
+            </div>
+
+            <div class="badge">
+                <ion-icon name="bookmark"></ion-icon>
+            </div>
+        </div>
+        
+    </div>
+    
+  </ion-row>
+
+   <ion-list class="collection-list">
     <ion-item-sliding #slideItem *ngFor="let item of api.collections">
       <ion-item>
         <div class="session-tile" [style.backgroundImage]="'url(' + util.wrapHostBase(item.getThumbnail()) + ')'" (click)="openItem(item)">
@@ -81,7 +117,7 @@
           <div class="session-tile-details" [style.backgroundColor]="item.getPrimeColor() + 'e6'">
             <div class="info ">
               <p class="title center">#{{item.collectionTitle}}</p>
-              <p class="date center">12 may '18</p>
+              <p class="date center">{{item.getDayCreated()}} {{item.getMonthCreated() | translate}} '{{item.getYearCreated()}} </p>
             </div>
             <ion-grid class="details-container">
               <ion-row class="session-tile-row" >

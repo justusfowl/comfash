@@ -155,8 +155,6 @@ export class Api {
  */
   toggleCompareSession(session : Session, forceDelete = false){
 
-    
-
     let sessionId = session.getId();
     let currIndex = this.compareSessionIds.indexOf(sessionId);
 
@@ -333,17 +331,12 @@ export class Api {
 
   */
 
- addCommentToSession(collectionId : Number, sessionId : Number, comment: Comment, selectedSession : Session){ 
-  this.post("imgcollection/" + collectionId + "/session/" + sessionId + "/comment", comment).subscribe(
-    (data) => {
-      let addedComment = new Comment(data);
+ addCommentToSession(collectionId : Number, sessionId : Number, comment: Comment){ 
+  return this.post("imgcollection/" + collectionId + "/session/" + sessionId + "/comment", comment);
+}
 
-      selectedSession.addComment(addedComment);
-    },
-    error => {
-      this.handleAPIError(error);
-    }
-  )
+getCommentsForSession(session : Session){
+  return this.http.get(this.url + "/imgcollection/" + session.getCollectionId() + "/session/" + session.getId() + "/comment")
 }
 
 upsertVote(collectionId : number, sessionId: number, vote : Vote){

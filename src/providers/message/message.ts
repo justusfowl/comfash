@@ -111,13 +111,28 @@ export class MsgService implements OnInit {
       }
 
     toast(msg: string){
-
+        
         let toast = this.toastCtrl.create({
             message: msg,
             duration: 1000,
             position: 'top'
           });
           toast.present();
+
+    }
+
+    toastLoader(){
+
+        let msg = this.translate.instant("PLEASE_WAIT");
+
+        let toast = this.toastCtrl.create({
+            message: msg,
+            cssClass : "toast-loader",
+            position: 'top'
+          });
+
+        toast.present();
+        return toast;
 
     }
 

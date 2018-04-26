@@ -1,33 +1,68 @@
 
 <ion-content class="force-no-scroll" ion-fixed no-bounce no-scroll>
     
-      <ion-buttons class="btn-header">
+      <ion-buttons ion-fixed class="btn-header">
         <button ion-button icon-only (click)="navBack()">
           <ion-icon name="arrow-back"></ion-icon>
         </button>
       </ion-buttons>
 
-      <ion-row no-bounce no-scrolling id="row-compare-items"> 
+      <ion-row  ion-fixed no-bounce no-scrolling id="row-compare-items" [style.height]="height + 'vh'"> 
 
         <session-item 
           *ngFor="let session of compareItems; let i = index;"
           [type]="session.sessionItemType" 
           [context]="session"
-          [height]="99"
+          [height]="height"
           [totalCnt]="compareItems.length" 
           [index]="i"
           (onCommentClick)="onCommentClick($event)"
+          (onVoteClick)="onVoteClick($event, session)"
+          (onTagsClick)="onPurchaseTagsClick(session)"
+          (onSessionRemoveClick)="onSessionRemoveClick(session, i)"
           >
           
         </session-item>
       </ion-row>
 
-      <ion-list id="tag-list" class="tag-list" >
-          <div class="tag-list-item" *ngFor="let comment of getCommentsForSelectedSession();" [hidden]="comment.calculateDisplay(prcSessionItem)" (click)="highlightComment(comment)">
-                  {{comment.commentText}}
-                  <div class="comment-list-item-detail">
-                    {{comment.getUsername()}}, {{util.formatDateDiffToNow(comment.getDate())}}
-                  </div>
+      <ion-list id="tag-list" class="tag-list" [class.active]="showsTags">
+          <div class="tag-list-item" *ngFor="let tag of tags;">
+              <div class="tag-body">
+                <img class="tag-avatar" [src]="tag.tagImage">
+                <div class="tag-text">
+                    {{tag.tagTitle}}
+                </div>
+                <ion-icon class="tag-link" name="link" (click)="goToTagSite(tag.tagUrl)"></ion-icon>
+              </div>
+              <div class="tag-list-item-detail">
+                {{tag.tagSeller}}
+              </div>
+          </div>
+        </ion-list>
+
+      <ion-list id="comment-list" class="comment-list" [class.active]="showsComments">
+        <div class="comment-add-container">
+          <ion-input class="comment-add-text" [(ngModel)]="commentText" 
+          (keyup.enter)="addComment()"
+          [placeholder]="'COMMENT_CREATE_TITLE' | translate"
+          ></ion-input>
+          <ion-icon class="comment-add-btn" name="arrow-back" (click)="addComment()"></ion-icon>
+        </div>
+        <div class="be-first-comment" *ngIf="comments.length == 0">
+          {{'BE_THE_FIRST_COMMENT' | translate }}
+          <ion-icon class="icon" name="megaphone" ></ion-icon>
+        </div>
+          <div class="comment-list-item" *ngFor="let comment of comments;">
+              <div class="comment-body">
+                <img class="comment-avatar" [src]="util.wrapHostBase(comment.getUserAvatarPath())">
+                <div class="comment-text">
+                    {{comment.commentText}}
+                </div>
+              </div>
+                
+              <div class="comment-list-item-detail">
+                {{comment.getUsername()}}, {{util.formatDateDiffToNow(comment.getDate())}}
+              </div>
           </div>
       </ion-list>
   

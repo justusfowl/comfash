@@ -7,6 +7,7 @@ import { Settings } from './settings/settings';
 import { User } from './user/user';
 import { UtilService } from './util/util';
 import { LocalSessionsService } from './api/local.sessions';
+import { VoteHandlerService } from './vote/votehandler';
 
 export {
     ConfigService,
@@ -17,5 +18,6 @@ export {
     AuthService,
     Settings,
     User, 
-    UtilService
+    UtilService, 
+    VoteHandlerService
 };

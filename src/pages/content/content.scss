@@ -43,7 +43,6 @@ page-content{
 
     #row-compare-items{
         display: flex;
-        height: 80vh;
     }
 
     session-item {
@@ -54,6 +53,94 @@ page-content{
         height: 100%;
         width: 100%;
         object-fit: cover;
+    }
+
+    .comment-add-container{
+        display: flex; 
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .comment-add-text{
+        color: color($colors, dark-text, base);
+        width: 80%;
+        padding: 5px;
+    }
+
+    .comment-add-btn{
+        font-size: 30px;
+        color: grey;
+        padding: 10px;
+    }
+
+    #comment-list, 
+    #tag-list{
+        position: absolute; 
+        top: 70vh; 
+        height: 0;
+        width: 100%;
+        overflow: scroll;
+    }
+
+    #comment-list.active, 
+    #tag-list.active{
+        height: 30vh;
+    }
+
+    .comment-avatar, 
+    .tag-avatar{
+        height: 30px; 
+        width: 30px; 
+        border-radius: 2px;
+        margin: 7px;
+        object-fit: cover; 
+        object-position: center;
+    }
+    
+    .be-first-comment{
+        color: rgba(color($colors, light-grey, base),0.8);
+        width: 100%; 
+        text-align: center;
+        padding-top: 25px;
+    }
+    .be-first-comment .icon{
+        padding-left: 5px;
+    }
+
+    .comment-body, 
+    .tag-body{
+        display: flex; 
+        justify-content: left;
+        align-items: center;
+        color: color($colors, dark-text, base);
+    }
+
+    .tag-text{
+        max-width: 70vw;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .tag-link{
+        padding-left: 5px;
+    }
+
+    .comment-list-item, 
+    .tag-list-item{
+        background-color: white;
+        position: relative; 
+        border-bottom: 1px solid #eeeeee;
+    }
+
+    .comment-list-item-detail, 
+    .tag-list-item-detail{
+        font-size : 8px;
+        color: rgba(color($colors, dark-text, base),0.8);
+        padding-right: 5px;
+        position: absolute;
+        right: 5px;
+        bottom: 5px;
     }
 
 }

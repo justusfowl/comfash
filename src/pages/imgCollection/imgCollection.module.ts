@@ -3,6 +3,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { IonicPageModule } from 'ionic-angular';
 
 import { ImgCollectionPage } from './imgCollection';
+import { LongPressModule } from 'ionic-long-press';
 
 @NgModule({
   declarations: [
@@ -10,7 +11,8 @@ import { ImgCollectionPage } from './imgCollection';
   ],
   imports: [
     IonicPageModule.forChild(ImgCollectionPage),
-    TranslateModule.forChild()
+    TranslateModule.forChild(),
+    LongPressModule
   ],
   exports: [
     ImgCollectionPage

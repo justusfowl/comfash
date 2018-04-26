@@ -3,6 +3,7 @@
 import { Injectable } from '@angular/core';
 import { ConfigService } from '../config/config';
 import { DomSanitizer } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class UtilService {
@@ -11,9 +12,22 @@ export class UtilService {
 
     constructor(
         private cfg : ConfigService, 
-        private sanitizer:DomSanitizer
+        private sanitizer:DomSanitizer,
+        private translate: TranslateService
     ) {
        
+    }
+
+    formatToNoDisplay(value){
+        try{
+            if (value != null){
+                return value;
+            }else{
+                return "0";
+            }
+        }catch(err){
+            return "0";
+        }
     }
 
     formatToPercent(floatVal){
@@ -41,6 +55,13 @@ export class UtilService {
 
     sanitizeResource(value){ 
         return this.sanitizer.bypassSecurityTrustResourceUrl(value);
+    }
+
+    formatDate(inputDateStr : string){
+        let inputDate = new Date(inputDateStr);
+
+        let day = inputDate.getDate();
+
     }
 
 

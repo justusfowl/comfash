@@ -21,6 +21,12 @@ page-reactions {
         font-size: 30px;
     }
 
+    .voting-btns{
+        display: flex; 
+        justify-content: space-between;
+        align-items: center;
+    }
+
     .unvote{
         color: darkgrey;
         height: 100%; 
@@ -30,11 +36,12 @@ page-reactions {
     }
 
     .unvote-icon{
-        padding-left: 5px;
+        padding-left: 15px;
     }
 
     .reaction-icon{
-        font-size: 25px;
+        color: darkgrey;
+        font-size: 30px;
     }
  
 }

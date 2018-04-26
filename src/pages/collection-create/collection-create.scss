@@ -6,11 +6,7 @@ page-collection-create {
     background-color: unset;
   }
 
-  .main-cont{
-    height: 100vh; 
-    background-color: rgba($background-color,0.8) !important;
-    // padding-top: 40vh; 
-  }
+
 
   .header{
     position: relative !important;
@@ -50,6 +46,10 @@ page-collection-create {
       }
     }
   }
+  .form-item{
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
 
   .content{
     background-color: $background-color !important;
@@ -77,6 +77,16 @@ page-collection-create {
     padding: 4px; 
     border-radius: 4px;
     font-size: 12px; 
+  }
+
+  .search-list{
+    margin-bottom: 200px;
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+  .search-list ion-label{
+    margin: 0;
   }
 
 }

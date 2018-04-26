@@ -1,4 +1,4 @@
-<div class="main-cont">
+
   
 <ion-header>
 
@@ -29,21 +29,21 @@
 
     <form [formGroup]="collectionForm">
 
-      <ion-item>
+      <ion-item class="form-item">
         <ion-label floating>{{ 'COLLECTIONTITLE' | translate }}</ion-label>
 
         <ion-input  formControlName="collectionTitle" name="collectionTitle" type="text"></ion-input>
 
       </ion-item>
 
-      <ion-item>
+      <ion-item class="form-item">
         <ion-label floating>{{ 'COLLECTIONDESCRIPTION' | translate }}</ion-label>
 
         <ion-input  formControlName="collectionDescription" name="collectionDescription" type="text"></ion-input>
 
       </ion-item>
 
-      <ion-item>
+      <ion-item class="form-item">
         <ion-label>{{ 'PUBLIC' | translate }}</ion-label>
         <ion-select formControlName="privacyStatus" name="privacyStatus" >
           <ion-option *ngFor="let o of privacyOptions" [value]="o.value" >{{o.option}}</ion-option>
@@ -52,7 +52,7 @@
     
     </form>
 
-    <ion-item>
+    <ion-item class="form-item">
       <p>Einladen</p>
       <div class="selected-users-container">
           <div class="selected-user" *ngFor="let friend of sharedWithUsers; let i = index;" (click)="removeFriend(friend, i)" >
@@ -62,13 +62,16 @@
       </div>
       <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="searchChanged($event)"></ion-searchbar>
     </ion-item>
-
-    <ion-item *ngFor="let result of tmpSearchlist; let i = index;">
-        <div (click)="toggleFriend(result)" >
-            {{result.userName}}
-          <ion-icon name="checkmark" [hidden]="getIfCheckedHidden(result)" item-right></ion-icon>
-        </div>
-    </ion-item>
+      
+  <ion-list id="" #searchList class="search-list">
+      <ion-item *ngFor="let result of tmpSearchlist; let i = index;">
+          <div (click)="toggleFriend(result)" >
+              <ion-icon name="checkmark" [hidden]="getIfCheckedHidden(result)" item-right></ion-icon>
+              @{{result.userName}}
+          </div>
+      </ion-item>
+  </ion-list>
+    
 
   <!--
     <ion-list>
@@ -106,5 +109,3 @@
   -->
 </ion-content>
 
-
-</div>

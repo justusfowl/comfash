@@ -6,6 +6,7 @@ import { FittingStreamPage } from './fitting-stream';
 
 import { LongPressModule } from 'ionic-long-press';
 
+import { DynamicActivityItemModule } from '../../components/activity-item/activity-item.module';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { LongPressModule } from 'ionic-long-press';
   imports: [
     IonicPageModule.forChild(FittingStreamPage),
     TranslateModule.forChild(), 
-    LongPressModule
+    LongPressModule, 
+    DynamicActivityItemModule
   ],
   exports: [
     FittingStreamPage

@@ -6,7 +6,7 @@ import { Config, Nav, Platform } from 'ionic-angular';
 import { OneSignal } from '@ionic-native/onesignal';
 
 import { FirstRunPage, MainPage } from '../pages/pages';
-import { Settings, WebsocketService } from '../providers/providers';
+import { Settings, WebsocketService, UtilService } from '../providers/providers';
 
 import { Camera } from '@ionic-native/camera';
 
@@ -42,7 +42,8 @@ export class MyApp {
     private ws : WebsocketService, 
     public camera: Camera, 
     public api: Api, 
-    private cfg : ConfigService, 
+    private cfg : ConfigService,
+    private util: UtilService,
     public oneSignal : OneSignal) {
 
     platform.ready().then(() => {
@@ -239,7 +240,7 @@ export class MyApp {
         if (avatarPath.substring(0,4) == 'data'){
           return avatarPath; 
         }else{
-          return this.cfg.getHostBase() + avatarPath;
+          return this.util.wrapHostBase(avatarPath);
         }
       }else{
         return "";

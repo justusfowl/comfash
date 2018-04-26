@@ -116,6 +116,7 @@ export class AuthService {
                                 (data : any) => {
 
                                   authResult["userName"] = data.userName;
+                                  authResult["userAvatarPath"] = data.userAvatarPath;
 
                                   resolve(this.handleProfileSuccess(authResult));
 

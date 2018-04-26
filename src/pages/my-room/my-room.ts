@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ApplicationRef } from '@angular/core';
 import { IonicPage, ModalController, NavController, MenuController, NavParams } from 'ionic-angular';
 
 import { Collection } from '../../models/datamodel';
@@ -18,6 +18,8 @@ export class MyRoomPage {
   roomUserId : string = "";
   isMyRoom : boolean;
 
+  profileFixed : boolean = false;
+
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -28,8 +30,24 @@ export class MyRoomPage {
     public menu: MenuController,
     public config: ConfigService, 
     public util : UtilService, 
+    private appRef : ApplicationRef,
     private localSessions : LocalSessionsService) {
 
+  }
+
+  TESTpresent(){
+
+    let settingsModal = this.modalCtrl.create('SessionSettingsPage');
+
+    settingsModal.onDidDismiss(previewResult => {
+      if (previewResult) {
+
+        console.log(previewResult);
+
+      }
+    })
+    
+    settingsModal.present();
   }
 
   /**
@@ -43,6 +61,7 @@ export class MyRoomPage {
 
     if (!userId){
       userId = this.auth.getUserId();
+      
     }
     
     this.loadUserBase(userId);
@@ -54,6 +73,21 @@ export class MyRoomPage {
     }
 
     this.api.getCollections(userId);
+  }
+
+
+  onContentScroll(evt){
+
+    let scrollTop = evt.scrollTop;
+    let profileArea = document.getElementById("profile-area");
+    
+    if (scrollTop > profileArea.clientHeight){
+      this.profileFixed = true;
+    }else{
+      this.profileFixed = false;
+    }
+    this.appRef.tick();
+
   }
 
   loadUserBase(userId) {

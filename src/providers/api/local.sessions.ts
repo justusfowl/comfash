@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { File } from '@ionic-native/file';
 import { AuthService } from '../auth/auth';
 import { localSession, Session } from '../../models/datamodel';
-import { Platform } from 'ionic-angular';
+import { Platform, ModalController } from 'ionic-angular';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { Camera } from '@ionic-native/camera';
@@ -30,7 +30,8 @@ export class LocalSessionsService {
         public api : Api,
         public config : ConfigService,
         private transfer: FileTransfer, 
-        private sanitizer:DomSanitizer, 
+        private sanitizer:DomSanitizer,
+        public modalCtrl: ModalController, 
         private camera : Camera
     ) { 
         
@@ -72,8 +73,9 @@ export class LocalSessionsService {
                 targetWidth: window.outerWidth,
                 targetHeight:window.outerHeight
             }).then((data) => {
-      
-              self.storeImage(collectionId, data, "image/jpg");
+                
+            self.previewCameraPicture(collectionId, data, "image/jpg");
+              //self.storeImage(collectionId, data, "image/jpg");
       
             }, (err) => {
               alert('Unable to take photo');
@@ -81,6 +83,30 @@ export class LocalSessionsService {
           } else {
             console.log("click?"!);
           }
+
+    }
+
+    previewCameraPicture(collectionId : number, data : any, mimeType : string){
+
+        let self = this;
+
+        let settingsOptions = {
+            collectionId : collectionId, 
+            data : data, 
+            mimeType : mimeType
+        }
+
+        let settingsModal = this.modalCtrl.create('SessionSettingsPage', {"settingsOptions": settingsOptions});
+
+        settingsModal.onDidDismiss(previewResult => {
+          if (previewResult) {
+    
+            self.storeImage(collectionId, data, "image/jpg");
+    
+          }
+        })
+        
+        settingsModal.present();
 
     }
 

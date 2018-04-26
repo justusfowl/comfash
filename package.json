@@ -50,6 +50,7 @@
     "cordova-plugin-facebook4": "^1.10.1",
     "cordova-plugin-file": "^6.0.1",
     "cordova-plugin-file-transfer": "^1.7.1",
+    "cordova-plugin-inappbrowser": "^3.0.0",
     "cordova-plugin-ionic-keyboard": "^2.0.5",
     "cordova-plugin-ionic-webview": "^1.1.16",
     "cordova-plugin-media-capture": "^3.0.1",
@@ -95,7 +96,8 @@
       "cordova-plugin-facebook4": {
         "APP_ID": "1597049303683543",
         "APP_NAME": "Comfash"
-      }
+      },
+      "cordova-plugin-inappbrowser": {}
     },
     "platforms": [
       "ios"

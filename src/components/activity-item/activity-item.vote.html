@@ -1,0 +1,83 @@
+
+<div [id]="'activity-item_' + index" class="session-tile" [style.backgroundImage]="'url(' + util.wrapHostBase(context.sessionItemPath) + ')'">
+
+      <div class="session-tile-details" [style.backgroundColor]="context.getPrimeColor() + 'e6'">
+       
+        <ion-grid class="details-container">
+          <ion-row class="session-tile-row" >
+
+                <div class="creator-profile-avatar" 
+                        [style.backgroundImage]="'url(' + util.wrapHostBase(context.itemCreatorAvatarPath) + ')'">
+                </div>
+
+              <div class="session-tile-info-container">
+                <div class="session-tile-info "> 
+                    <p class="vote-text">
+
+                        <link-username
+                            [userName]="context.itemCreator"
+                            [userId]="context.userId"
+                        ></link-username>
+                            {{'HAS_VOTED' | translate }}
+                        <ion-icon  name="thumbs-up"></ion-icon>
+                    </p>
+
+                    <p class="date">{{util.formatDateDiffToNow(context.refDate)}}</p>
+                </div>
+              </div>
+
+          </ion-row>
+        </ion-grid>
+            
+      </div>
+
+
+      <div class="session-tile-details activity-item-details" [style.backgroundColor]="context.getPrimeColor() + 'e6'">
+            <div class="info ">
+              <p class="title center"> 
+
+                <link-collection
+                [collectionTitle]="context.collectionTitle"
+                [collectionId]="context.collectionId"
+                ></link-collection>
+            </p>
+            </div>
+            <ion-grid class="details-container">
+              <ion-row class="session-tile-row-owner" >
+                <ion-col>
+                    <div class="session-tile-info left owner-container">
+                        <div class="colOwner-profile-avatar" 
+                                [style.backgroundImage]="'url(' + util.wrapHostBase(context.colOwnerAvatarPath) + ')'">
+                        </div>
+                        <font class="colOwner">
+                            <link-username
+                                [userName]="context.colOwner"
+                                [userId]="context.colOwnerId"
+                            ></link-username>
+                        </font>
+                    </div>
+                </ion-col>
+    
+                <ion-col> 
+                    <div class="session-tile-info">
+                        <font class="cntFigure">
+                            {{util.formatToNoDisplay(context.voteCnt)}}
+                        </font>
+
+                        <ion-icon class="session-menu-btn right vote-icon-btn large" [class.active]="context.myVote" ion-long-press 
+                        [interval]="400" 
+                        (click)="showReactions($event, context)" icon-right clear small
+                        name="ios-thumbs-up-outline" ></ion-icon>
+
+                    <!--
+                        <ion-icon (click)="testClick($event)" name="thumbs-up" class="session-tile-details-icon"></ion-icon>
+                    -->
+
+
+                    </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+                
+          </div>
+    </div>

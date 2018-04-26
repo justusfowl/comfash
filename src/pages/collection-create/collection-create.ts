@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Camera } from '@ionic-native/camera';
-import { IonicPage, NavController, ViewController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, ViewController, NavParams, Content } from 'ionic-angular';
 
 import { Api, AuthService } from '../../providers/providers';
 
@@ -14,6 +14,10 @@ import { Collection } from '../../models/datamodel';
   templateUrl: 'collection-create.html'
 })
 export class CollectionCreatePage {
+
+  @ViewChild("searchList") searchList : ElementRef;
+
+  @ViewChild(Content) content : Content;
 
   tmpSearchlist : any;
   searchTerm : string;
@@ -109,8 +113,14 @@ export class CollectionCreatePage {
 
   }
 
-  ionViewDidLoad() {
+  scrollToList(){
+    let pos = this.searchList.nativeElement.getClientRects()[0];
 
+    this.content.scrollTo(0, pos.y);
+  }
+
+  ionViewDidLoad() {
+    
   }
 
   /**
@@ -145,6 +155,7 @@ export class CollectionCreatePage {
           try{
   
             this.tmpSearchlist = data;
+            this.scrollToList();
             
           }
           catch(err){

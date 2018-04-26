@@ -1,0 +1,26 @@
+
+@import "../../theme/variables";
+
+
+page-session-settings {
+
+    .preview-image-large{
+        height: 60vh; 
+        width: 100vw; 
+        object-fit: cover; 
+        object-position: center;
+    }
+
+    .option-list{
+        display: flex;
+
+    }
+    
+    .filter-option{
+        display: inline-flex;
+        padding: 5px;
+        margin: 5px;
+        color: white;
+        background-color: rgba($background-color, 0.4)
+    }
+}

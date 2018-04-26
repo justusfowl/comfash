@@ -25,7 +25,8 @@ import {
   WebsocketService,  
   Settings, 
   AuthService, 
-  UtilService } from '../providers/providers';
+  UtilService,
+  VoteHandlerService } from '../providers/providers';
 
 import { AuthIntercept } from '../providers/api/authintercept'
 import { MyApp } from './app.component';
@@ -77,6 +78,7 @@ export function createTranslateLoader(http: HttpClient) {
     WebsocketService,
     Api,
     LocalSessionsService,
+    VoteHandlerService,
     { provide: HTTP_INTERCEPTORS, useClass : AuthIntercept, multi: true},
     User,
     Camera,

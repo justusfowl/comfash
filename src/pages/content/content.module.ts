@@ -5,7 +5,7 @@ import { IonicPageModule } from 'ionic-angular';
 import { ContentPage } from './content';
 
 
-import { DynamicSessionItemModule } from '../../comp/session-item/session-item.module';
+import { DynamicSessionItemModule } from '../../components/session-item/session-item.module';
 
 @NgModule({
   declarations: [

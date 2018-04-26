@@ -1,0 +1,23 @@
+
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{ 'NEW_OUTFIT' | translate }}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content>
+
+  <img id="preview-img" class="preview-image-large" [src]="util.wrapHostBase(testImg)">
+
+  <div class="footer-area">
+    <div class="option-list">
+       <div class="filter-option" *ngFor="let filter of filterOptions; let i = index;">
+        {{filter.name}}
+      </div>
+    </div>
+  </div>
+
+</ion-content>

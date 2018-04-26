@@ -60,12 +60,4 @@ export class NotificationsPage {
     }
   }
 
-  getAuthorText(message){
-    if (message.receiverName != this.auth.getUsername()){
-      return 'sent to ' + message.receiverName;
-    }else{
-      return 'received from ' + message.senderName;
-    }
-  }
-
 }
