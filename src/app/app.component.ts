@@ -92,7 +92,6 @@ export class MyApp {
     }
 
 
-
     });
 
     if (auth.getToken()){

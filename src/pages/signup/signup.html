@@ -18,7 +18,7 @@
 
 <ion-content>
   <form (submit)="doSignup()">
-    <ion-list>
+    <ion-list class="sign-up-form-list">
 
       <ion-item>
         <ion-label class="login-label" floating>{{ 'EMAIL' | translate }}</ion-label>
@@ -46,4 +46,9 @@
 
     </ion-list>
   </form>
+
+  <div class="footer-signup" padding> 
+    {{'ACCEPT_TERMS' | translate}} <a href='http://comfash.de/terms' >Nutzungsbedingungen</a>{{'ACCEPT_TERMS_SUFFIX' | translate}} 
+  </div>
+
 </ion-content>

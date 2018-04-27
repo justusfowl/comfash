@@ -902,3 +902,34 @@
   
   
     }
+
+
+    export class User {
+  
+      userId: string;
+      userName : string;
+      userAvatarPath : string;
+
+      constructor(fields : any) {
+
+        this.userId = fields.userId;
+        this.userName = fields.userName;
+        this.userAvatarPath = fields.userAvatarPath || '/img/hangersbg.png';
+      }
+    
+      getUserId(){
+        return this.userId;
+      }
+    
+      getUserName(){
+        return this.userName;
+      }
+
+      getUserAvatarPath(){
+        return this.userAvatarPath;
+      }
+    
+      
+    
+    
+    }

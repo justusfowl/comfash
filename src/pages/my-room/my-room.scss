@@ -45,14 +45,45 @@ page-my-room {
         background-size: cover;
     }
 
+
+    .follow-btn{
+        height: 30px; 
+        margin-top: 8px;
+        font-family: Roboto;
+        font-size:16px;
+    }
+
+    .follow-btn-small{
+        display: none;
+    }
+
+    .profile-area.isFixed .follow-btn-small{
+        display: unset;
+        position: absolute; 
+        right: 0; 
+        font-size: 12px; 
+        height: 22px;
+        margin-right: 0;
+    }
+
+    .profile-area.isFixed .follow-btn{
+        display: none;
+    }
+
+
     .profile-area.isFixed .profile-user{
+        font-size: 12px;
+        font-weight: 100;
         left: 70px;
         bottom: 8px;
+        top: unset;
     }
 
     .profile-user{
+        font-size: 20px;
+        font-weight: 100;
         left: 120px;
-        bottom: 20px;
+        top: 50px;
         position: absolute;
         color : color($colors, dark-text, base)
     }

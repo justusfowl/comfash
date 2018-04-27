@@ -24,14 +24,14 @@
       </ion-list>
     </form>
 
-    <button ion-button icon-right (click)="auth.testFB()" >
+    <button ion-button icon-right (click)="auth.facebookLogin()" hidden >
       Login with
       <ion-icon name="logo-facebook"></ion-icon>
     </button>
 
 
     <div class="footer-signup" padding (click)="signUp()"> 
-      New to comfash? Sign-up <a hred='#' >here</a>
+        {{ 'LOGIN_NEW' | translate }}<a hred='#' >{{'LOGIN_HERE' | translate}}</a> {{'LOGIN_NEW_SUFFIX' | translate}}
     </div>
   </div>
 </ion-content>

@@ -117,7 +117,7 @@ export class VoteHandlerService {
         case -50:
             iconName = "thumbs-down";
             break;
-        case 0:
+        case 25:
             iconName = "sad";
             break;
         case 75:

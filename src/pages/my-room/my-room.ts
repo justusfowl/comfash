@@ -1,7 +1,7 @@
 import { Component, ApplicationRef } from '@angular/core';
 import { IonicPage, ModalController, NavController, MenuController, NavParams } from 'ionic-angular';
 
-import { Collection } from '../../models/datamodel';
+import { Collection, User } from '../../models/datamodel';
 import { Api, AuthService, MsgService, ConfigService, UtilService, LocalSessionsService } from '../../providers/providers';
 
 
@@ -14,8 +14,10 @@ import { Api, AuthService, MsgService, ConfigService, UtilService, LocalSessions
   templateUrl: 'my-room.html'
 })
 export class MyRoomPage {
+  roomUser : User;
   roomUserName : string = "";
   roomUserId : string = "";
+  roomUserAvatarPath : string = "";
   isMyRoom : boolean;
 
   profileFixed : boolean = false;
@@ -79,8 +81,11 @@ export class MyRoomPage {
   loadUserBase(userId) {
     this.roomUserId = userId; 
     this.api.getUserProfileBase(userId).subscribe(
-      (data : any) => {
-        this.roomUserName = data.userName;
+      (data : User) => {
+        let user = new User(data);
+        this.roomUser = user;
+        this.roomUserName = user.getUserName();
+        this.roomUserAvatarPath = user.getUserAvatarPath();
       },
       error => {
         this.api.handleAPIError(error);
@@ -141,6 +146,7 @@ export class MyRoomPage {
   quickSelectCapture(collection, slidingItem){
     this.api.setSelectedCollectionId(collection.getId())
     slidingItem.close();
+    this.takePictureToCollection();
   }
 
   /**

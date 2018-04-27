@@ -10,8 +10,6 @@
 
     <ion-title >
       {{ 'LIST_MASTER_TITLE' | translate }}
-      <p class="sub-page-title">@{{roomUserName}}</p>
-
     </ion-title>
 
     <ion-buttons end>
@@ -30,11 +28,11 @@
     <ion-icon class="cf-fab-btn-icon" name="add"></ion-icon>
 </button>
 
-<button color="primary" class="cf-fab-btn right-2" *ngIf="auth.getUserId() == roomUserId" [disabled]="api.getSelectedCollectionId().isSelected" (click)="takePictureToCollection()">
+<button color="primary" class="cf-fab-btn right" *ngIf="auth.getUserId() == roomUserId" [disabled]="api.getSelectedCollectionId().isSelected" (click)="takePictureToCollection()">
     <ion-icon class="cf-fab-btn-icon" name="camera"></ion-icon>
 </button>
 
-<button color="primary" class="cf-fab-btn right" *ngIf="auth.getUserId() == roomUserId" [disabled]="api.getSelectedCollectionId().isSelected" (click)="captureToCollection()">
+<button hidden color="primary" class="cf-fab-btn right-2" *ngIf="auth.getUserId() == roomUserId" [disabled]="api.getSelectedCollectionId().isSelected" (click)="captureToCollection()">
     <ion-icon class="cf-fab-btn-icon" name="refresh-circle"></ion-icon>
 </button>
 
@@ -72,15 +70,20 @@
 
   <ion-row ion-fixed >
     <div id="profile-area" class="profile-area" [class.isFixed]="profileFixed">
-        <img class="profile-background" [src]="util.sanitizeResource(util.wrapHostBase(auth.getUserAvatarPath()))">
-
+       <!-- <img class="profile-background" [src]="util.sanitizeResource(util.wrapHostBase(auth.getUserAvatarPath()))">
+      -->
         <div class="profile-avatar" 
-        [style.backgroundImage]="'url(' + util.wrapHostBase(auth.getUserAvatarPath()) + ')'">
+        [style.backgroundImage]="'url(' + util.wrapHostBase(roomUserAvatarPath) + ')'">
         </div>
+      
+        
 
         <div class="profile-user">
-            @{{roomUserName}}
+            <div>@{{roomUserName}}</div>
+            <button class="follow-btn" ion-button color="primary">Folgen</button>
         </div>
+
+        <button class="follow-btn-small" ion-button color="primary">Folgen</button>
 
         <div class="badge-container">
             <div class="badge">

@@ -24,13 +24,17 @@ export class AuthService {
 
     public testDeviceId : string = "";
 
+    
+
     public auth0Config = {
         clientID: 'IEFi9KoFw0QdQbtoXoCcD523MZ3OVULr',
+        clientId: 'IEFi9KoFw0QdQbtoXoCcD523MZ3OVULr',
         domain: 'comfash.eu.auth0.com',
         responseType: 'token id_token',
         audience: 'https://comfash.eu.auth0.com/api/v2/',
         redirectUri: 'https://comfash.com/',
-        scope: 'openid profile email' 
+        scope: 'openid profile email', 
+        packageIdentifier : "com.comfash.mobile"
       }
 
     private Auth0 : any;
@@ -51,6 +55,7 @@ export class AuthService {
 
 
     }
+
  
     loginOld(userId : string, password : string){
 
@@ -76,60 +81,25 @@ export class AuthService {
                         this.isAuth = true;
                         console.log("FACEBOOK AUTHENTICATED ME");
 
-                        const credentials = {
-                            client_id: self.auth0Config.clientID,
-                            access_token: res.authResponse.accessToken,
-                            scope: self.auth0Config.scope,
-                            connection: 'facebook'
-                          };
-
-
-                        console.log(JSON.stringify(res.authResponse));
-                        self.handleAuthSuccess(res.authResponse, resolve, reject);
                         
-                    } else {
-                        this.isAuth = false;
-                        reject();
-                    }
-                })
-                .catch(e => console.log('Error logging into Facebook', JSON.stringify(e)));
-        });
-
-        
-    }
-
-    testFB(){
-
-        let self = this; 
-
-        return new Promise<any>((resolve, reject) => {
-            this.fb.login(['public_profile', 'user_friends', 'email'])
-                .then(res => {
-                    if(res.status === "connected") {
-                        this.isAuth = true;
-                        console.log("FACEBOOK AUTHENTICATED ME");
-
                         const credentials = {
-                            client_id: self.auth0Config.clientID,
-                            access_token: res.authResponse.accessToken,
-                            scope: self.auth0Config.scope,
+                            fb_access_token: res.authResponse.accessToken,
                             connection: 'facebook'
                           };
+                          
 
-
-                        console.log(JSON.stringify(res.authResponse));
-
-                        self.Auth0.authorize(credentials, (err, authResult) => {
-                            if (err){
-                                console.error(JSON.stringify(err));
-                                reject(err)
-                                return;
-                            }else{
-                                console.log("authenticated");
+                        self.api.post("auth/f", credentials).subscribe(
+                            (authResult : any) => {
+                                console.log("  i am here in the auth/f result");
                                 console.log(JSON.stringify(authResult));
-                                resolve(authResult);
+                                authResult["accessToken"] = authResult.access_token;
+
+                              resolve(this.handleAuthSuccess(authResult, resolve, reject));
+                            },
+                            error => {
+                              this.api.handleAPIError(error);
                             }
-                        })
+                          );
                         
                     } else {
                         this.isAuth = false;
@@ -255,6 +225,32 @@ export class AuthService {
         return;
 
         
+    }
+
+    signUp(account){
+        let self = this;
+
+        return new Promise<any>((resolve, reject) => {
+        
+            this.Auth0.signup({
+                client_id: this.auth0Config.clientID,
+                username : account.userName,
+                email: account.userId,
+                password: account.password,
+                connection: 'Username-Password-Authentication'
+            }, (err, result) => {
+                if (err){
+                    console.error(err);
+                    this.api.handleAPIError(err);
+                    reject(err)
+                    return;
+                }else{
+                    console.log("signed up");
+                    console.log(result);
+                    resolve(result);
+                }
+            })
+        });
     }
 
     setAvatarBaseStr (avatarBase){

@@ -115,6 +115,28 @@ html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: 
   .flag-icon.active{
     color: white;
   }
+
+  @keyframes spin {
+        from {transform:rotate(0deg);}
+        to {transform:rotate(360deg);}
+    }
+
+    .flag-sync{
+        width: 100%; 
+        text-align: center;
+        padding: 0;
+        margin: 0;
+    }
+
+  .in-progress{
+    animation: spin 1.9s infinite linear;
+    -webkit-transform-origin: 50% 50%;
+    -moz-transform-origin: 50% 50%;
+    -o-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+  }
+
+
   
   .flag.active{
     background: color($colors, primary, base);

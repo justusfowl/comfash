@@ -41,7 +41,22 @@ export class ImgCollectionPage implements OnInit{
 
     // entweder selectedCollection aus der API gibts (dann nimm) sonst ladt und pack in API
 
-    let loadCollection : any = this.api.loadCollection(collectionId);
+    this.loadCollection(true)
+
+
+ 
+  }
+
+  uploadLocalSession(session : any){
+    session.uploadInProgress = true;
+    let self = this;
+    this.localSessions.upload(session).then((res : any) => {
+      self.loadCollection(true);
+    }).catch(e => console.log('Error in upload localsession:', JSON.stringify(e)));
+  }
+
+  loadCollection(forced = false, loader? : any){
+    let loadCollection : any = this.api.loadCollection(this.selectedCollectionId, forced);
 
     let comp = this;
     loadCollection.observable.subscribe(
@@ -54,14 +69,16 @@ export class ImgCollectionPage implements OnInit{
             comp.api.handleLoadCollection(data);
         }
 
-        this.sortSessionsByVotes();
+        if (loader){
+          loader.complete();
+        }
+        // this.sortSessionsByVotes();
 
       },
       error => {
         comp.api.handleAPIError(error);
       }
     )
- 
   }
 
   ngOnInit(){

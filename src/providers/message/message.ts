@@ -69,13 +69,14 @@ export class MsgService implements OnInit {
         }
     }
 
-    alert(msg: any){
+    alert(msgKey: any){
 
+        let msg = this.translate.instant(msgKey);
 
         let alert = this.alertCtrl.create({
             title: 'Comfash',
             subTitle: msg,
-            buttons: ['Dismiss']
+            buttons: [this.translate.instant("ACCEPT_BUTTON")]
           });
           alert.present();
 
@@ -86,9 +87,9 @@ export class MsgService implements OnInit {
         let title = this.translate.instant("ALERT_DELETE_TITLE");
         let msg = this.translate.instant("ALERT_DELETE_MSG");
 
-        let cancelTxt = this.translate.instant("CANCEL");
+        let cancelTxt = this.translate.instant("CANCEL_BUTTON");
 
-        let acceptTxt = this.translate.instant("ACCEPT");
+        let acceptTxt = this.translate.instant("ACCEPT_BUTTON");
 
         let alert = this.alertCtrl.create({
           title: title,
@@ -110,11 +111,13 @@ export class MsgService implements OnInit {
         alert.present();
       }
 
-    toast(msg: string){
+    toast(msgKey: string, duration = 1000){
+
+        let msg = this.translate.instant(msgKey);
         
         let toast = this.toastCtrl.create({
             message: msg,
-            duration: 1000,
+            duration: duration,
             position: 'top'
           });
           toast.present();

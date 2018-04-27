@@ -79,6 +79,7 @@
   "SAVE_BUTTON" : "Save",
 
   "CANCEL_BUTTON": "Cancel",
+  "ACCEPT_BUTTON" : "OK",
   "DELETE_BUTTON": "Delete",
 
   "PLEASE_WAIT" : "Please wait...",
@@ -116,7 +117,19 @@
   "09" : "sep",
   "10" : "oct",
   "11" : "nov",
-  "12" : "dec"
+  "12" : "dec",
 
+  "LOGIN_NEW" : "New to comfash? Sign up ",
+  "LOGIN_NEW_SUFFIX" : "",
+  "LOGIN_HERE" : "here",
 
+  "ACCEPT_TERMS" : "In order to register, you accept our ",
+  "ACCEPT_TERMS_SUFFIX" : "",
+  "TERMS" : "terms of service",
+  "WELCOME_SIGNUP" : "Welcome to comfash - glad you are here!",
+
+ 
+ "ERROR_400_USER_EXISTS" : "We have already registered an account for this email.",
+  "ERROR_400_INVALID_PASSWORD" : "Please use strong passphrases with a minimum of 8 characters and a combination of special characters, letters and numbers.",
+  "UNIVERSAL_ERROR" : "Unfortunately, something went wrong - please try again."
 }

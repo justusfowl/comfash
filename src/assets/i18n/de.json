@@ -12,6 +12,7 @@
   "SAVE_BUTTON" : "Speichern",
 
   "SIGNUP": "Registrieren",
+  "ACCEPT_BUTTON" : "OK",
   "CANCEL_BUTTON": "Schließen",
 
   "TAB1_TITLE": "Items",
@@ -104,6 +105,18 @@
   "09" : "sep",
   "10" : "okt",
   "11" : "nov",
-  "12" : "dez"
+  "12" : "dez", 
+
+  "LOGIN_NEW" : "Neu bei Comfash? Melde Dich ",
+  "LOGIN_NEW_SUFFIX" : " an",
+  "LOGIN_HERE" : "hier",
+  "ACCEPT_TERMS" : "Mit Deiner Registrierung stimmst Du unseren ",
+  "ACCEPT_TERMS_SUFFIX" : " zu",
+  "TERMS" : "Nutzungsbedingungen",
+  "WELCOME_SIGNUP" : "Willkommen bei Comfash - wir freuen uns, dass Du hier bist!",
+
+  "ERROR_400_USER_EXISTS" : "Es existiert bereits ein Konto mit dieser Email.",
+  "ERROR_400_INVALID_PASSWORD" : "Bitte verwende ein starkes Passwort mit min. 8 Zeichen und einer Mischung aus Sonderzeichen, Buchstaben und Ziffern.",
+  "UNIVERSAL_ERROR" : "Leider hat das nicht geklappt, bitte versuche es erneut."
 
 }

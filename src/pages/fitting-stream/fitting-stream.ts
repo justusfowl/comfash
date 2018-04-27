@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, OnDestroy, ApplicationRef } from '@angular/core';
 import { IonicPage, NavController, PopoverController, Content, LoadingController} from 'ionic-angular';
 import { Api, ConfigService, UtilService, AuthService, MsgService, VoteHandlerService } from '../../providers/providers';
 import { TranslateService } from '@ngx-translate/core';
@@ -26,10 +26,11 @@ export class FittingStreamPage {
 
   loader : any;
 
+
   touches = {
 		"touchstart": {"x":-1, "y":-1, "target" : ""}, 
-		"touchmove" : {"x":-1, "y":-1}, 
-		"touchend"  : false,
+    "touchmove" : {"x":-1, "y":-1}, 
+    "touchend" : {"x":-1, "y":-1, "isEnd" : false}, 
     "directionX" : "undetermined",
     "directionY" : "undetermined"
   }
@@ -44,7 +45,9 @@ export class FittingStreamPage {
     private auth : AuthService, 
     private voteHdl : VoteHandlerService, 
     public loadingCtrl : LoadingController,
-    public msg: MsgService) {
+    public msg: MsgService, 
+    //private ref : ChangeDetectorRef, 
+    private AppRef : ApplicationRef) {
 
     
     this.getTrendStream(null, true);
@@ -56,13 +59,11 @@ export class FittingStreamPage {
 
 
     document.addEventListener('touchstart', this.touchHandler.bind(this), false);	
-		document.addEventListener('touchmove', this.touchHandler.bind(this), false);	
+		// document.addEventListener('touchmove', this.touchHandler.bind(this), false);	
     document.addEventListener('touchend', this.touchHandler.bind(this), false);
-    
-
-
 
   }
+
 
   touchHandler(event : any) {
     var touch;
@@ -91,22 +92,22 @@ export class FittingStreamPage {
             self.touches[event.type].x = touch.pageX;
             self.touches[event.type].y = touch.pageY;
 						break;
-					case 'touchend':
-            self.touches[event.type] = true;
+          case 'touchend':
+          
+          let changedTouch = event.changedTouches[0];
+
+            self.touches[event.type].x = changedTouch.pageX;
+            self.touches[event.type].y = changedTouch.pageY;
+
+            self.touches[event.type].isEnd = true;
 
             if (self.touches.touchstart.target == "session-tile"){
-              if (self.touches.touchstart.x > -1 && self.touches.touchmove.x > -1) {
-                self.touches.directionX = self.touches.touchstart.x < self.touches.touchmove.x ? "right" : "left";
-                
-                // DO STUFF HERE
-                console.log(self.touches.directionX);
-              }
               
-              if (self.touches.touchstart.y > -1 && self.touches.touchmove.y > -1) {
-                self.touches.directionY = self.touches.touchstart.y < self.touches.touchmove.y ? "down" : "up";
+              if (self.touches.touchstart.y > -1 && self.touches.touchend.y > -1) {
+                self.touches.directionY = self.touches.touchstart.y < self.touches.touchend.y ? "down" : "up";
                 
-                // DO STUFF HERE
                 console.log(self.touches.directionY);
+                
                 self.handleScrollEnd(self.touches);
               }
 
@@ -196,6 +197,8 @@ export class FittingStreamPage {
     console.log("in scrollend")
     console.log(JSON.stringify(event));
 
+    console.log("this is the visibileIndex: ", this.visibleIndex)
+
     if (!this.programScrolling){
 
       if (event.directionY == "up"){
@@ -206,6 +209,7 @@ export class FittingStreamPage {
             this.infiniteScroll(null)
           }
           this.visibleIndex++;
+          this.AppRef.tick();
         }
       
     }else{
@@ -213,6 +217,7 @@ export class FittingStreamPage {
 
         if (this.visibleIndex > 0){
           this.visibleIndex--;
+          this.AppRef.tick();
         }else{
           this.getTrendStream(null, true);
         }

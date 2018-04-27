@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.comfash.mobile" version="1.1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.comfash.mobile" version="1.1.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>comfash</name>
     <description>Comfash mobile application</description>
     <author email="mail@comfash.com" href="http://comfash.com/">Comfash</author>
@@ -11,6 +11,7 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <preference name="AndroidLaunchMode" value="singleTask" />
     <preference name="ScrollEnabled" value="false" />
     <preference name="android-minSdkVersion" value="16" />
     <preference name="BackupWebStorage" value="none" />
@@ -108,5 +109,12 @@
     <plugin name="cordova-plugin-inappbrowser" spec="^3.0.0" />
     <plugin name="cordova-plugin-network-information" spec="^2.0.1" />
     <plugin name="cordova-plugin-background-fetch" spec="^5.3.0" />
-    <engine name="ios" spec="~4.5.4" />
+    <plugin name="cordova-plugin-safariviewcontroller" spec="^1.5.3" />
+    <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">
+        <variable name="URL_SCHEME" value="com.comfash.mobile" />
+        <variable name="ANDROID_SCHEME" value="com.comfash.mobile" />
+        <variable name="ANDROID_HOST" value="comfash.eu.auth0.com" />
+        <variable name="ANDROID_PATHPREFIX" value="/cordova/com.comfash.mobile/callback" />
+    </plugin>
+    <engine name="ios" spec="4.5.4" />
 </widget>

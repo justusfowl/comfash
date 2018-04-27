@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IonicPage, NavController, ToastController, ViewController } from 'ionic-angular';
-import { User, Api, MsgService } from '../../providers/providers';
+import { User, Api, MsgService, AuthService } from '../../providers/providers';
 
 @IonicPage()
 @Component({
@@ -28,7 +28,7 @@ export class SignupPage {
     public user: User,
     public toastCtrl: ToastController,
     public translateService: TranslateService, 
-    public api : Api, 
+    public auth : AuthService, 
     private msg : MsgService) {
 
     this.translateService.get('SIGNUP_ERROR').subscribe((value) => {
@@ -37,6 +37,14 @@ export class SignupPage {
   }
 
   doSignup() {
+
+    this.auth.signUp(this.account)
+    .then((data : any) => {
+      this.viewCtrl.dismiss();
+      this.msg.alert("WELCOME_SIGNUP")
+    }).catch(e => this.handleSignupError(e));
+
+    /*
     // Attempt to login in through our User service
     this.api.post('auth/register', this.account).subscribe((resp) => {
       this.viewCtrl.dismiss();
@@ -53,6 +61,29 @@ export class SignupPage {
       });
       toast.present();
     });
+
+    */
+  }
+
+  handleSignupError(error){
+    
+    let code = error.code;
+
+    let msgKey;
+
+    switch(code){
+      case "user_exists": 
+        msgKey = "ERROR_400_USER_EXISTS";
+        break;
+      case "invalid_password": 
+        msgKey = "ERROR_400_INVALID_PASSWORD";
+        break; 
+      default: 
+        msgKey = "UNIVERSAL_ERROR";
+    }
+
+    this.msg.toast(msgKey, 2000)
+
   }
 
   cancel() {

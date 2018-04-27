@@ -40,8 +40,8 @@ export class ConfigService {
 
         platform.ready().then(() => {
 
-            self.networkType = network.type;
-            self.downloadSpeed = network.downlinkMax;
+            self.networkType = this.network.type;
+            self.downloadSpeed = this.network.downlinkMax;
 
             // watch network for a disconnect
             this.network.onDisconnect().subscribe(() => {
@@ -58,6 +58,7 @@ export class ConfigService {
                 // before we determine the connection type. Might need to wait.
                 // prior to doing any api requests as well.
                 setTimeout(() => {
+                    self.downloadSpeed = this.network.downlinkMax;
                     self.networkType = this.network.type;
                 }, 3000);
 

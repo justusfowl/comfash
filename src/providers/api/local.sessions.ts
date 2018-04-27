@@ -372,47 +372,50 @@ export class LocalSessionsService {
     }
 
     upload(localSession : localSession) {
-
         var self = this;
-        let collectionId = localSession.getCollectionId();
-      
-          let options: FileUploadOptions = {
-            fileKey: 'file',
-            fileName: 'load_from_localsession.jpg', 
-            mimeType : 'image/jpg'
-          }
-      
-          let headers = {
-            "Authorization" : "Bearer " + this.auth.getToken()
-          }
-      
-          options.headers = headers; 
-      
-          var fileTransfer = this.transfer.create(); 
-      
-          let endpoint = this.config.getAPIBase() + '/' + "imgcollection/" + collectionId + "/sessionImg";
-      
-          console.log("uploading the video in the background");
+        
+        return new Promise<any>((resolve, reject) => {
 
-          let filePath = localSession.getFullFilePath();
-          console.log("this is a filepath: ", filePath)
+            let collectionId = localSession.getCollectionId();
       
-          fileTransfer.upload(filePath, endpoint , options, true)
-          .then((data) => {
-      
-            console.log("successfully uploading the video done");
+            let options: FileUploadOptions = {
+              fileKey: 'file',
+              fileName: 'load_from_localsession.jpg', 
+              mimeType : 'image/jpg'
+            }
+        
+            let headers = {
+              "Authorization" : "Bearer " + this.auth.getToken()
+            }
+        
+            options.headers = headers; 
+        
+            var fileTransfer = this.transfer.create(); 
+        
+            let endpoint = this.config.getAPIBase() + '/' + "imgcollection/" + collectionId + "/sessionImg";
+        
+            console.log("uploading the video in the background");
+  
+            let filePath = localSession.getFullFilePath();
+            console.log("this is a filepath: ", filePath)
+        
+            fileTransfer.upload(filePath, endpoint , options, true)
+            .then((data) => {
+        
+              console.log("successfully uploading the video done");
 
-            self.deleteLocalSession(localSession.getFileName());
-            self.api.loadCollection(collectionId, true);
-       
-          }, (err) => {
-            console.log("error in uploading the video");
-            console.log(JSON.stringify(err));
-          })
-          
-        }
+              resolve({"code" : 200});
+  
+              self.deleteLocalSession(localSession.getFileName());
+              self.api.loadCollection(collectionId, true);
+         
+            }, (err) => {
+                reject({"error" : "Something went wrong with syncing and uploading"});
+                console.log("error in uploading the video");
+                console.log(JSON.stringify(err));
+            })
 
+        });
 
-
-
+    }
 }
