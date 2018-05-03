@@ -1,0 +1,33 @@
+<ion-col col-6 >
+    <div class="photo-tile" >
+
+        <img class="session-item-item" [src]="getItemSessionPathImg(session)">
+
+        <div id="flag_{{index}}" class="flag-compare flag" [class.active]="isCompared(session)" (click)="selectCompareSession(session)">
+            <ion-icon id="flag-icon_{{index}}" name="git-compare" class="photo-tile-details-icon flag-icon" [class.active]="isCompared(session)" ></ion-icon>
+          </div>
+          
+        <div id="vote_{{index}}" class="flag-vote flag " [hidden]="!session.voteCnt" [class.highly-rated]="session.getIsHighlyRated()">
+            <div class="flag-vote-figure" [class.highly-rated]="session.getIsHighlyRated()">{{util.formatIntToPercent(session.voteAvg)}}</div>
+            <ion-icon name="thumbs-up" class="photo-tile-details-icon flag-vote-icon" >
+            </ion-icon>
+        </div>
+  
+        <div class="photo-tile-details" >
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                      <ion-icon name="trash" *ngIf="auth.checkProfile(session, 'owner')" class="photo-tile-details-icon session-delete" (click)="deleteSession(session)" ></ion-icon>
+              
+                </ion-col>
+              <ion-col>
+  
+                <div class="photo-tile-info">
+                    {{session.sessionId}}
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+      </div>
+  </ion-col>

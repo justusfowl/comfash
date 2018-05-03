@@ -3,6 +3,17 @@
 
 
 activity-item{
+    // session-tile is configured in app.scss
+
+    .session-img{
+        height: 100vh; 
+        width: 100vw; 
+        top: 0; 
+        left: 0; 
+        object-fit: cover; 
+        object-position: center;
+    }
+
     .session-tile-details{
         bottom: unset; 
         top: 0;

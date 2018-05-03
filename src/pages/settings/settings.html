@@ -64,7 +64,13 @@
           </ion-item>
 
           <ion-item>
+              <button ion-button (click)="localSessions.initLocalSession()">Lokale Daten laden</button>
+              
+          </ion-item>
+
+          <ion-item>
               <button ion-button (click)="deleteLocalUserData()">Lokale Daten löschen?</button>
+              
           </ion-item>
 
           <ion-item text-wrap>
@@ -73,7 +79,7 @@
           
 
           <ion-item *ngFor="let i of localSessions.userLocalSessions">
-              <ion-label>{{i.itemPath}}</ion-label>
+              <ion-label>{{i.getFileName()}}</ion-label>
           </ion-item>
   
         </ion-list>

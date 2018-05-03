@@ -53,6 +53,9 @@
 }
 
 html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: transparent !important; }
+img{
+    border: 0;
+}
 
 .sub-page-title{
     margin: 0; 
@@ -68,6 +71,7 @@ html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: 
     display: flex; 
     align-items: center; 
     background: color($colors, light-grey, base);
+    z-index: 200;
 }
 
 .flag-compare{
@@ -168,6 +172,11 @@ html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: 
     z-index: 9999;
   }
 
+  .btn-header.right {
+      left: unset; 
+      right: 5px;
+  }
+
 
   // css for collection tiles 
 
@@ -221,6 +230,7 @@ html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: 
         background-color: color($colors, text, base);
         bottom: -1px;
         padding: 5px;
+        z-index: 10;
     }
 
     .session-tile-details .info .center{
@@ -276,6 +286,15 @@ html, body, ion-app, div.nav-decor, .ion-content, .app-root { background-color: 
 
     .session-tile-details-icon{
         color: color($colors, text, base);
+    }
+
+    .session-tile-details-icon.settings{
+        transform: rotate(-90deg);
+        font-size: 21px;
+    }
+
+    .session-tile-details-icon.privacy{
+        font-size: 10px;
     }
 
     .swipe-btn{

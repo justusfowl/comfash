@@ -14,7 +14,7 @@
 
     <ion-buttons end>
 
-      <button class="headerBtn" ion-button icon-only (click)="toNotification()" [disabled]='msg.isNotificationDisabled()' >
+      <button class="headerBtn" ion-button icon-only (click)="toNotification()" >
         <div class="cnt-new-notifications"> {{msg.newMessages.length}}</div>   
           <ion-icon name="chatboxes" ></ion-icon>
       </button>
@@ -23,22 +23,24 @@
 
 </ion-header>
 
-
+<!--
 <button color="primary" class="cf-fab-btn left" (click)="addItem()" *ngIf="auth.getUserId() == roomUserId">
     <ion-icon class="cf-fab-btn-icon" name="add"></ion-icon>
 </button>
+-->
 
-<button color="primary" class="cf-fab-btn right" *ngIf="auth.getUserId() == roomUserId" [disabled]="api.getSelectedCollectionId().isSelected" (click)="takePictureToCollection()">
+<button color="primary" class="cf-fab-btn right" *ngIf="auth.getUserId() == roomUserId" (click)="takePictureToCollection()">
     <ion-icon class="cf-fab-btn-icon" name="camera"></ion-icon>
 </button>
-
+<!--
 <button hidden color="primary" class="cf-fab-btn right-2" *ngIf="auth.getUserId() == roomUserId" [disabled]="api.getSelectedCollectionId().isSelected" (click)="captureToCollection()">
     <ion-icon class="cf-fab-btn-icon" name="refresh-circle"></ion-icon>
 </button>
+-->
 
 <ion-content (ionScroll)="onContentScroll($event)">
   
-  <ion-refresher (ionRefresh)="api.getCollections(roomUserId, ($event.complete()))">
+  <ion-refresher class="room-refresher" (ionRefresh)="loadRoom($event)">
       <ion-refresher-content
       pullingIcon="arrow-dropdown"
       pullingText="Update MyRoom"
@@ -100,23 +102,29 @@
   </ion-row>
 
    <ion-list class="collection-list">
-    <ion-item-sliding #slideItem *ngFor="let item of api.collections">
-      <ion-item>
-        <div class="session-tile" [style.backgroundImage]="'url(' + util.wrapHostBase(item.getThumbnail()) + ')'" (click)="openItem(item)">
 
-            <div id="flag_{{item._id}}" class="flag-compare flag" [class.active]="item.getId() === api.getSelectedCollectionId().selectedId">
-                <ion-icon id="flag-icon_{{item._id}}" name="videocam" class="photo-tile-details-icon flag-icon" [class.active]="item.getId() === api.getSelectedCollectionId().selectedId" ></ion-icon>
-            </div>
+      <ion-item *ngFor="let item of collections">
+        <div class="session-tile" >
 
-          <div class="session-tile-details" [style.backgroundColor]="item.getPrimeColor() + 'e6'">
-            <div class="info ">
+            <ion-slides loop=true *ngIf="item.sessions.length > 0">
+              <ion-slide *ngFor="let session of item.sessions">
+                <img  [class]="'filter-' + session.filterOption" [src]="util.wrapHostBase(session.getThumbnail())" (click)="openItem(item)" >
+              </ion-slide>
+            </ion-slides>
+
+            <img [src]="util.wrapHostBase(item.getThumbnail())" (click)="openItem(item)" >
+
+          <div class="session-tile-details" [style.backgroundColor]="item.getPrimeColor() + 'e6'" >
+            <div class="info"  (click)="openItem(item)">
               <p class="title center">#{{item.collectionTitle}}</p>
               <p class="date center">{{item.getDayCreated()}} {{item.getMonthCreated() | translate}} '{{item.getYearCreated()}} </p>
             </div>
             <ion-grid class="details-container">
               <ion-row class="session-tile-row" >
+
                 <ion-col>
-                    <ion-icon name="unlock" class="session-tile-details-icon"></ion-icon>
+                    <ion-icon name="more" class="session-tile-details-icon settings" (click)="itemSettings(item)" ></ion-icon>
+                    <ion-icon name="unlock" class="session-tile-details-icon privacy" *ngIf="item.getPrivacyProtected()"></ion-icon>
                   <!-- <font class="session-tile-collection-title"> {{item.collectionTitle}} </font> -->
                 </ion-col>
 
@@ -140,30 +148,8 @@
         </div>
     </ion-item>
 
-    <ion-item-options side="right" *ngIf="auth.checkProfile(item, 'owner')">
-      <button class="swipe-btn" ion-button (click)="deleteCollection(item, slideItem)">
-        <ion-icon class="swipe-icon" name="trash"></ion-icon>
-        {{'DELETE' | translate}}
-      </button>
-    </ion-item-options>
 
-    <ion-item-options side="left" *ngIf="auth.checkProfile(item, 'owner')">
-        <button class="swipe-btn" ion-button (click)="quickSelectCapture(item, slideItem)">
-          <ion-icon class="swipe-icon" name="videocam"></ion-icon>
-          {{'SELECT' | translate}}
-        </button>
-
-        <button class="swipe-btn border-left" ion-button (click)="itemSettings(item, slideItem)">
-            <ion-icon class="swipe-icon" name="settings"></ion-icon>
-            {{'SETTINGS' | translate}}
-          </button>
-
-    </ion-item-options>
-
-
-    </ion-item-sliding>
-
-    <div class="blank-card" (click)="addItem()" *ngIf="api.collections.length == 0">
+    <div class="blank-card" (click)="addItem()" *ngIf="auth.getUserId() == roomUserId">
         <ion-icon class="blank-card-add" name="add">
         </ion-icon>
         {{'BLANK_CARD_ADD_COLLECTION' | translate}}

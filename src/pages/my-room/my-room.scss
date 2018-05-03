@@ -1,13 +1,17 @@
 @import "../../theme/variables";
 
 page-my-room {
-    
+
+    #profile-area{
+        background-color: white !important;
+    }
     .profile-area{
-        background-color: white;
+        
         position: relative;
         height: 120px;
         width: 100vw;
         margin-bottom:20px;
+        //transition: 0.5s ease;
     }
 
     .profile-area.isFixed{
@@ -15,6 +19,7 @@ page-my-room {
         z-index: 999;
         height: 36px;
         width: 100vw;
+        //transition: 0.5s ease;
     }
 
     .profile-background{
@@ -31,6 +36,7 @@ page-my-room {
         height: 30px;
         width: 30px; 
         bottom: 3px;
+        //transition: 0.5s ease;
     }
 
     .profile-avatar{
@@ -64,10 +70,12 @@ page-my-room {
         font-size: 12px; 
         height: 22px;
         margin-right: 0;
+        //transition: 0.5s ease;
     }
 
     .profile-area.isFixed .follow-btn{
         display: none;
+        //transition: 0.5s ease;
     }
 
 
@@ -77,6 +85,7 @@ page-my-room {
         left: 70px;
         bottom: 8px;
         top: unset;
+        //transition: 0.5s ease;
     }
 
     .profile-user{
@@ -85,7 +94,7 @@ page-my-room {
         left: 120px;
         top: 50px;
         position: absolute;
-        color : color($colors, dark-text, base)
+        color : color($colors, dark-text, base);
     }
 
     .badge-container{
@@ -149,7 +158,31 @@ page-my-room {
         margin-top: 130px;
     }
 
+    .swiper-slide img{
+        height: 100% !important; 
+        width: 100% !important; 
+        object-fit: cover; 
+        object-position: center;
+        max-width: unset; 
+        max-height: unset; 
+    }
+    
+    .slide-zoom{
+        height: 100%;
+    }
 
+    .ion-slides{
+        z-index: -1; 
+    }
+
+    
+    .room-refresher{
+        top: 190px !important;
+    }
+
+    .local-item{
+        color: red;
+    }
 
 
 }

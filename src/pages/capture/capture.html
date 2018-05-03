@@ -4,56 +4,70 @@
     <div id="countDownText">{{secondsUntilShot}}</div>
   </div>
 
-<ion-content no-bounce>
+<ion-content no-bounce >
+
 
   <ion-buttons class="btn-header">
-    <button ion-button icon-only (click)="navBack()">
+    <button ion-button icon-only clear (click)="navBack()">
       <ion-icon name="arrow-back"></ion-icon>
     </button>
   </ion-buttons>
 
-  <!-- <img class="testImg" *ngFor="let pic of capturedPics;" [src]= "'data:image/jpeg;base64,' + pic + ''"> -->
+  <ion-buttons class="btn-header right" *ngIf="isPreview">
+    <button ion-button icon-only clear (click)="acceptAndStore()" [disabled]="collectionId == '0'">
+      <ion-icon name="checkmark"></ion-icon>
+    </button>
+  </ion-buttons>
 
-  <div class="ar-arrow-box">
+  <div class="ar-arrow-box" *ngIf="!isPreview && isVideoCapture">
       <!-- <ion-icon class="ar-icon" name="ios-refresh-circle-outline"></ion-icon>-->
       <i class="fas fa-sync ar-icon" ></i> 
   </div>
 
   <div id="onAirCapture" hidden class="recordingIcon"></div>
 
-  <img [src]="previewPicture">
-  
-  <div *ngFor="let i of localSessions.userLocalSessions" (click)="testLoadLocalSession(i.name)" >
-    {{i.itemPath}}
-  </div>
+  <ion-select class="collection-list" [(ngModel)]="collectionId" *ngIf="isPreview">
+    <ion-option value="0">{{ 'SELECT' | translate }}</ion-option>
+    <ion-option *ngFor="let c of collectionList" [value]="c.collectionId" >#{{c.collectionTitle}}</ion-option>
+  </ion-select>
 
-
+  <img 
+  #previewPictureRef 
+  id="previewPicture"
+  [class]="'filter-' + filterSelected" 
+  [src]="previewPicture"
+  >
   
 </ion-content>
 
-<ion-footer id="footer" >
+<ion-footer id="preview-footer" *ngIf="isPreview">
+ 
+    <div *ngFor="let f of filters" [class.selected]="f.name == filterSelected" [class]="'filterPreview filter-' + f.name" (click)="setFilter(f.name)" >
+
+        <img [src]="previewPicture" >
+
+      </div>
+
+</ion-footer>
+
+<ion-footer id="footer" *ngIf="!isPreview">
   <ion-toolbar>
     <ion-row >
 
-    <ion-col col >
-      <div id="btn-switch-cam" class="btn-footer-cam" (click)="getCameraPicture()" >
-          <ion-icon name="add-circle"></ion-icon>
-      </div>
+      <ion-col col >
+          <div id="btn-take-picture" class="btn-footer-cam" (click)="switchCam()" >
+              <ion-icon name="ios-reverse-camera-outline"></ion-icon>
+          </div>
       </ion-col>
-      
+
     <ion-col col >
       <div id="btn-switch-cam" class="btn-footer-cam" (click)="takePicture()" >
           <ion-icon name="ios-camera-outline"></ion-icon>
       </div>
       </ion-col>
 
-    <ion-col col >
-        <div id="btn-take-picture" class="btn-footer-cam" (click)="switchCam()" >
-            <ion-icon name="ios-reverse-camera-outline"></ion-icon>
-        </div>
-    </ion-col>
 
-    <ion-col col >
+    <ion-col col *ngIf="isVideoCapture">
         <div id="btn-capture" class="btn-footer-capture" (click)="startCountdown()" >
             <ion-icon name="ios-videocam-outline"></ion-icon>
         </div>

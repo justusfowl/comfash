@@ -1,6 +1,6 @@
 
 <div class="session-item-container" [style.width]="(100 / totalCnt) + 'vw'">
-    <img class="session-item-item" [src]="getItemSessionPath(itemSessionPath)">
+    <img [class]="'session-item-item filter-' + context.filterOption" [src]="getItemSessionPath(itemSessionPath)">
     
     <ion-icon 
         class="close-compare-session"
@@ -22,9 +22,10 @@
     [style.left]="getPosInt(tag.xRatio) + '%'"
     ></div>
 
-    <ion-grid class="session-details" [hidden]="flagIsTmp">
+    <ion-grid class="session-details" >
         <ion-row>
-            <ion-col class="voting-btn">
+            <ion-col class="voting-btn" *ngIf="!context.flagIsTmp">
+                {{context.commentCnt}}
                 <ion-icon class="session-menu-btn right"  icon-left clear small
                 name="ios-chatbubbles-outline" 
                 (click)="hasCommentClicked(context)"></ion-icon>

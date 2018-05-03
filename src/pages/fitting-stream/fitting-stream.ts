@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef, OnDestroy, ApplicationRef } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, OnDestroy, ApplicationRef, ElementRef } from '@angular/core';
 import { IonicPage, NavController, PopoverController, Content, LoadingController} from 'ionic-angular';
 import { Api, ConfigService, UtilService, AuthService, MsgService, VoteHandlerService } from '../../providers/providers';
 import { TranslateService } from '@ngx-translate/core';
@@ -13,8 +13,12 @@ import { TrendItem, Vote, Session } from '../../models/datamodel';
 
 
 export class FittingStreamPage {
+
   @ViewChild(Content)
   content : Content;
+
+  @ViewChild("loaderContainer")
+  loader : ElementRef;
 
   streamOptions = {
     limit : 3, 
@@ -24,7 +28,7 @@ export class FittingStreamPage {
   visibleIndex : number = 0;
   programScrolling : boolean = false;
 
-  loader : any;
+  isLoading : boolean = false;
 
 
   touches = {
@@ -45,98 +49,68 @@ export class FittingStreamPage {
     private auth : AuthService, 
     private voteHdl : VoteHandlerService, 
     public loadingCtrl : LoadingController,
-    public msg: MsgService, 
-    //private ref : ChangeDetectorRef, 
-    private AppRef : ApplicationRef) {
+    public msg: MsgService) {
 
     
-    this.getTrendStream(null, true);
-
-
   }
 
   ngAfterViewInit(){
 
-
-    document.addEventListener('touchstart', this.touchHandler.bind(this), false);	
-		// document.addEventListener('touchmove', this.touchHandler.bind(this), false);	
-    document.addEventListener('touchend', this.touchHandler.bind(this), false);
+    this.getTrendStream(null, true);
 
   }
 
-
-  touchHandler(event : any) {
-    var touch;
-    var target;
-    let self = this;
-		if (typeof event !== 'undefined'){	
-			//event.preventDefault(); 
-			if (typeof event.touches !== 'undefined') {
-        touch = event.touches[0];
-        
-
-
-				switch (event.type) {
-          case 'touchstart':
-            try {
-              target = touch.target.getAttribute("class");
-            }catch(err){
-              target = "";
-            }
-
-            self.touches[event.type].target = target;
-            self.touches[event.type].x = touch.pageX;
-            self.touches[event.type].y = touch.pageY;
-            break;
-					case 'touchmove':
-            self.touches[event.type].x = touch.pageX;
-            self.touches[event.type].y = touch.pageY;
-						break;
-          case 'touchend':
-          
-          let changedTouch = event.changedTouches[0];
-
-            self.touches[event.type].x = changedTouch.pageX;
-            self.touches[event.type].y = changedTouch.pageY;
-
-            self.touches[event.type].isEnd = true;
-
-            if (self.touches.touchstart.target == "session-tile"){
-              
-              if (self.touches.touchstart.y > -1 && self.touches.touchend.y > -1) {
-                self.touches.directionY = self.touches.touchstart.y < self.touches.touchend.y ? "down" : "up";
-                
-                console.log(self.touches.directionY);
-                
-                self.handleScrollEnd(self.touches);
-              }
-
-              self.touches.touchstart.target = ""; 
-            }
-
-					default:
-						break;
-				}
-			}
-		}
+  swipeUp(events){
+    this.handleScrollEnd(true)
   }
+
+  swipeDown(events){
+    this.handleScrollEnd(false)
+  }
+
+
+
   
+  resetStreamOptions(){
+    this.streamOptions = {
+      limit : 3, 
+      skip : 0
+    };
+  }
+
+  toggleLoad(){
+    const container = this.loader.nativeElement;
+    container.classList.toggle("active");
+  }
+
 
   getTrendStream (refresher? : any, reloadBeginning = false){
 
-    let comp = this; 
-    let loader;
+    let comp = this;
 
     if (reloadBeginning){
-      loader = this.msg.toastLoader();
+      comp.toggleLoad();
     }
+    
+
+    console.log("calling the api with the following options:")
+    console.log(this.streamOptions);
 
     this.api.getTrendStream(this.streamOptions).subscribe(
       (trendStream : Array<TrendItem>) => {
 
           if (reloadBeginning){
-            comp.api.streamItems = trendStream.map(element => new TrendItem(element));
-            loader.dismiss();
+
+            comp.api.streamItems.length = 0;
+
+            trendStream.map(element => {
+              
+              let item = new TrendItem(element);
+              comp.api.streamItems.push(item)
+
+            });
+
+            comp.toggleLoad();
 
           }else{
             comp.api.streamItems = comp.api.streamItems.concat(trendStream.map(element => new TrendItem(element)));
@@ -186,47 +160,29 @@ export class FittingStreamPage {
     }
   }
 
-  presentLoader(){
-    this.loader = this.loadingCtrl.create({
-    });
-    this.loader.present();
-  }
+  handleScrollEnd(isUp = true){
 
-  handleScrollEnd(event){
-
-    console.log("in scrollend")
-    console.log(JSON.stringify(event));
-
-    console.log("this is the visibileIndex: ", this.visibleIndex)
-
-    if (!this.programScrolling){
-
-      if (event.directionY == "up"){
+      if (isUp){
       
         if (this.visibleIndex < this.api.streamItems.length){
 
           if (this.visibleIndex + 4 > this.api.streamItems.length){
-            this.infiniteScroll(null)
+            this.infiniteScroll(null);
           }
+
           this.visibleIndex++;
-          this.AppRef.tick();
         }
       
-    }else{
-      console.log(this.visibleIndex);
+      }else{
 
-        if (this.visibleIndex > 0){
-          this.visibleIndex--;
-          this.AppRef.tick();
-        }else{
-          this.getTrendStream(null, true);
+          if (this.visibleIndex > 0){
+            this.visibleIndex--;
+          }else{
+            this.resetStreamOptions();
+            this.getTrendStream(null, true);
+          }
+
         }
-
-      }
-    }
-
-
-    
   }
 
 

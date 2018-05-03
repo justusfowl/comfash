@@ -6,7 +6,7 @@ import { Config, Nav, Platform } from 'ionic-angular';
 import { OneSignal } from '@ionic-native/onesignal';
 
 import { FirstRunPage, MainPage } from '../pages/pages';
-import { Settings, WebsocketService, UtilService } from '../providers/providers';
+import { Settings, WebsocketService, UtilService, LocalSessionsService } from '../providers/providers';
 
 import { Camera } from '@ionic-native/camera';
 
@@ -44,7 +44,8 @@ export class MyApp {
     public api: Api, 
     private cfg : ConfigService,
     private util: UtilService,
-    public oneSignal : OneSignal) {
+    public oneSignal : OneSignal, 
+    private localSessions : LocalSessionsService) {
 
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -52,6 +53,7 @@ export class MyApp {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
 
+      
     
     try{
       
@@ -64,6 +66,7 @@ export class MyApp {
         this.msg.toast(message);
 
         this.msg.newMessages.push(message);
+        this.msg.updateMessages();
         
       });
 
@@ -92,11 +95,16 @@ export class MyApp {
     }
 
 
+
     });
 
     if (auth.getToken()){
+
+      
       this.msg.initMsgService();
       this.rootPage = MainPage;
+
+
     }else{
       this.rootPage = FirstRunPage;
     }

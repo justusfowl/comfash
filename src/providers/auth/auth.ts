@@ -213,14 +213,19 @@ export class AuthService {
 
         this.isAuth = true;
 
-        // Retrieve the OneSignal user id and the device token
+        
 
         try{  
+
+            // Retrieve the OneSignal user id and the device token
             this.oneSignal.getIds().then(data => this.setDeviceToken(data));
+
         }
         catch(err){
             console.log(JSON.stringify(err))
         }
+
+
 
         return;
 

@@ -39,7 +39,7 @@ export class ReactionsPage {
     unvote(){
 
         // unvote = voteType = 0
-        this.viewCtrl.dismiss(0);
+        this.viewCtrl.dismiss(-1);
     }
  
 }

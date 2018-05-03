@@ -22,6 +22,12 @@ export class MyRoomPage {
 
   profileFixed : boolean = false;
 
+  mySlideOptions = {
+    pager:true
+  };
+
+  collections : any; 
+
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
@@ -37,16 +43,20 @@ export class MyRoomPage {
 
   }
 
-
-
   /**
    * The view loaded, let's query our items for the list
    */
   ionViewDidLoad() { 
+
+    this.localSessions.onLocalSessionAdded.subscribe(value => {
+      self.loadRoom();
+    });
+
     
     this.menu.enable(true,'mainmenu');
 
     let userId = this.navParams.get('userId');
+    let self = this;
 
     if (!userId){
       userId = this.auth.getUserId();
@@ -58,24 +68,57 @@ export class MyRoomPage {
       this.isMyRoom = true;
     }else{
       this.isMyRoom = false;
-    }
+    } 
 
-    this.api.getCollections(userId);
+    this.loadRoom();
+
+  }
+
+  loadRoom(refresher? : any){
+    let userId = this.roomUserId;
+    let self = this;
+
+    this.api.loadRoom(userId).subscribe(
+      (data : Collection[]) => {
+
+        let outData = data.map(function(val){
+
+          let tmpCollection = new Collection(val);
+          tmpCollection.castSessions();
+
+          return tmpCollection;
+
+        }); 
+
+
+        this.collections = outData;
+
+        if (refresher){
+          refresher.complete();
+        }
+
+      },
+      error => {
+        this.api.handleAPIError(error);
+      }
+    );
+
   }
 
 
   onContentScroll(evt){
 
+    /*
     let scrollTop = evt.scrollTop;
     let profileArea = document.getElementById("profile-area");
     
-    if (scrollTop > profileArea.clientHeight){
+    if (scrollTop > (profileArea.clientHeight / 2)){
       this.profileFixed = true;
     }else{
       this.profileFixed = false;
     }
     this.appRef.tick();
-
+  */
   }
 
   loadUserBase(userId) {
@@ -102,7 +145,7 @@ export class MyRoomPage {
     addModal.onDidDismiss(collection => {
       if (collection) {
 
-        this.api.getCollections(this.auth.getUserId());
+        this.loadRoom();
 
       }
     })
@@ -110,9 +153,8 @@ export class MyRoomPage {
     addModal.present();
   }
 
-  itemSettings(collection : Collection, slidingItem) {
+  itemSettings(collection : Collection) {
     
-    slidingItem.close();
 
     let addModal = this.modalCtrl.create('CollectionCreatePage', {"collection": collection})  ;
     addModal.onDidDismiss(collection => {
@@ -166,7 +208,9 @@ export class MyRoomPage {
 
     let collectionId = this.api.getSelectedCollectionId().selectedId; 
 
-    this.localSessions.captureCameraPicture(collectionId);
+    let resultAction = function (){ this.loadRoom()};
+
+    this.localSessions.captureCameraPicture(collectionId, this.navCtrl, resultAction.bind(this));
 
   }
 

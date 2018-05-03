@@ -1,14 +1,16 @@
 
-<div [id]="'activity-item_' + index" class="session-tile" [style.backgroundImage]="'url(' + util.wrapHostBase(context.sessionItemPath) + ')'">
-
-      <div class="session-tile-details" [style.backgroundColor]="context.getPrimeColor() + 'e6'">
+<div [id]="'activity-item_' + index" class="session-tile" >
+    <img class="session-img"
+    [src]="util.wrapHostBase(context.sessionItemPath)"
+    >
+      <div class="session-tile-details" [style.backgroundColor]="context.primeColor + 'e6'">
        
         <ion-grid class="details-container">
           <ion-row class="session-tile-row" >
 
                 <div class="creator-profile-avatar" 
                         [style.backgroundImage]="'url(' + util.wrapHostBase(context.itemCreatorAvatarPath) + ')'">
-                </div>
+                </div> 
 
               <div class="session-tile-info-container">
                 <div class="session-tile-info "> 
@@ -28,7 +30,7 @@
       </div>
 
 
-      <div class="session-tile-details activity-item-details" [style.backgroundColor]="context.getPrimeColor() + 'e6'">
+      <div class="session-tile-details activity-item-details" [style.backgroundColor]="context.getPrimeColor + 'e6'">
             <div class="info ">
               <p class="title center">
                     <link-collection
@@ -54,7 +56,7 @@
                 </ion-col>
     
                 <ion-col> 
-                    <div class="session-tile-info">
+                    <div class="session-tile-info" >
                         <font class="cntFigure">
                             {{util.formatToNoDisplay(context.voteCnt)}}
                         </font>

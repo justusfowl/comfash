@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform, ViewController } from 'ionic-angular';
-import { Session } from '../../models/datamodel';
-import { CameraPreview, CameraPreviewOptions } from '@ionic-native/camera-preview';
+import { Component, ViewChild, ElementRef } from '@angular/core';
+import { IonicPage, NavController, NavParams, Platform, ViewController, Gesture, LoadingController, MenuController } from 'ionic-angular';
+import { Session, Collection } from '../../models/datamodel';
+import { CameraPreview, CameraPreviewOptions, CameraPreviewPictureOptions } from '@ionic-native/camera-preview';
 import { Api, ConfigService, LocalSessionsService } from '../../providers/providers';
 import { FileTransfer, FileUploadOptions } from '@ionic-native/file-transfer';
 import { AuthService } from '../../providers/providers'; 
@@ -19,7 +19,60 @@ import { Camera } from '@ionic-native/camera';
   templateUrl: 'capture.html'
 })
 export class CapturePage {
+  @ViewChild('previewPictureRef') previewPictureRef: ElementRef;
+  private pressGesture: Gesture;
 
+  isPreview : boolean = false;
+  isVideoCapture : boolean = false; //feature toggle until 360° are possible
+
+  public filters = [
+ 
+    {
+      "name" : "#nofilter",
+      "description" : "#nofilter",
+      "option" : 0, 
+      "data" : null
+    },
+    {
+      "name" : "aden",
+      "description" : "Aden",
+      "option" : 1, 
+      "data" : null
+    },
+    {
+      "name" : "brooklyn",
+      "description" : "Brooklyn",
+      "option" : 2, 
+      "data" : null
+    },
+    {
+      "name" : "inkwell",
+      "description" : "Inkwell",
+      "option" : 3, 
+      "data" : null
+    },
+    {
+      "name" : "maven",
+      "description" : "Maven",
+      "option" : 4, 
+      "data" : null
+    },
+    {
+      "name" : "moon",
+      "description" : "Moon",
+      "option" : 4, 
+      "data" : null
+    },
+    {
+      "name" : "willow",
+      "description" : "Willow",
+      "option" : 5, 
+      "data" : null
+    },
+  ]
+
+  filterSelected : string = "";
+  
   
   captureIntervalMilSec = 4000;
   countdownMilSecInterval = 1000;
@@ -33,19 +86,30 @@ export class CapturePage {
     width: window.screen.width,
     height: window.screen.height,
     camera: this.cameraPreview.CAMERA_DIRECTION.FRONT,
-    //tapPhoto: true,
     tapToFocus: true,
     previewDrag: true,
     toBack: true,
     alpha: 1
   };
 
+  // picture options
+  pictureOpts: CameraPreviewPictureOptions = {
+    width: window.innerWidth * 3,
+    height: window.innerHeight * 3,
+    quality: 100
+  }
+
   captureCamera: string = 'front';
-  collectionId : any;
+  collectionId : any = "0";
   newSession : Session;
   srcNav : any;  
 
   previewPicture : any;
+  imageData : any;
+
+  collectionList : any;
+
+  resultCallback : any;
 
   constructor(
     public navCtrl: NavController, 
@@ -55,26 +119,115 @@ export class CapturePage {
     public api: Api, 
     private cameraPreview: CameraPreview, 
     public camera: Camera,
+    public menu: MenuController, 
     private transfer: FileTransfer, 
     public config : ConfigService, 
     private auth: AuthService,
     private localSessions : LocalSessionsService, 
-    private sanitizer:DomSanitizer) {
+    private sanitizer:DomSanitizer,
+    public loadingCtrl : LoadingController) {
+
+      this.menu.enable(false,'mainmenu');
+
+      let userId = this.auth.getUserId();
+
+      this.srcNav = navParams.get('srvNav'); 
+      let navCollectionId = navParams.get('collectionId');
+
+      if (navCollectionId && typeof(navCollectionId) != "undefined"){
+        this.collectionId = navParams.get('collectionId') ;
+      }else{
+        this.collectionId = "0";
+      }
+
+      let imageData = navParams.get('imageData');
+
+      this.resultCallback = navParams.get('resultCallback');
+
+      platform.ready().then(() => {
+      
+        this.startLiveCam();
+
+        
+      });
+      
+
+      if (imageData && imageData != undefined && imageData != null){
+        this.imageData = imageData;
+        this.previewPicture = 'data:image/jpeg;base64,' + imageData;
+        this.isPreview = true;
+      }
+
+      this.loadCollections();
+
+  }
+
+
+
+  public ngAfterViewInit(): void {
+
+    this.pressGesture = new Gesture(this.previewPictureRef.nativeElement);
+  
+    this.pressGesture.listen();
+
+    let self = this;
+    
+    this.pressGesture.on('doubletap', (e:Event) => {
+  
+      console.log(e.type);
+      self.handleDoubleTap();
+      
+    });
+  
+  }
+  
+  public ngOnDestroy(): void {
+    this.pressGesture.destroy();
+    this.menu.enable(true,'mainmenu');
+  }
+
+  loadCollections(){
 
     let userId = this.auth.getUserId();
 
-    this.srcNav = navParams.get('srvNav'); 
 
-    this.collectionId = navParams.get('collectionId');
+       this.api.myCollections().subscribe(
+      (data) => {
+        
+        try{
 
-    platform.ready().then(() => {
+          let outData = data.map(function(val){
+            let tmpCollection = new Collection(val);
+            tmpCollection.castSessions();
+            return tmpCollection;
+          })
 
-
-    
-      this.startLiveCam();
-      
-    }); 
+        this.collectionList = outData;
+        }
+        catch(err){
+          console.log(err);
+          return null;
+        } 
+      },
+      error => {
+        this.api.handleAPIError(error);
+      }
+    )
+   
   }
+
+
+
+  handleDoubleTap(){
+
+    if (this.isPreview){
+      this.isPreview = false;
+      this.previewPicture = null
+    }else{
+      this.switchCam();
+    }
+  }
+
 
 
   testLoadLocalSession(filename){
@@ -101,84 +254,37 @@ export class CapturePage {
 
   }
 
-  getCameraPicture(){
-    this.localSessions.captureCameraPicture(this.collectionId);
+  setFilter(filterName){
+    console.log(filterName, " selected filter")
+    this.filterSelected = filterName;
   }
 
   takePicture(){
 
-    this.localSessions.captureCameraPicture(this.collectionId);
+
+
+    this.cameraPreview.takePicture(this.pictureOpts).then(
+      data => {
+        this.isPreview = true;
+        this.previewPicture = 'data:image/jpeg;base64,' + data;
+        if (data.constructor === Array){
+          this.imageData = data[0];
+        }else{
+          this.imageData = data;
+        }
+        
+      }
+    ).catch(error =>{
+      console.log("error");
+      console.log(error);
+    });
+
+    //this.localSessions.captureCameraPicture(this.collectionId);
 
   }
 
   stopPreviewCam(){
     this.cameraPreview.stopCamera();
-  }
-  
-  upload(fileData) {
-
-  var comp = this;
-
-    let options: FileUploadOptions = {
-      fileKey: 'file',
-      fileName: 'testfile.mp4', 
-      mimeType : 'video/mp4'
-    }
-
-    let headers = {
-      "x-access-token" : this.auth.getToken()
-    }
-
-    options.headers = headers; 
-
-    var fileTransfer = this.transfer.create(); 
-
-    let endpoint = this.config.getAPIBase() + '/' + "imgcollection/" + this.collectionId + "/session";
-
-    let date = new Date(); 
-
-    let newSession = new Session({
-      sessionId : date.getTime() * 999999,
-      sessionItemPath : fileData, 
-      userId : this.auth.getUserId()
-    });
-
-    newSession.flagIsTmp = true;
-
-    this.api.addSessionToCollection(this.collectionId, newSession); 
-
-    console.log("SuCCESSSful added") 
-    comp.navBack();
-
-    console.log("uploading the video in the background");
-
-    fileTransfer.upload(fileData, endpoint , options, true)
-    .then((data) => {
-
-      console.log("successfully uploading the video done");
-
-
-      let loadCollection : any = this.api.loadCollection(this.collectionId, true);
-      let comp = this;
-
-      loadCollection.observable.subscribe(
-        (data) => {
-
-          // handlLoad every time sine froced = true
-
-          comp.api.handleLoadCollection(data);
-        },
-        error => {
-          comp.api.handleAPIError(error);
-        }
-      )
-
- 
-    }, (err) => {
-      console.log("error in uploading the video");
-      console.log(err);
-    })
-    
   }
 
   switchCam(){
@@ -268,7 +374,8 @@ export class CapturePage {
       comp.setUIRecording(false);
 
       setTimeout(function(){
-        comp.upload(filePath);
+        //comp.upload(filePath);
+        console.log("here you go, the filepath for uploading:", filePath)
       }, 100);
 
     }, function (err){
@@ -287,5 +394,35 @@ export class CapturePage {
     this.navCtrl.pop();
 
    }
+
+  acceptAndStore(){ 
+
+    let self = this;
+
+    let loading = this.loadingCtrl.create({
+      content: 'Please wait...'
+    });
+  
+    loading.present();
+
+
+    setTimeout(function(){ 
+      self.stopPreviewCam();
+    }, 1000);
+    
+    let resultItem = {
+      "collectionId" : this.collectionId,
+      "filterOption" : this.filterSelected,
+      "data" : this.imageData, 
+      "mimeType" : "image/jpg"
+    };
+
+    this.localSessions.storeImage(resultItem).then(res => {
+      this.navCtrl.pop();
+      loading.dismiss();
+    });
+    
+    
+  }
 
 }

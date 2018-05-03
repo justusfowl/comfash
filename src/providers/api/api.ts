@@ -36,6 +36,15 @@ export class Api {
     this.url = this.config.getAPIBase();
   }
 
+  myCollections(){
+    return this.http.get<Collection[]>(this.url + '/' + "imgcollection/myCollections")
+  }
+
+  loadRoom(userId : string){
+    return this.http.get<Collection[]>(this.url + '/' + "imgcollection/room/" + userId)
+  }
+
+
   getCollections(userId : string, callback = function(){ }){
 
     this.http.get<Collection[]>(this.url + '/' + "imgcollection/room/" + userId).subscribe(
@@ -67,26 +76,8 @@ export class Api {
   }
 
 
-  loadCollection(collectionId: Number, forced = false){
-
-    let returnObj = {};
-
-    if (this.selectedCollection.getId() != collectionId || forced){
-      returnObj["observable"] = this.http.get<Collection>(this.url + '/' + "imgcollection/" + collectionId, {responseType: 'json'})
-      returnObj["isQry"] = true;
-      return returnObj;
-
-    }else{
-
-      let collection = this.selectedCollection; 
-
-      returnObj["observable"] = new Observable(observer => {
-          observer.next(collection);
-      });
-      returnObj["isQry"] = false;
-
-      return returnObj
-    }
+  loadCollection(collectionId: Number){
+      return this.http.get<Collection>(this.url + '/' + "imgcollection/" + collectionId);
   }
 
   getCollectionDetails(collectionId : number){
@@ -177,14 +168,19 @@ export class Api {
 
   }
 
-  addSessionToCollection(collectionId : number, newSession : Session){
+  addSessionToCollection(collectionId : number, content : any){
 
+    console.log("adding to id:", collectionId)
+
+    let newSession = new Session(content);
 
     this.collections.forEach((collection : Collection) => {
       
       if (collection.getId() == collectionId){
 
-        collection.addSession(newSession)
+        collection.addSession(newSession);
+
+        console.log("adding to collection:", collection)
 
       }
 
@@ -201,23 +197,13 @@ export class Api {
   }
 
   deleteSession(collection: Collection, session: Session){
+    
     let collectionId = collection.getId();
     let sessionId = session.getId();
 
     this.toggleCompareSession(session, true);
 
-    this.http.delete(this.url + '/imgcollection/' + collectionId + "/session/" + sessionId).subscribe(
-      (data) => {
-
-        let session = this.getSessionById(sessionId); 
-        let index = this.selectedCollection.sessions.indexOf(session);
-        this.selectedCollection.sessions.splice(index, 1);
-
-      },
-      error => {
-        this.handleAPIError(error);
-      }
-    );
+    return this.http.delete(this.url + '/imgcollection/' + collectionId + "/session/" + sessionId);
 
   }
 

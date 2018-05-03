@@ -8,12 +8,22 @@
         </ion-buttons>
 
     <ion-title>{{ 'FITTING_STREAM_TITLE' | translate }}</ion-title>
+
+    <ion-buttons end>
+      <div #loaderContainer id="load-container" >
+          <ion-spinner name="dots"></ion-spinner>
+      </div>
+    </ion-buttons>
+
   </ion-navbar>
+
+
+ 
 
 </ion-header>
 
 
-<ion-content id="fitting-stream-container">
+<ion-content id="fitting-stream-container" >
 
   <div ion-fixed class="dot-container">
     <div class="dot" 
@@ -24,7 +34,7 @@
     </div>
   </div>
 
-  <div ion-fixed id="activity-box" class="activity-box">
+  <div ion-fixed id="activity-box" class="activity-box" swipeAll (swipeup)="swipeUp($event)" (swipedown)="swipeDown($event)" >
       <activity-item
       class="act-item"
       [class.isVisible]="visibleIndex == i"

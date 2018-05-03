@@ -1,0 +1,49 @@
+
+  <div class="photo-tile" >
+      <div id="flag_{{index}}" class="flag-compare flag" [class.active]="isCompared(session)" (click)="selectCompareSession(session)">
+          <ion-icon id="flag-icon_{{index}}" name="git-compare" class="photo-tile-details-icon flag-icon" [class.active]="isCompared(session)" ></ion-icon>
+        </div>
+        
+      <div id="vote_{{index}}" class="flag-vote flag " [hidden]="!session.voteCnt" [class.highly-rated]="session.getIsHighlyRated()">
+          <div class="flag-vote-figure" [class.highly-rated]="session.getIsHighlyRated()">{{util.formatIntToPercent(session.voteAvg)}}</div>
+          <ion-icon name="thumbs-up" class="photo-tile-details-icon flag-vote-icon" >
+          </ion-icon>
+      </div>
+
+      <img class="session-item-item"  
+        [class]="'filter-' + session.filterOption"
+        imageViewer 
+        [filterOption]="session.filterOption"
+       [src]="getItemSessionPath(session)">
+
+      <div class="photo-tile-details" >
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+                  <ion-icon name="trash" *ngIf="auth.checkProfile(session, 'owner')" 
+                    class="photo-tile-details-icon session-delete" 
+                    (click)="deleteSession(session)" >
+                  </ion-icon>
+                    
+                  </ion-col>
+
+            <ion-col *ngIf="!session.flagIsTmp">
+
+              <div class="photo-tile-info">
+                  <font class="cntFigure" >
+                      {{session.getNoVotes()}}
+                    </font>
+                  <ion-icon class="photo-tile-details-icon vote" [class.active]="session.hasVote"  
+                   icon-right clear small
+                  [name]="voteHdl.getVoteIcon(session)" ></ion-icon>
+
+                  <font class="cntFigure">
+                      {{session.getNoComments()}}
+                  </font>
+                  <ion-icon name="ios-text-outline" class="photo-tile-details-icon"></ion-icon>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </div>

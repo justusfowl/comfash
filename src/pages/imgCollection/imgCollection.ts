@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { PopoverController } from 'ionic-angular';
-import { Session, localSession } from '../../models/datamodel';
+import { Session, Collection } from '../../models/datamodel';
 
 import { Api, ConfigService, MsgService, AuthService, UtilService, LocalSessionsService, VoteHandlerService } from '../../providers/providers';
 
@@ -20,11 +20,16 @@ export class ImgCollectionPage implements OnInit{
 
   collectionUserId : string;
 
+  collection : Collection; 
+
+  collectionUserName : string; 
+  collectionTitle : string;
+
   localSessionsArray : Session[];
 
   constructor(
     public navCtrl: NavController, 
-    navParams: NavParams, 
+    public navParams: NavParams, 
     public modalCtrl: ModalController, 
     public api : Api, 
     public config : ConfigService, 
@@ -35,48 +40,106 @@ export class ImgCollectionPage implements OnInit{
     private localSessions : LocalSessionsService, 
     private voteHdl : VoteHandlerService) {
     
-    let collectionId = navParams.get('collectionId'); 
+
+
+ 
+  }
+
+  /**
+   * The view loaded, let's query our items for the list
+   */
+  ionViewDidLoad() {
+
+    let self = this;
+
+    this.localSessions.onLocalSessionAdded.subscribe(value => {
+      self.loadCollection();
+    });
+
+    this.localSessions.onLocalSessionUploaded.subscribe(value => {
+      let responseBody = JSON.parse(value.response);
+      let localSessionId = value.localSessionId;
+      self.replaceLocalByUploaded(localSessionId, responseBody);
+    
+    });
+
+    let collectionId = this.navParams.get('collectionId'); 
 
     this.selectedCollectionId = collectionId; 
 
     // entweder selectedCollection aus der API gibts (dann nimm) sonst ladt und pack in API
 
-    this.loadCollection(true)
+    this.loadCollection()
 
+  }
 
- 
+  replaceLocalByUploaded(localId : number, uploadResponse: any){
+
+    console.log("I AM HERE IN THE REPLACELOCALFUNC TO UPDATE SESSIONID ??????? ")
+    console.log(JSON.stringify(localId));
+    console.log("afterrr");
+
+    this.collection.sessions.forEach(session => {
+
+      console.log(JSON.stringify(session.getId()));
+      console.log(JSON.stringify(localId));
+
+      if (session.getId() == localId){
+        console.log("I AM HERE IN THE REPLACELOCALFUNC TO UPDATE SESSIONID; ", session.getId())
+        session.updateWithUploadData(uploadResponse);
+
+      }
+      
+    });
+
+    console.log("ENDS")
+
   }
 
   uploadLocalSession(session : any){
     session.uploadInProgress = true;
     let self = this;
     this.localSessions.upload(session).then((res : any) => {
-      self.loadCollection(true);
+      self.loadCollection();
     }).catch(e => console.log('Error in upload localsession:', JSON.stringify(e)));
   }
 
-  loadCollection(forced = false, loader? : any){
-    let loadCollection : any = this.api.loadCollection(this.selectedCollectionId, forced);
+  loadCollection(loader? : any){
 
-    let comp = this;
-    loadCollection.observable.subscribe(
+    let self = this;
+
+    this.api.loadCollection(this.selectedCollectionId).subscribe(
       (data) => {
 
-        this.collectionUserId = this.api.selectedCollection.getUserId();
+        let tmpCollection = new Collection(data[0]);
 
-        // only if the query has been made to the API, load data into the api object, otherwise take existing one
-        if (loadCollection.isQry){
-            comp.api.handleLoadCollection(data);
-        }
+        tmpCollection.castSessions();
 
-        if (loader){
-          loader.complete();
-        }
-        // this.sortSessionsByVotes();
+        let localSessionArr;
+
+        this.collectionUserId = tmpCollection.getUserId();
+        this.collection = tmpCollection;
+
+        this.collectionUserName = tmpCollection.userName;
+        this.collectionTitle = tmpCollection.collectionTitle;
+        
+        self.localSessions.loadLocalSessionArray([tmpCollection.getId()]).then( (data : any) => {
+          localSessionArr = data[tmpCollection.getId()];
+
+          if (localSessionArr){
+            localSessionArr.forEach(element => {
+              tmpCollection.sessions.unshift(element);
+            });
+          }
+
+          if (loader){
+            loader.complete();
+          }
+        });
 
       },
       error => {
-        comp.api.handleAPIError(error);
+        this.api.handleAPIError(error);
       }
     )
   }
@@ -85,19 +148,9 @@ export class ImgCollectionPage implements OnInit{
 
   }
 
-  selectCompareSession(session: Session){
-    this.api.toggleCompareSession(session)
-  }
 
-  isCompared(session : Session){
 
-    
-    if (this.api.compareSessionIds.indexOf(session.getId()) != -1){
-      return true;
-    }else{
-      return false;
-    }
-  }
+
 
   addItem() {
     
@@ -112,7 +165,14 @@ export class ImgCollectionPage implements OnInit{
   captureCameraPicture(sourceType){
     let collectionId = this.api.selectedCollection.getId(); 
 
-    this.localSessions.captureCameraPicture(collectionId, sourceType);
+    let resultAction = function (){
+      let self = this;
+      setTimeout(function(){ self.loadCollection(); }, 500);
+
+      
+    };
+
+    this.localSessions.captureCameraPicture(collectionId, this.navCtrl, resultAction.bind(this), sourceType);
   }
 
   compareItems(){
@@ -124,16 +184,33 @@ export class ImgCollectionPage implements OnInit{
     });
   }
 
-  deleteLocalSession(localSession : localSession){
+  onDeleteClick(session : Session){
+    console.log("delete clicked in imgcollection");
+    let acceptHandler;
+    let sessionId = session.getId();
+    let self = this;
 
-    this.localSessions.deleteLocalSession(localSession.getFileName())
+    if (session.flagIsTmp){
+      acceptHandler = function (){ 
+        this.localSessions.deleteLocalSession(session.getFileName()).then((data) => {
+          let index = self.collection.sessions.findIndex(x => x["sessionId"] === sessionId);
+          self.collection.sessions.splice(index, 1);
+        })
+      
+      };
 
-  }
-
-  deleteSession(session : Session){
-
-    let acceptHandler = function (){
-      this.api.deleteSession(this.api.selectedCollection, session);
+    }else{
+      acceptHandler = function (){
+        this.api.deleteSession(this.api.selectedCollection, session).subscribe(
+          (data) => {
+            let index = self.collection.sessions.findIndex(x => x["sessionId"] === sessionId);
+            self.collection.sessions.splice(index, 1);
+          },
+          error => {
+            this.api.handleAPIError(error);
+          }
+        )
+      }
     }
 
     this.msg.presentConfirm(acceptHandler.bind(this))

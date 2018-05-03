@@ -91,14 +91,9 @@ import { Api, AuthService, UtilService } from '../../providers/providers';
             instance.index = this.index;
             instance.totalCnt = this.totalCnt;
             instance.height = this.height;
-
-            if (this.context["flagIsTmp"]){
-                instance.flagIsTmp = true;
-                instance.itemSessionPath = this.context.getSrc();
-            }else{
-                instance.flagIsTmp = false;
-                instance.itemSessionPath = this.context.getSessionItemPath();
-            }
+            instance.flagIsTmp = this.context.flagIsTmp;
+            instance.itemSessionPath = this.context.getSessionItemPath();
+            
 
             instance.onCommentClick.subscribe(value => this.handleCommentClicked(value));
             instance.onVoteClick.subscribe(value => this.handleVoteClicked(value));

@@ -2,8 +2,8 @@
 
   <ion-navbar>
     <ion-title>
-      {{ '#' + api.selectedCollection.collectionTitle }}
-      <p class="sub-page-title">@{{api.selectedCollection.userName}}</p>
+      {{ '#' + collectionTitle }}
+      <p class="sub-page-title">@{{collectionUserName}}</p>
     </ion-title>
     <ion-buttons end>
 
@@ -19,7 +19,7 @@
 
 <ion-content>
 
-  <ion-refresher (ionRefresh)="loadCollection(true, $event)">
+  <ion-refresher (ionRefresh)="loadCollection($event)">
       <ion-refresher-content
       pullingIcon="arrow-dropdown"
       pullingText="Update MyRoom"
@@ -30,94 +30,31 @@
   
   <ion-grid>
     <ion-row>
-      <ion-col  col-6 *ngFor="let indexNo = index; let session of localSessions.userLocalSessions">
-          <div class="photo-tile" [style.backgroundImage]="util.sanitizeStyle('url(' + session.src + ')')" >
-              <div id="flag_{{indexNo}}" class="flag-compare flag" [class.active]="isCompared(session)" (click)="selectCompareSession(session)">
-                  <ion-icon id="flag-icon_{{indexNo}}" name="git-compare" class="photo-tile-details-icon flag-icon" [class.active]="isCompared(session)" ></ion-icon>
-                </div>
+      
+ 
+        <session-tile 
+          *ngFor="let session of collection?.sessions; let i = index;"
+          [session]="session"
+          [index]="i"
+          (onSessionDeleteClick)="onDeleteClick($event)"
+          >
+          
+        </session-tile>
 
-                <div id="vote_{{indexNo}}" class="flag-vote flag ">
-                  <div class="flag-sync" [class.in-progress]="session.uploadInProgress">
-                      <ion-icon name="sync" class="photo-tile-details-icon flag-icon"  (click)="uploadLocalSession(session)" ></ion-icon>
-                  </div>
-                   
-                </div>
+        
 
-              <div class="photo-tile-details" >
-                <ion-grid>
-                  <ion-row>
-                    <ion-col>
-                          <ion-icon name="trash" class="photo-tile-details-icon   session-delete" (click)="deleteLocalSession(session)" ></ion-icon>
-                    </ion-col>
-
-                    <ion-col right>
-                        
-                    </ion-col>
-                    
-
-                  </ion-row>
-                </ion-grid>
-              </div>
-            </div>
-      </ion-col> 
-  
-      <ion-col col-6 *ngFor="let indexNo = index; let session of api.selectedCollection.sessions">
-          <div class="photo-tile" [style.backgroundImage]="'url(' + util.wrapHostBase(session.getThumbnail()) + ')'" >
-              <div id="flag_{{indexNo}}" class="flag-compare flag" [class.active]="isCompared(session) == true" (click)="selectCompareSession(session)">
-                  <ion-icon id="flag-icon_{{indexNo}}" name="git-compare" class="photo-tile-details-icon flag-icon" [class.active]="isCompared(session) == true" ></ion-icon>
-                </div>
-                
-
-              <div id="vote_{{indexNo}}" class="flag-vote flag " [hidden]="!session.voteCnt" [class.highly-rated]="session.getIsHighlyRated()">
-                  <div class="flag-vote-figure" [class.highly-rated]="session.getIsHighlyRated()">{{util.formatIntToPercent(session.voteAvg)}}</div>
-                  <ion-icon name="thumbs-up" class="photo-tile-details-icon flag-vote-icon" >
-                  </ion-icon>
-
-              </div>
-
-              <ion-spinner name="circles" *ngIf="session.flagIsTmp">
-              </ion-spinner>
-              <div class="photo-tile-details" >
-                <ion-grid>
-                  <ion-row>
-                    <ion-col>
-                            <ion-icon name="trash" *ngIf="auth.checkProfile(session, 'owner')" class="photo-tile-details-icon session-delete" (click)="deleteSession(session)" ></ion-icon>
-                    </ion-col>
-                    <ion-col>
-
-                      <div class="photo-tile-info">
-                          <font class="cntFigure">
-                              {{session.getNoVotes()}}
-                            </font>
-                          <ion-icon class="photo-tile-details-icon vote" [class.active]="session.hasVote" ion-long-press 
-                          [interval]="400" 
-                          (click)="showReactions($event, session)"   icon-right clear small
-                          [name]="voteHdl.getVoteIcon(session)" ></ion-icon>
-
-                          <font class="cntFigure">
-                              {{session.getNoComments()}}
-                          </font>
-                          <ion-icon name="ios-text-outline" class="photo-tile-details-icon"></ion-icon>
-                      </div>
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
-              </div>
-            </div>
-      </ion-col> 
-
-      <ion-col *ngIf="api.selectedCollection.sessions.length == 0 && localSessions.displayUserLocalSessions == 0" >
+      <ion-col *ngIf="collection?.sessions.length == 0 && localSessions.userLocalSessions.length == 0" >
           
           <div class="blank-card" (click)="addItem()" *ngIf="auth.checkProfile(api.selectedCollection, 'owner')" >
-              <ion-icon class="blank-card-add" name="videocam">
+              <ion-icon class="blank-card-add" name="camera">
               </ion-icon>
               {{'BLANK_CARD_ADD_SESSION' | translate}}
           </div>
 
           <div class="blank-card" *ngIf="!auth.checkProfile(api.selectedCollection, 'owner')" >
-              <ion-icon class="blank-card-add" name="videocam">
+              <ion-icon class="blank-card-add" name="camera">
               </ion-icon>
-              {{api.selectedCollection.userName}} {{'BLANK_CARD_NO_SESSION_NO_OWNER' | translate}}
+              @{{collectionUserName}} {{'BLANK_CARD_NO_SESSION_NO_OWNER' | translate}}
           </div>
       </ion-col>
 

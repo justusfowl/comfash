@@ -66,7 +66,7 @@ export class VoteHandlerService {
       if (voteType){
 
         // votetype = 0 -> delete previous vote 
-        if (voteType != 0) {
+        if (voteType != -1) {
 
           if (session.myVote){
             hasMyVote = true;

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IonicPage, NavController, ToastController, ModalController, MenuController } from 'ionic-angular';
 
-import { AuthService, MsgService } from '../../providers/providers';
+import { AuthService, MsgService, LocalSessionsService } from '../../providers/providers';
 import { MainPage } from '../pages';
 
 import * as $ from 'jquery';
@@ -29,7 +29,11 @@ export class LoginPage {
   constructor(public navCtrl: NavController,
     public auth: AuthService,
     public toastCtrl: ToastController,
-    public translateService: TranslateService, public modalCtrl: ModalController, public menu: MenuController, private msg: MsgService) {
+    public translateService: TranslateService, 
+    public modalCtrl: ModalController, 
+    public menu: MenuController, 
+    private msg: MsgService,
+    private localSession : LocalSessionsService) {
 
     //this.menu.enable(false,'mainmenu');
 
@@ -54,7 +58,12 @@ export class LoginPage {
     this.auth.login(this.account.userId, this.account.password).then(
       (data) => {
 
+        // init messanging service and connect to sockets
         this.msg.initMsgService();
+
+        // init local sessions ( creating user directory and loading sessions);
+        this.localSession.initLocalSession();
+
         this.navCtrl.setRoot(MainPage, {
           userId : this.auth.getUserId()
         });

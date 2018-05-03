@@ -5,6 +5,8 @@ import { IonicPageModule } from 'ionic-angular';
 import { ImgCollectionPage } from './imgCollection';
 import { LongPressModule } from 'ionic-long-press';
 
+import { SessionTileModule } from '../../components/session-tile/session-tile.module';
+
 @NgModule({
   declarations: [
     ImgCollectionPage,
@@ -12,7 +14,8 @@ import { LongPressModule } from 'ionic-long-press';
   imports: [
     IonicPageModule.forChild(ImgCollectionPage),
     TranslateModule.forChild(),
-    LongPressModule
+    LongPressModule,
+    SessionTileModule
   ],
   exports: [
     ImgCollectionPage

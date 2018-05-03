@@ -2,9 +2,63 @@
 
 page-capture {
 
+    
+    [class*="filter"] {
+        position: relative;
+    }
+    
 
-    // enable for preview on device 
 
+    .collection-list{
+        position: absolute; 
+        top: 25px;
+        right: 65px;
+        width: 200px;
+        z-index: 999999;
+        text-align: right;
+        color: color($colors, primary, base);
+    }
+
+    #filter-box{
+        position: fixed; 
+        top: 0; 
+        left: 0;
+        z-index: 200;
+    }
+
+    .filterOverlay{
+        height: 100vh;
+        width: 100vw;
+        padding-top :50px;
+    }
+
+    #preview-footer{
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+        overflow-y: hidden;
+        white-space: nowrap;
+        background-color: white;
+        z-index: 20000;
+    }
+
+    .filterPreview{
+        width: 100px;
+        height: 100px;
+        display: inline-block;
+        margin: 5px;
+        border-radius:2px;
+    }
+
+    .filterPreview.selected{
+        transform: scale(1.3);
+    }
+
+    .filterPreview img{
+        object-fit: cover; 
+        object-position: center;
+        height: 100%; 
+        width: 100%;
+    }
     
     background: transparent !important;
 
@@ -16,6 +70,8 @@ page-capture {
        background-color: color($colors, primary, base);
     }
 
+
+
     .btn-footer-capture, .btn-footer-cam{
         font-size: 30px;
         color: color($colors, dark-text, base);
@@ -23,13 +79,24 @@ page-capture {
         text-align: center;
     }
 
-    .btn-footer-cam{
+    #btn-take-picture.btn-footer-cam{
         border-right: 1px solid color($colors, dark-text, base);
     }
 
     .testImg{
         width: 200px; 
         height: 200px; 
+    }
+
+    #previewPicture{
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh; 
+        width: 100vw;
+        object-fit: cover;
+        object-position: center;
+        z-index: 100;
     }
 
     @keyframes turnArrow{
@@ -40,7 +107,7 @@ page-capture {
             transform : rotate3d(1,0,0,60deg) rotate(360deg); 
         }
     }
-
+ 
     .ar-icon{
         
         -webkit-animation: turnArrow 5s infinite;

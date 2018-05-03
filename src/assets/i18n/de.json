@@ -63,6 +63,8 @@
 
   "NEW_OUTFIT" : "Outfit",
 
+  "SESSION_ADDED" : "Aufnahme hinzugefügt",
+
   "BLANK_CARD_ADD_SESSION" : "Session hinzufügen",
   "BLANK_CARD_NO_SESSION_NO_OWNER" : " hat noch keine Session hinzugefügt.",
 

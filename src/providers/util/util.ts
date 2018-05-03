@@ -57,6 +57,11 @@ export class UtilService {
         return this.sanitizer.bypassSecurityTrustResourceUrl(value);
     }
 
+
+    sanitizeUrl(value){ 
+        return this.sanitizer.bypassSecurityTrustUrl(value);
+    }
+
     formatDate(inputDateStr : string){
         let inputDate = new Date(inputDateStr);
 

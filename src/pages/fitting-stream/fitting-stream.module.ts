@@ -8,6 +8,8 @@ import { LongPressModule } from 'ionic-long-press';
 
 import { DynamicActivityItemModule } from '../../components/activity-item/activity-item.module';
 
+import { IonicSwipeAllModule } from 'ionic-swipe-all';
+
 @NgModule({
   declarations: [
     FittingStreamPage,
@@ -16,7 +18,8 @@ import { DynamicActivityItemModule } from '../../components/activity-item/activi
     IonicPageModule.forChild(FittingStreamPage),
     TranslateModule.forChild(), 
     LongPressModule, 
-    DynamicActivityItemModule
+    DynamicActivityItemModule,
+    IonicSwipeAllModule
   ],
   exports: [
     FittingStreamPage

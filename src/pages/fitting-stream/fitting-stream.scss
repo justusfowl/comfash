@@ -2,6 +2,14 @@
 
 page-fitting-stream {
 
+    #load-container{
+        opacity: 0;
+    }
+
+    #load-container.active{
+        opacity: 1;
+    }
+
     .dot-container{
         position: absolute; 
         right: 5px; 

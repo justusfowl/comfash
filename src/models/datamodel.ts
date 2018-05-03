@@ -40,6 +40,15 @@
       
     }
 
+    getPrivacyProtected(){
+      if (this.privacyStatus == "1" || this.privacyStatus == "2"){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+
     getDayCreated(){
       return padStart2("0", this.collectionCreated.getDate().toString());
     }
@@ -114,7 +123,7 @@
     }
   
     addSession(newSession : Session){
-      this.sessions.push(newSession);
+      this.sessions.unshift(newSession);
     }
   
     removeSession(sessionId : number){
@@ -154,53 +163,6 @@
     }
   
   }
-
-  export class localSession {
-    tmpId : string;
-    userId: string;
-    collectionId: number;
-    itemPath : string;
-    fullFilePath : string;
-    src : string;
-    flagIsTmp : boolean = true;
-    sessionItemType : string;
-    filterOption : any;
-
-    constructor(fields : any) {
-      this.tmpId = 'tmp_' + Date.now(),
-      this.userId = fields.userId;
-      this.collectionId = fields.collectionId;
-      this.fullFilePath = fields.fullFilePath;
-      this.itemPath = fields.itemName;
-      this.src = fields.src
-      this.sessionItemType = fields.sessionItemType; 
-      this.filterOption = fields.filterOption
-    }
-
-    getId(){
-      return this.tmpId;
-    }
-
-    getThumbnail(){
-      return this.src;
-    }
-
-    getFileName(){
-      return this.itemPath;
-    }
-
-    getFullFilePath(){
-      return this.fullFilePath;
-    }
-
-    getCollectionId(){
-      return this.collectionId;
-    }
-
-    getSrc(){
-      return this.src;
-    }
-  }
   
   export class Session {
   
@@ -219,17 +181,26 @@
     tags : PurchaseTag[] = [];
 
     votes : Vote[] = [];
+
     sessionThumbnailPath : string;
     sessionItemPath : string;
     height: number; 
     width: number;
     primeColor: string;
+    primeFont : string;
+
+    filterOption: string;
+
     displayHeight: number; 
     displayWidth: number; 
     displayTop: number; 
     displayLeft: number
+
     flagIsTmp : boolean = false;
-    sessionItemType: string; 
+    tmpFileName : string;
+    tmpFullFilePath : string;
+
+    sessionItemType: string;
   
     myVote : Vote;
     hasVote : boolean = false;
@@ -256,11 +227,20 @@
       this.width = fields.width || 0;
       this.sessionThumbnailPath = fields.sessionThumbnailPath || '/img/hangersbg.png';
       this.primeColor = fields.primeColor || '#8c8c8c';
+      this.primeFont = fields.primeFont || '#fff';
+
+      this.filterOption = fields.filterOption || '#nofilter';
       this.sessionItemType = fields.sessionItemType || "";
+
+      
   
       this.voteCnt = fields.voteCnt || 0;
       this.voteAvg = fields.voteAvg || 0;
       this.commentCnt = fields.commentCnt || 0;
+
+      this.flagIsTmp = fields.flagIsTmp || false;
+      this.tmpFileName = fields.tmpFileName || null;
+      this.tmpFullFilePath = fields.tmpFullFilePath || null;
       
       // per default there is not any vote by the user but if there is, parse it
       if (fields.myVote){
@@ -268,6 +248,18 @@
         this.myVote = newVote;
         this.hasVote = true;
       }
+      
+    }
+
+    updateWithUploadData(responseBody){
+
+      this.sessionId = responseBody.sessionId;
+      this.sessionCreated = responseBody.sessionCreated;
+      this.sessionThumbnailPath = responseBody.sessionThumbnailPath;
+      this.sessionItemPath = responseBody.sessionItemPath;
+      this.primeColor = responseBody.primeColor;
+      this.flagIsTmp = false;
+
       
     }
   
@@ -379,6 +371,24 @@
         return this.sessionThumbnailPath;
       }catch(err){
         return '/img/hangersbg.png';
+      }
+    }
+
+    // only for temp sessions
+    getFileName(){
+      if (this.flagIsTmp){
+        return this.tmpFileName;
+      }else{
+        return null;
+      }
+    }
+
+    // only for temp sessions
+    getFullFilePath(){
+      if (this.flagIsTmp){
+        return this.tmpFullFilePath;
+      }else{
+        return null;
       }
     }
 
@@ -839,7 +849,7 @@
         this.voteType = fields.voteType || null;
 
         // per default there is not any vote by the user but if there is, parse it
-        if (fields.voteType){
+        if (fields.myVoteType){
           this.myVote = new Vote({
             sessionId : fields.sessionId, 
             voteType : fields.myVoteType,

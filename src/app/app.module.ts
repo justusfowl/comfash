@@ -19,6 +19,7 @@ import { FileTransfer } from '@ionic-native/file-transfer';
 import { Network } from '@ionic-native/network';
 import { BackgroundFetch } from '@ionic-native/background-fetch';
 
+import { IonicImageViewerModule } from '../components/image-viewer/ionic-image-viewer';
 
 import { 
   ConfigService, 
@@ -38,7 +39,6 @@ import { MyApp } from './app.component';
 import { OneSignal } from '@ionic-native/onesignal';
 
 import { Facebook } from '@ionic-native/facebook';
-
 
 
 //import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
@@ -66,7 +66,8 @@ export function createTranslateLoader(http: HttpClient) {
       }
     }),
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    IonicImageViewerModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

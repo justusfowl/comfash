@@ -82,17 +82,9 @@ export class ContentPage implements AfterViewInit {
 
         this.api.compareSessionIds = compareSessionIds;
 
-        let onlineSessionIds = compareSessionIds.filter(function (value){
-          if (!this.util.isTmpId(value)){
-            return value
-          }
-        }.bind(this));
+        let onlineSessionIds = compareSessionIds;
 
-        let localSessionIds = compareSessionIds.filter(function (value){
-          if (this.util.isTmpId(value)){
-            return value
-          }
-        }.bind(this));
+        let localSessionIds = this.localSession.compareLocalSessionIds;
 
         // get local sessions
         let localSessions = this.localSession.loadLocalSessionByIds(localSessionIds);

@@ -2,7 +2,7 @@
 <ion-content class="force-no-scroll" ion-fixed no-bounce no-scroll>
     
       <ion-buttons ion-fixed class="btn-header">
-        <button ion-button icon-only (click)="navBack()">
+        <button ion-button icon-only clear (click)="navBack()">
           <ion-icon name="arrow-back"></ion-icon>
         </button>
       </ion-buttons>
@@ -46,7 +46,7 @@
           (keyup.enter)="addComment()"
           [placeholder]="'COMMENT_CREATE_TITLE' | translate"
           ></ion-input>
-          <ion-icon class="comment-add-btn" name="arrow-back" (click)="addComment()"></ion-icon>
+          <ion-icon class="comment-add-btn" name="arrow-forward" (click)="addComment()"></ion-icon>
         </div>
         <div class="be-first-comment" *ngIf="comments.length == 0">
           {{'BE_THE_FIRST_COMMENT' | translate }}

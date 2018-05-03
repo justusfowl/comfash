@@ -1,9 +1,9 @@
 
 
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { File } from '@ionic-native/file';
 import { AuthService } from '../auth/auth';
-import { localSession } from '../../models/datamodel';
+import { Session } from '../../models/datamodel';
 import { Platform, ModalController } from 'ionic-angular';
 
 import { Camera } from '@ionic-native/camera';
@@ -15,14 +15,24 @@ import { ConfigService } from '../config/config';
 import { Storage } from '@ionic/storage';
 
 import { BackgroundFetch, BackgroundFetchConfig } from '@ionic-native/background-fetch';
+import { MsgService } from '../message/message';
 
 
 @Injectable()
 export class LocalSessionsService {
   
-    public displayUserLocalSessions : localSession[] = [];
+    public displayUserLocalSessions : Session[] = [];
 
     public userLocalSessions : any[] = [];
+
+    onLocalSessionAdded = new EventEmitter<any>();
+
+    onLocalSessionUploaded = new EventEmitter<any>();
+
+    public isInit : boolean = false;
+
+    compareLocalSessionIds : number[] = [];
+
 
     constructor(
         private file: File, 
@@ -34,29 +44,42 @@ export class LocalSessionsService {
         public modalCtrl: ModalController, 
         private camera : Camera,
         public storage: Storage,
-        private backgroundFetch: BackgroundFetch
+        private backgroundFetch: BackgroundFetch, 
+        public msg: MsgService
     ) { 
         
-        platform.ready().then(() => {
+    }
 
-            this.createUserDir();
-            this.loadLocalSessions();
+    initLocalSession(){
+
+        console.log("Initialize local sessions...")
+        let self = this;
+
+        return new Promise<any>((resolve, reject) => {
+
+            if (this.isInit){
+                resolve();
+            }
 
             const config: BackgroundFetchConfig = {
                 stopOnTerminate: false, // Set true to cease background-fetch from operating after user "closes" the app. Defaults to true.
               };
             
-              backgroundFetch.configure(config)
-                 .then(() => {
-                     console.log('Background Fetch initialized');
+            this.backgroundFetch.configure(config)
+                .then(() => {
+                    console.log('Background Fetch initialized');
                     this.uploadAllSessions();
                     this.backgroundFetch.finish();
-            
-                 })
-                 .catch(e => console.log('Error initializing background fetch', e));
+        
+                })
+                .catch(e => console.log('Error initializing background fetch', e));
 
-            
-          }); 
+            this.isInit = true;
+
+            this.createUserDir();
+            this.loadLocalSessions(resolve, reject)
+        });
+
     }
 
     createUserDir (){
@@ -69,93 +92,77 @@ export class LocalSessionsService {
         .catch(err => console.log('Error in creating user directory', JSON.stringify(err)));
     }
 
-    captureCameraPicture(collectionId: number, flagIsCamera = true){
+    captureCameraPicture(collectionId: number, navCtrl : any, callback?, flagIsCamera = true){
 
         let self = this;
         let sourceType;
 
         if (flagIsCamera){
             sourceType = this.camera.PictureSourceType.CAMERA;
+
+            navCtrl.push('CapturePage', {
+                "collectionId" : collectionId, 
+                "resultCallback" : callback
+              });
+
         }else{
             sourceType = this.camera.PictureSourceType.PHOTOLIBRARY;
+            if (Camera['installed']()) {
+                this.camera.getPicture({
+                    sourceType : sourceType,
+                    destinationType: this.camera.DestinationType.DATA_URL,
+                    encodingType: this.camera.EncodingType.JPEG,
+                    correctOrientation: true,
+                    targetWidth: window.outerWidth,
+                    targetHeight:window.outerHeight
+                }).then((data) => {
+
+                navCtrl.push('CapturePage', {
+                    "collectionId" : collectionId,
+                    "resultCallback" : callback,
+                    "imageData" : data
+                });
+          
+                }, (err) => {
+                  console.log('Aborted to take photo');
+                })
+              } else {
+                console.log("cordova unavailable??"!);
+              }
         }
-        
-        if (Camera['installed']()) {
-            this.camera.getPicture({
-                sourceType : sourceType,
-                destinationType: this.camera.DestinationType.DATA_URL,
-                encodingType: this.camera.EncodingType.JPEG,
-                correctOrientation: true,
-                targetWidth: window.outerWidth,
-                targetHeight:window.outerHeight
-            }).then((data) => {
-                
-            self.previewCameraPicture(collectionId, data, "image/jpg");
-              //self.storeImage(collectionId, data, "image/jpg");
-      
-            }, (err) => {
-              console.log('Aborted to take photo');
-            })
-          } else {
-            console.log("cordova unavailable??"!);
-          }
-
-    }
-
-    previewCameraPicture(collectionId : number, data : any, mimeType : string){
-
-        let self = this;
-
-        let settingsOptions = {
-            collectionId : collectionId, 
-            data : data, 
-            mimeType : mimeType
-        }
-
-        let settingsModal = this.modalCtrl.create('SessionSettingsPage', {"settingsOptions": settingsOptions});
-
-        settingsModal.onDidDismiss(previewResult => {
-          if (previewResult) {
-
-            previewResult["collectionId"] = collectionId;
-            previewResult["data"] = data;
-            previewResult["mimeType"] = "image/jpg";
-    
-            self.storeImage(previewResult);
-    
-          }
-        })
-        
-        settingsModal.present();
 
     }
 
     createTmpSession(data){
 
         let collectionId = parseInt(data.name.substring(0,data.name.indexOf("_")));
-        let sessionItemType = this.getTypeFromFileName(data.name);
 
-        console.log("i am in the createTmpSession", collectionId);
-
-        let newSession = new localSession({
+        let newSession = new Session({
             userId : this.auth.getUserId(),
+            sessionId : Date.now(),
             collectionId : collectionId,
-            itemName : data.name, 
-            fullFilePath : data.nativeURL,
-            src : data.src,
-            sessionItemType : sessionItemType,
-            filterOption : data.filterOption 
+            tmpFileName : data.name,
+            tmpFullFilePath : data.nativeURL,
+            sessionItemPath : data.src, //data_uri -> not base64 encoded!!!
+            sessionItemType : data.sessionItemType, //corresponding mime-type to encode data_uri
+            filterOption : data.filterOption,
+            flagIsTmp : true
         });
 
-        this.userLocalSessions.push(newSession); 
-        this.displayUserLocalSessions.push(newSession)
+        this.userLocalSessions.push(newSession);
+        this.displayUserLocalSessions.push(newSession);
+
+        return newSession; 
 
     }
 
-    loadLocalSessions(){
+    loadLocalSessions(resolve, reject){
 
         let userId = this.auth.getUserId();
         let self = this;
+
+        this.userLocalSessions.length = 0;
+        this.displayUserLocalSessions.length = 0;
 
         this.file.listDir( this.file.dataDirectory, userId ) 
             .then((data : any) => {
@@ -168,15 +175,26 @@ export class LocalSessionsService {
 
                         self.getImageMetaData(element.name).then((val) => {
                             
-                            element["sessionItemType"] = val.mimeType || null;
-                            element["filterOption"] = val.filterOption || null;
-                            
-                            self.createTmpSession(element);
+                            if (val){
+
+                                element["sessionItemType"] = val.mimeType || null;
+                                element["filterOption"] = val.filterOption || null;
+                                
+                                self.createTmpSession(element);
+                            }
+
                         })
                     })
                 });
+
+                this.onLocalSessionAdded.emit(true);
+
+                resolve();
             })
-            .catch(err => console.log('Error in loading the local sessions', JSON.stringify(err)));
+            .catch(err => {
+                reject(err);
+                console.log('Error in loading the local sessions', JSON.stringify(err));
+            });
     }
 
 
@@ -185,8 +203,32 @@ export class LocalSessionsService {
         return this.file.readAsDataURL(targetDir, filename)
     }
 
-    loadLocalSessionArray(collectionId : number){
-        this.displayUserLocalSessions = this.userLocalSessions.filter(session => session.collectionId == collectionId);
+    loadLocalSessionArray(collectionIds : number[]){
+        let self = this;
+        return new Promise<any>((resolve, reject) => {
+            if (this.isInit){
+                let output = self.getLocalSessionsByCollectionId(collectionIds);
+                resolve(output);
+            }else{
+                this.initLocalSession().then(res => {
+                    let output = self.getLocalSessionsByCollectionId(collectionIds);
+                    resolve(output);
+                })
+            }
+        });
+    }
+
+    getLocalSessionsByCollectionId(collectionIds : number[]){
+        let output = {};
+
+        collectionIds.forEach(collectionId => {
+            let collectionSessionArr = this.userLocalSessions.filter(session => session.collectionId == collectionId);
+            
+            output[collectionId] = collectionSessionArr;
+
+        });
+
+        return output;
     }
 
     loadLocalSessionByIds(arrayOfIds : any){
@@ -234,44 +276,58 @@ export class LocalSessionsService {
 
     storeImage(previewItem : any){
 
-        let collectionId = previewItem.collectionId;
-        let imageData = previewItem.data;
-        let contentType = previewItem.mimeType;
-
         let self = this;
-        var fileBlob = this.b64toBlob(imageData, contentType);
-        let type = contentType.substring(0,contentType.indexOf("/"));
 
-        let targetDir = this.getUserDir();
+        return new Promise<any>((resolve, reject) => {
+
+            let collectionId = previewItem.collectionId;
+            let imageData = previewItem.data;
+            let contentType = previewItem.mimeType;
+            let filterOption = previewItem.filterOption;
     
-        let fileName = collectionId.toString() + "_" + Date.now().toString() + "_" + type;
+            
+            var fileBlob = this.b64toBlob(imageData, contentType);
+            let type = contentType.substring(0,contentType.indexOf("/"));
     
-        this.file.writeFile( targetDir, fileName, fileBlob )      
-        .then(element => {
-          console.log('image stored');
-          console.log(fileName);
-          console.log(element);
-          element["src"] = 'data:*/*;base64,' + imageData;
-          element["sessionItemType"] = type;
-          
-          // create temporary session item for display until uploaded
-          self.createTmpSession(element);
-
-          // store meta data (e.g. filter) to storage
-          let metaData = {
-              "filename" : fileName,
-              "mimeType" : contentType,
-              "filterOption" : previewItem.filterOption
-          }
-
-          self.setImageMetaData(fileName, metaData).then(res => {
-              console.log("metadata saved!", fileName)
-          })
-
-
+            let targetDir = this.getUserDir();
+        
+            let fileName = collectionId.toString() + "_" + Date.now().toString() + "_" + type;
+        
+            this.file.writeFile( targetDir, fileName, fileBlob )      
+            .then(element => {
+              console.log('image stored');
+              element["src"] = imageData;
+              element["sessionItemType"] = contentType;
+              element["filterOption"] = filterOption;
+              
+              // create temporary session item for display until uploaded
+              let newSession = self.createTmpSession(element);
+                
+              self.msg.toast("SESSION_ADDED");
+              this.onLocalSessionAdded.emit(true);
     
-        })
-        .catch(err => console.log('Error in storing an image', JSON.stringify(err)));
+              // store meta data (e.g. filter) to storage
+              let metaData = {
+                  "filename" : fileName,
+                  "mimeType" : contentType,
+                  "filterOption" : previewItem.filterOption
+              }
+    
+              self.setImageMetaData(fileName, metaData).then(res => {
+                  console.log("metadata saved!", fileName)
+              });
+
+              self.upload(newSession);
+
+              resolve();
+        
+            })
+            .catch(err => {
+                console.log('Error in storing an image', JSON.stringify(err));
+                reject();
+            });
+
+        });
     
       }
 
@@ -285,23 +341,32 @@ export class LocalSessionsService {
 
 
         //delete item from the userLocalsessions
-        let imageIndex = this.userLocalSessions.findIndex(x => x["itemPath"] == fileName); 
+        let imageIndex = this.userLocalSessions.findIndex(x => x.getFileName() == fileName); 
         this.userLocalSessions.splice(imageIndex, 1);
 
-        //remove item from local app storage
-        this.file.removeFile(this.getUserDir(), fileName)
+        return new Promise<any>((resolve, reject) => {
+            //remove item from local app storage
+            this.file.removeFile(this.getUserDir(), fileName)
             .then(element => {
                 self.storage.remove(fileName).then(val => {
                     console.log("file and meta data successfully removed"); 
+                    resolve(true);
                 })
             })
-            .catch(err => console.log('Error in removing  file', JSON.stringify(err)));
+            .catch(err => {
+
+                console.log('Error in removing  file', JSON.stringify(err))
+                reject(err);
+            });
+        });
+
+        
     }
 
 
     deleteLocalSessions(){
         let userId = this.auth.getUserId();
-        let self = this; 
+        let self = this;
 
         this.file.removeRecursively(this.file.dataDirectory, userId)
         .then(element => {
@@ -316,9 +381,37 @@ export class LocalSessionsService {
             });
 
             self.createUserDir();
+            console.log("WARNING; for debugging storage is cleared!!!")
+            self.storage.clear();
 
           })
           .catch(err => console.log('Error in removing  user directory', JSON.stringify(err)));
+
+
+    }
+
+    /**
+     * Function to toggle whether a session should be viewable for comparison or not, flag available to delete 
+     * @param session 
+     * @param forceDelete 
+     */
+    toggleCompareSession(localSession : Session, forceDelete = false){
+
+        let sessionId = localSession.getId();
+        let currIndex = this.compareLocalSessionIds.indexOf(sessionId);
+
+        if ( currIndex == -1){
+
+            // when normally toggling, add session to comparison if not there
+            // upon deletion, just make sure to remove and not add again
+
+            if (!forceDelete){
+                this.compareLocalSessionIds.push(sessionId);
+            }
+        
+        }else{
+         this.compareLocalSessionIds.splice(currIndex, 1); 
+        }
 
 
     }
@@ -371,7 +464,7 @@ export class LocalSessionsService {
         });
     }
 
-    upload(localSession : localSession) {
+    upload(localSession : Session) {
         var self = this;
         
         return new Promise<any>((resolve, reject) => {
@@ -387,8 +480,13 @@ export class LocalSessionsService {
             let headers = {
               "Authorization" : "Bearer " + this.auth.getToken()
             }
+
+            let params = {
+                "filterOption" : localSession.filterOption
+              }
         
-            options.headers = headers; 
+            options.headers = headers;
+            options.params = params; 
         
             var fileTransfer = this.transfer.create(); 
         
@@ -401,13 +499,18 @@ export class LocalSessionsService {
         
             fileTransfer.upload(filePath, endpoint , options, true)
             .then((data) => {
+                data["localSessionId"] = localSession.getId();
         
-              console.log("successfully uploading the video done");
-
-              resolve({"code" : 200});
-  
-              self.deleteLocalSession(localSession.getFileName());
-              self.api.loadCollection(collectionId, true);
+                console.log("successfully uploading the video done");
+               
+                self.deleteLocalSession(localSession.getFileName()).then(delResult => {
+                    self.onLocalSessionUploaded.emit(data);
+                }, (err) => {
+                    reject({"error" : "Something went wrong with removing the local session/file"});
+                    console.log(JSON.stringify(err));
+                });
+                
+                resolve({"code" : 200});
          
             }, (err) => {
                 reject({"error" : "Something went wrong with syncing and uploading"});
