@@ -1,4 +1,16 @@
+@import "../../theme/variables";
+
+
 page-tutorial {
+
+  h2{
+    color: color($colors, primary, base);
+  }
+
+  .swiper-pagination-bullet-active{
+    background: color($colors, primary, base);
+  }
+
   .toolbar-background {
     background: transparent;
     border-color: transparent;
@@ -31,6 +43,10 @@ page-tutorial {
     b {
       color: #000000;
     }
+  }
+
+  .last-slide{
+    background-color: $background-color;
   }
 
 }

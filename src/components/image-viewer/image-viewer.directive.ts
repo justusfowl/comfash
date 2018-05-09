@@ -1,7 +1,7 @@
 import { Directive, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
 
-import { ImageViewerComponent } from './image-viewer.component';
-import { ImageViewer } from './image-viewer';
+//import { ImageViewerComponent } from './image-viewer.component';
+//import { ImageViewer } from './image-viewer';
 import { ImageViewerController } from './image-viewer.controller';
 
 @Directive({

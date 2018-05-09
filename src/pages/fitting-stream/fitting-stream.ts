@@ -1,8 +1,8 @@
-import { Component, ViewChild, ChangeDetectorRef, OnDestroy, ApplicationRef, ElementRef } from '@angular/core';
-import { IonicPage, NavController, PopoverController, Content, LoadingController} from 'ionic-angular';
-import { Api, ConfigService, UtilService, AuthService, MsgService, VoteHandlerService } from '../../providers/providers';
+import { Component, ViewChild, ElementRef } from '@angular/core';
+import { IonicPage, NavController, Content, LoadingController} from 'ionic-angular';
+import { Api, ConfigService, UtilService, MsgService, VoteHandlerService, AuthService } from '../../providers/providers';
 import { TranslateService } from '@ngx-translate/core';
-import { TrendItem, Vote, Session } from '../../models/datamodel';
+import { TrendItem, Session } from '../../models/datamodel';
 
 @IonicPage()
 
@@ -43,16 +43,21 @@ export class FittingStreamPage {
     private translate: TranslateService, 
     public navCtrl: NavController, 
     public api: Api, 
-    public config: ConfigService, 
+    public config: ConfigService,
+    public auth : AuthService,
     public util : UtilService, 
-    private popoverCtrl: PopoverController, 
-    private auth : AuthService, 
     private voteHdl : VoteHandlerService, 
     public loadingCtrl : LoadingController,
     public msg: MsgService) {
 
     
   }
+
+  ionViewWillEnter() {
+    this.auth.validateAuth(this.navCtrl)
+  }
+
+
 
   ngAfterViewInit(){
 

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
-import { ConfigService, LocalSessionsService } from '../../providers/providers';
+import { ConfigService, LocalSessionsService, AuthService } from '../../providers/providers';
 
 /**
  * Generated class for the SettingsPage page.
@@ -17,10 +17,13 @@ import { ConfigService, LocalSessionsService } from '../../providers/providers';
 })
 export class SettingsPage {
 
+  public now : any = new Date().getTime();
+
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams, 
     public config: ConfigService, 
+    public auth : AuthService,
     private localSessions : LocalSessionsService) {
   }
 

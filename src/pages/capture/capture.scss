@@ -12,11 +12,13 @@ page-capture {
     .collection-list{
         position: absolute; 
         top: 25px;
-        right: 65px;
+        right: 15px;
         width: 200px;
         z-index: 999999;
         text-align: right;
         color: color($colors, primary, base);
+        background-color: rgba(255,255,255,0.7);
+        border-radius: 4px;
     }
 
     #filter-box{
@@ -37,20 +39,33 @@ page-capture {
         -webkit-overflow-scrolling: touch;
         overflow-y: hidden;
         white-space: nowrap;
-        background-color: white;
+        background-color: transparent;
         z-index: 20000;
+        height : 0px;
+        position: fixed; 
+        bottom: 7%; 
+        left: 0px;
+        width: 100vw; 
+        transition: 0.4s ease;
+        margin: 10px;
+    }
+
+    #preview-footer.showEffects{
+        height: 100px; 
+        transition: 0.4s ease;
     }
 
     .filterPreview{
-        width: 100px;
-        height: 100px;
+        width: 80px;
+        height: 80px;
         display: inline-block;
         margin: 5px;
-        border-radius:2px;
+        border-radius:10px;
     }
 
     .filterPreview.selected{
-        transform: scale(1.3);
+        transform: scale(1.1);
+        
     }
 
     .filterPreview img{
@@ -58,6 +73,48 @@ page-capture {
         object-position: center;
         height: 100%; 
         width: 100%;
+        border-radius: 5px;
+    }
+
+    .filterPreview.selected img{
+        border: 1px solid color($colors, primary, base);
+    }
+
+    #tags-footer{
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+        overflow-y: hidden;
+        white-space: nowrap;
+        background-color: transparent;
+        z-index: 20000;
+        height : 0px;
+        position: fixed; 
+        bottom: 7%; 
+        left: 0px;
+        width: 100vw; 
+        transition: 0.4s ease;
+        margin: 10px;
+    }
+
+    #tags-footer.showTags{
+        height: 100px; 
+        transition: 0.4s ease;
+    }
+
+    #new-tag{
+        background-color: red;
+    }
+
+    #new-tag.dragged{
+        position: fixed;
+    }
+
+    .purchase-tag{
+        width: 80px;
+        height: 80px;
+        display: inline-block;
+        margin: 5px;
+        border-radius:10px;
     }
     
     background: transparent !important;
@@ -82,6 +139,73 @@ page-capture {
     #btn-take-picture.btn-footer-cam{
         border-right: 1px solid color($colors, dark-text, base);
     }
+
+    #btn-capture-picture{
+        position: absolute; 
+        bottom: 3%; 
+        left: 50%; 
+        transform: translateX(-50%);
+        border-radius: 50px; 
+        border: 3px solid white;
+        z-index: 9999;
+        height: 70px; 
+        width: 70px; 
+        display: flex; 
+        align-items: center;
+    }
+
+    #btn-capture-picture .inner{
+        margin: 4px;
+        z-index: 9999;
+        height: 50px;
+        width: 50px; 
+        border-radius: 50px; 
+        background-color: white;
+        filter: blur(2px);
+        opacity: 0.8;
+    }
+
+    #btn-effects{
+        position: fixed; 
+        bottom: 1%; 
+        left: 10%;  
+        z-index: 102;
+    }
+
+
+    #btn-tags{
+        position: fixed;
+        z-index: 102;
+        bottom: 1%; 
+        left: 30%; 
+    }
+
+
+    #btn-effects .inner,
+    #btn-tags .inner{
+        font-size: 8px;
+        color: white;
+        text-shadow: 0 0 3px #797979;
+    }
+
+
+    #btn-effects .icon,
+    #btn-tags .icon{
+        font-size: 30px;
+        color: white;
+        text-shadow: 0 0 3px #797979;
+    }
+
+    #btn-save{
+        position: fixed;
+        bottom: 1%; 
+        right: 5px;
+        width: 20%; 
+        background-color: white;
+        border-radius: 5px;
+        z-index: 102;
+    }
+
 
     .testImg{
         width: 200px; 

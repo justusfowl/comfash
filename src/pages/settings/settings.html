@@ -48,40 +48,64 @@
     
       <ion-list>
 
-  
-          <ion-item>
-            <ion-label>Env: {{config.getEnvironment()}}</ion-label>
-            
-          </ion-item>
-  
-          <ion-item text-wrap>
-            <ion-label>APIBase: {{config.getAPIBase()}} </ion-label>
-          </ion-item>
+      <ion-item>
+        <ion-label>Appversion: {{config.getAppVersion()}}</ion-label>
+        
+      </ion-item>
 
-            
-          <ion-item text-wrap>
-            <ion-label>Network: {{config.isOnline}},  {{config.networkType}}, {{config.downloadSpeed}} </ion-label>
-          </ion-item>
+      <ion-item>
+        <ion-label>TutorialShown: {{config.tutorialShown}}</ion-label>
+        
+      </ion-item>
 
-          <ion-item>
-              <button ion-button (click)="localSessions.initLocalSession()">Lokale Daten laden</button>
-              
-          </ion-item>
+      <ion-item>
+        <ion-label>Expires at: {{auth.expiresAt}}</ion-label>
+        
+      </ion-item>      
 
-          <ion-item>
-              <button ion-button (click)="deleteLocalUserData()">Lokale Daten löschen?</button>
-              
-          </ion-item>
+      <ion-item>
+        <ion-label>Now : {{now}}</ion-label>
+        
+      </ion-item>
 
-          <ion-item text-wrap>
-            <ion-label># lokale Dateien: {{localSessions.userLocalSessions.length}}</ion-label>
-          </ion-item>
+      <ion-item>
+        <ion-label>Get authstatus: {{auth.getAuthStatus()}}</ion-label>
+        
+      </ion-item>         
+
+      <ion-item>
+        <ion-label>Env: {{config.getEnvironment()}}</ion-label>
+        
+      </ion-item>
+
+      <ion-item text-wrap>
+        <ion-label>APIBase: {{config.getAPIBase()}} </ion-label>
+      </ion-item>
+
+        
+      <ion-item text-wrap>
+        <ion-label>Network: {{config.isOnline}},  {{config.networkType}}, {{config.downloadSpeed}} </ion-label>
+      </ion-item>
+
+      <ion-item>
+          <button ion-button (click)="localSessions.initLocalSession()">Lokale Daten laden</button>
           
+      </ion-item>
 
-          <ion-item *ngFor="let i of localSessions.userLocalSessions">
-              <ion-label>{{i.getFileName()}}</ion-label>
-          </ion-item>
-  
-        </ion-list>
+      <ion-item>
+          <button ion-button (click)="deleteLocalUserData()">Lokale Daten löschen?</button>
+          
+      </ion-item>
+
+      <ion-item text-wrap>
+        <ion-label># lokale Dateien: {{localSessions.userLocalSessions.length}}</ion-label>
+      </ion-item>
+      
+
+      <ion-item *ngFor="let i of localSessions.userLocalSessions">
+          <ion-label>{{i.getFileName()}}</ion-label>
+      </ion-item>
+
+    </ion-list>
 
 </ion-content>

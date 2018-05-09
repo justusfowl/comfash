@@ -2,6 +2,11 @@
 
 page-my-room {
 
+    ion-fab[top][edge]{
+        top: 32px;
+        z-index: 99999;
+    }
+
     #profile-area{
         background-color: white !important;
     }
@@ -40,7 +45,7 @@ page-my-room {
     }
 
     .profile-avatar{
-        left: 20px;
+        left: 12px;
         bottom: -5px;
         border-radius: 2px;
         position: absolute;
@@ -61,6 +66,14 @@ page-my-room {
 
     .follow-btn-small{
         display: none;
+    }
+
+    .follow-btn.isFollowed{
+        background-color: color($colors, primary, base);;
+    }
+
+    .follow-icon{
+        padding-right: 5px;
     }
 
     .profile-area.isFixed .follow-btn-small{
@@ -99,7 +112,7 @@ page-my-room {
 
     .badge-container{
         position: absolute; 
-        right: 0; 
+        left: 120px; 
         bottom: -15px; 
         display: flex;
     }
@@ -112,7 +125,7 @@ page-my-room {
     .blank-card{
         display: flex; 
         align-items: center;
-        margin: 5px;
+        margin: 12px;
         border: 2px dashed;
         background-color: #f9f9f99c;
         height: 80px; 
@@ -127,7 +140,7 @@ page-my-room {
 
     .cf-fab-btn{
         position: fixed;
-        bottom: 15px; 
+        bottom: 70px; 
         border-radius: 50px;
         color: white;
         z-index:9999;

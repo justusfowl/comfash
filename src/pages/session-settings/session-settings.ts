@@ -172,7 +172,6 @@ export class SessionSettingsPage {
 
   addFilter(elementId : string, filterOption : number){
 
-    let self = this;
     this.isProcessing = true;
     this.filterIndexSelected = filterOption; 
 
@@ -208,7 +207,6 @@ export class SessionSettingsPage {
  getSmallestSize(targetObj: any, imgWidth, imgHeight) : any{
 
   let resultSize = {};
-  let imgRatio = imgWidth / imgHeight; 
   let scallingRatio; 
 
   if (imgWidth > imgHeight){

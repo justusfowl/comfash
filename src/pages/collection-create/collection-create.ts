@@ -4,8 +4,9 @@ import { IonicPage, NavController, ViewController, NavParams, Content } from 'io
 
 import { Api, AuthService } from '../../providers/providers';
 
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Collection } from '../../models/datamodel';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @IonicPage()
@@ -23,22 +24,6 @@ export class CollectionCreatePage {
   searchTerm : string;
 
   privacyOptions = [
-    {
-      "option": "Unset",
-      "value" : "0"
-    },
-    {
-      "option": "Me",
-      "value" : "1"
-    },
-    {
-      "option": "Restricted",
-      "value" : "2"
-    },
-    {
-      "option": "Public",
-      "value" : "3"
-    },
 
   ]
 
@@ -54,11 +39,13 @@ export class CollectionCreatePage {
 
   collectionTemplate  = {
     collectionId : 0,
-    collectionTitle : "",
-    collectionDescription : "",
+    collectionTitle : new FormControl('', Validators.required),
+    collectionDescription :  new FormControl(''),
     sharedWithUsers : [], 
     privacyStatus : "2"
   };
+
+  isValid : boolean = false;
 
 
   constructor(
@@ -68,7 +55,9 @@ export class CollectionCreatePage {
     private formBuilder: FormBuilder,
     public camera: Camera, 
     public api: Api, 
-    public auth: AuthService) {
+    public auth: AuthService, 
+    private translate : TranslateService
+  ) {
 
       let passedCollection = params.get('collection'); 
 
@@ -84,6 +73,8 @@ export class CollectionCreatePage {
           (data) => {
             
             try{
+
+              this.isValid = true;
               
               let tmpCollection = new Collection(data);
               this.privSelected = tmpCollection.privacyStatus;
@@ -107,11 +98,31 @@ export class CollectionCreatePage {
             this.api.handleAPIError(error);
           }
         )
-
     }
+
+    translate.get(['PRIVACY_1', 'PRIVACY_2', 'PRIVACY_3']).subscribe(values => {
+
+      this.privacyOptions.push({
+        option: values['PRIVACY_1'], 
+        value : 1
+      });
+
+      this.privacyOptions.push({
+        option: values['PRIVACY_2'], 
+        value : 2
+      });
+
+      this.privacyOptions.push({
+        option: values['PRIVACY_3'], 
+        value : 3
+      });
+
+
+    });
 
 
   }
+
 
   scrollToList(){
     let pos = this.searchList.nativeElement.getClientRects()[0];
@@ -121,6 +132,16 @@ export class CollectionCreatePage {
 
   ionViewDidLoad() {
     
+  }
+
+  validateCollection(val){
+
+    if (val.target.value != ""){
+      this.isValid = true;
+    }
+    else{
+      this.isValid = false;
+    }
   }
 
   /**
@@ -143,6 +164,12 @@ export class CollectionCreatePage {
     this.viewCtrl.dismiss(collection);
   }
 
+
+  privacyChange(value) {
+    this.privSelected = value;
+
+    console.log(this.privSelected);
+  }
 
   public searchChanged(event) {
 
@@ -262,7 +289,7 @@ export class CollectionCreatePage {
         
         try{
 
-          console.log("in save collection")
+          console.log("in update collection")
           this.viewCtrl.dismiss(collection);
           
         }

@@ -1,4 +1,4 @@
-import { Input, Component, ViewChild, HostListener } from '@angular/core';
+import { Input, Component, HostListener } from '@angular/core';
 import { NavController, ViewController } from 'ionic-angular';
 
 

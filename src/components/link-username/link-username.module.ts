@@ -3,7 +3,6 @@ import {
     LinkUsernameComponent
   } from './link-username.component';
 
-import { LongPressModule } from 'ionic-long-press';
 import { IonicPageModule } from 'ionic-angular';
 
 @NgModule({

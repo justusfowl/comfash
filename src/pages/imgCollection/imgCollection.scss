@@ -1,5 +1,10 @@
 page-imgCollection {
 
+    ion-fab[bottom][edge]{
+        bottom: 0px;
+        z-index: 99999;
+    }
+
     .grid {
         padding : 0 !important;
     }

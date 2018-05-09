@@ -89,4 +89,11 @@ page-collection-create {
     margin: 0;
   }
 
+  .error-msg{
+    padding-left: 16px;
+    font-size: 10px; 
+    color: color($colors, primary, base);
+
+  }
+
 }

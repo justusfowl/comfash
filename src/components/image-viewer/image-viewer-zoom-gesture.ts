@@ -1,5 +1,5 @@
 import { Renderer } from '@angular/core';
-import { Animation, DomController, Gesture, Platform } from 'ionic-angular';
+import { Animation, Gesture, Platform } from 'ionic-angular';
 import { DIRECTION_HORIZONTAL, DIRECTION_VERTICAL } from 'ionic-angular/gestures/hammer';
 
 import { ImageViewerComponent } from './image-viewer.component';

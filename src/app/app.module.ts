@@ -16,6 +16,8 @@ import { File } from '@ionic-native/file';
 
 import { FileTransfer } from '@ionic-native/file-transfer';
 
+import { AppVersion } from '@ionic-native/app-version';
+
 import { Network } from '@ionic-native/network';
 import { BackgroundFetch } from '@ionic-native/background-fetch';
 
@@ -31,7 +33,8 @@ import {
   Settings, 
   AuthService, 
   UtilService,
-  VoteHandlerService } from '../providers/providers';
+  VoteHandlerService, 
+  SettingHandlerService } from '../providers/providers';
 
 import { AuthIntercept } from '../providers/api/authintercept'
 import { MyApp } from './app.component';
@@ -39,6 +42,8 @@ import { MyApp } from './app.component';
 import { OneSignal } from '@ionic-native/onesignal';
 
 import { Facebook } from '@ionic-native/facebook';
+
+import { Badge } from '@ionic-native/badge';
 
 
 //import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
@@ -84,6 +89,7 @@ export function createTranslateLoader(http: HttpClient) {
     Api,
     LocalSessionsService,
     VoteHandlerService,
+    SettingHandlerService,
     { provide: HTTP_INTERCEPTORS, useClass : AuthIntercept, multi: true},
     User,
     Camera,
@@ -96,7 +102,9 @@ export function createTranslateLoader(http: HttpClient) {
     { provide: ErrorHandler, useClass: IonicErrorHandler }, 
     File, 
     FileTransfer, 
-    Facebook
+    Facebook,
+    AppVersion,
+    Badge
   ],
 })
 export class AppModule { }

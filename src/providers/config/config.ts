@@ -5,6 +5,10 @@ import { ENV } from '@app/env';
 import { Network } from '@ionic-native/network';
 import { Platform } from 'ionic-angular';
 
+import { Storage } from '@ionic/storage';
+
+import { AppVersion } from '@ionic-native/app-version';
+
 
 @Injectable()
 export class ConfigService {
@@ -23,10 +27,16 @@ export class ConfigService {
     public networkType : string;
     public downloadSpeed : string;
 
+    public appVersionNo : string;
+
+    public tutorialShown : boolean;
+
 
     constructor(
         private network : Network,
-        platform: Platform
+        platform: Platform,
+        public storage: Storage,
+        public appVersion : AppVersion
     ) {
 
         this.environment = ENV.mode;
@@ -35,10 +45,19 @@ export class ConfigService {
         this.apiVersion = ENV.apiVersion;
 
         console.log("Environment loaded: " + this.environment);
+ 
 
         let self = this;
 
         platform.ready().then(() => {
+
+            this.appVersion.getVersionNumber().then(data => {
+
+                this.appVersionNo = data;
+
+                self.getTutorialViewed(data);
+
+            })
 
             self.networkType = this.network.type;
             self.downloadSpeed = this.network.downlinkMax;
@@ -99,6 +118,46 @@ export class ConfigService {
         }else{
             return this.apiProtocol + "://" + this.hostURL + this.getAPI();
         }
+    }
+
+    /**
+     * Store if tutorial has skipped / viewed
+     */
+    setTutorialViewed(){
+
+        let appVersion = this.appVersionNo;
+
+        this.storage.get("tutorial").then((value) => {
+
+            if (value.indexOf(appVersion) != -1){
+                value.push(appVersion);
+            } 
+
+            this.storage.set("tutorial", value);
+        }).catch(() => {
+            const tutorialViewed = [appVersion]
+            this.storage.set("tutorial", tutorialViewed);
+        });
+
+    }
+
+    getTutorialViewed(appVersion : string){
+
+        this.storage.get('tutorial').then((value) => {
+
+            if (value.indexOf(appVersion) != -1){
+                this.tutorialShown = true;
+            } else{
+                this.tutorialShown = false;
+            } 
+
+            
+        }).catch(() => this.tutorialShown = false);
+
+    }
+
+    getAppVersion(){
+        return this.appVersionNo;
     }
 
 

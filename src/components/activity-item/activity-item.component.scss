@@ -17,6 +17,7 @@ activity-item{
     .session-tile-details{
         bottom: unset; 
         top: 0;
+        background-color: rgba(color($colors, very-dark, base), 0.95)
     }
 
     .activity-item-details{

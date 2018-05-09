@@ -1,10 +1,11 @@
-import { Component, ApplicationRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, ModalController, NavController, MenuController, NavParams } from 'ionic-angular';
 
 import { Collection, User } from '../../models/datamodel';
 import { Api, AuthService, MsgService, ConfigService, UtilService, LocalSessionsService } from '../../providers/providers';
 
 
+import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage({
   segment: "room/:userId"
@@ -19,6 +20,7 @@ export class MyRoomPage {
   roomUserId : string = "";
   roomUserAvatarPath : string = "";
   isMyRoom : boolean;
+  roomTitle : string;
 
   profileFixed : boolean = false;
 
@@ -34,14 +36,37 @@ export class MyRoomPage {
     public api: Api, 
     public modalCtrl: ModalController, 
     public msg : MsgService, 
+    private translate : TranslateService,
     public auth: AuthService,
     public menu: MenuController,
     public config: ConfigService, 
     public util : UtilService, 
-    private appRef : ApplicationRef,
     private localSessions : LocalSessionsService) {
 
   }
+
+  ionViewWillEnter() {
+    this.auth.validateAuth(this.navCtrl)
+  }
+
+  clickMainFAB() {
+    console.log('Clicked open social menu');
+  }
+
+  captureCameraPicture(sourceType, fabButton){
+    fabButton.close();
+    let collectionId = this.api.selectedCollection.getId(); 
+
+    let resultAction = function (){
+      let self = this;
+      setTimeout(function(){ self.loadCollection(); }, 500);
+
+      
+    };
+
+    this.localSessions.captureCameraPicture(collectionId, this.navCtrl, resultAction.bind(this), sourceType);
+  }
+
 
   /**
    * The view loaded, let's query our items for the list
@@ -66,8 +91,10 @@ export class MyRoomPage {
 
     if (userId == this.auth.getUserId()){
       this.isMyRoom = true;
+      this.roomTitle = this.translate.instant('MY_ROOM_TITLE');
     }else{
       this.isMyRoom = false;
+      this.roomTitle = this.translate.instant('ROOM_TITLE');
     } 
 
     this.loadRoom();
@@ -76,7 +103,6 @@ export class MyRoomPage {
 
   loadRoom(refresher? : any){
     let userId = this.roomUserId;
-    let self = this;
 
     this.api.loadRoom(userId).subscribe(
       (data : Collection[]) => {
@@ -140,7 +166,8 @@ export class MyRoomPage {
    * Prompt the user to add a new item. This shows our ItemCreatePage in a
    * modal and then adds the new item to our data source if the user created one.
    */
-  addItem() {
+  addItem(fabButton) {
+    fabButton.close();
     let addModal = this.modalCtrl.create('CollectionCreatePage');
     addModal.onDidDismiss(collection => {
       if (collection) {
@@ -160,7 +187,7 @@ export class MyRoomPage {
     addModal.onDidDismiss(collection => {
       if (collection) {
 
-        this.api.getCollections(this.auth.getUserId());
+        this.loadRoom();
 
       }
     })
@@ -214,6 +241,17 @@ export class MyRoomPage {
 
   }
 
+  followUser(){
+    this.api.toggleFollow(this.roomUserId).subscribe(
+      (data) => {
+        this.roomUser.toggleFollow();
+      },
+      error => {
+        this.api.handleAPIError(error);
+      }
+    );
+  }
+
 
   captureToCollection(){
 
@@ -226,7 +264,7 @@ export class MyRoomPage {
 
   toNotification(){
 
-    this.navCtrl.setRoot('NotificationsPage', {});
+    this.navCtrl.push('NotificationsPage', {});
 
   }
   

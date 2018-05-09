@@ -1,0 +1,12 @@
+<ion-content no-sroll no-bounce>
+ 
+    <ion-grid>
+        <ion-row>
+            <ion-col class="voting-btns" >
+                <ion-icon class="reaction-icon"(click)="reportItem()" name="eye-off" ></ion-icon>
+                <ion-icon class="reaction-icon" [hidden]="!itemOwner" (click)="deleteItem()" name="trash"></ion-icon>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+ 
+</ion-content>

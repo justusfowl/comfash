@@ -1,8 +1,6 @@
 
 
 import { Injectable } from '@angular/core';
-import { ConfigService } from '../config/config';
-import { DomSanitizer } from '@angular/platform-browser';
 import { Api } from '../api/api';
 import { Session, Vote } from '../../models/datamodel';
 import { AuthService } from '../auth/auth';

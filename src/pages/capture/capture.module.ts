@@ -4,6 +4,7 @@ import { IonicPageModule } from 'ionic-angular';
 
 import { CapturePage } from './capture';
 
+import { DirectivesModule} from '../../directives/directives.module';
 
 
 @NgModule({
@@ -12,7 +13,8 @@ import { CapturePage } from './capture';
   ],
   imports: [
     IonicPageModule.forChild(CapturePage),
-    TranslateModule.forChild()
+    TranslateModule.forChild(),
+    DirectivesModule
   ],
   exports: [
     CapturePage

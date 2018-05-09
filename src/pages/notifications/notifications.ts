@@ -29,6 +29,10 @@ export class NotificationsPage {
     
   }
 
+  ionViewWillEnter() {
+    this.auth.validateAuth(this.navCtrl)
+  }
+
   ionViewDidLoad() {
     console.log("notifications page loaded and deleted new messages")
     this.msg.newMessages.length = 0;

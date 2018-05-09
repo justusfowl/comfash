@@ -1,5 +1,5 @@
-import { Input, Component, ViewChild, HostListener } from '@angular/core';
-import { NavController, ViewController } from 'ionic-angular';
+import { Input, Component, HostListener } from '@angular/core';
+import { NavController } from 'ionic-angular';
 
 
 @Component({

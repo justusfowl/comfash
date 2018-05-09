@@ -1,6 +1,5 @@
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable, ApplicationRef } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { Collection, Session, Comment, Vote } from '../../models/datamodel'
 
 import 'rxjs/add/operator/map';
@@ -92,8 +91,6 @@ export class Api {
     if (data[0]){
             
       let loadedCol = new Collection(data[0]);
-
-      let collectionId = loadedCol.getId();
     
       loadedCol.castSessions();
 
@@ -317,8 +314,12 @@ export class Api {
 
   */
 
- addCommentToSession(collectionId : Number, sessionId : Number, comment: Comment){ 
+addCommentToSession(collectionId : Number, sessionId : Number, comment: Comment){ 
   return this.post("imgcollection/" + collectionId + "/session/" + sessionId + "/comment", comment);
+}
+
+deleteComment(collectionId : Number, sessionId : Number, commentId : number){ 
+  return this.http.delete(this.url + "/imgcollection/" + collectionId + "/session/" + sessionId + "/comment/" + commentId);
 }
 
 getCommentsForSession(session : Session){
@@ -370,14 +371,23 @@ getTrendStream(options){
   
 }
 
-post(endpoint: string, body: any, reqOpts?: any) {
-    return this.http.post(this.url + '/' + endpoint, body, reqOpts);
-  }
+toggleFollow(followedId : string){
+  return this.post("user/follow/" + followedId, {});
+}
 
-  postAuth(endpoint: string, body: any, reqOpts?: any) {
-    return this.http.post(endpoint, body, reqOpts);
-  }
+post(endpoint: string, body: any, reqOpts?: any) {  
+  return this.http.post(this.url + '/' + endpoint, body, reqOpts);
+}
 
+postAuth(endpoint: string, body: any, reqOpts?: any) {
+  return this.http.post(endpoint, body, reqOpts);
+}
+
+
+reportComplaint(complaintObject){
+  return this.post("compliance/complaint", complaintObject);
+
+}
   
   // ### BASIC FUNCTIONS ###
 /*

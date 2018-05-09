@@ -5,7 +5,7 @@ import {
   } from '@angular/core';
 
 import { PopoverController } from 'ionic-angular';
-import { Vote } from '../../models/datamodel';
+//import { Vote } from '../../models/datamodel';
 import { Api, AuthService, UtilService, VoteHandlerService } from '../../providers/providers';
 
   @Component({

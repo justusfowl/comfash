@@ -1,0 +1,59 @@
+.settings-popover .popover-content{
+    max-width: 30%;
+}
+
+page-settings-popover {
+ 
+    ion-content {
+        padding: 0;
+    }
+ 
+    button {
+        width: 40px;
+    }
+
+    .content{
+        background-image: unset;
+    }
+
+    .emoticons-btn{
+        width: 100%;
+        height: 30px !important;
+    }
+
+    .emoticons{
+        font-size: 30px;
+    }
+
+    .voting-btns{
+        display: flex; 
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .unvote{
+        color: darkgrey;
+        height: 100%; 
+        display: flex; 
+        align-items: center;
+        border-left: 1px solid grey;
+    }
+
+    .unvote-icon{
+        padding-left: 15px;
+    }
+
+    .reaction-icon{
+        color: darkgrey;
+        font-size: 30px;
+    }
+
+
+    .reaction-icon.active{
+        color: color($colors, primary, base);
+        transform: scale(1.4);
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+ 
+}

@@ -560,6 +560,10 @@
       return this.commentUserName;
     }
 
+    getUserId(){
+      return this.commentUserId;
+    }
+
     getUserAvatarPath(){
       return this.commentUserAvatarPath;
     }
@@ -919,12 +923,16 @@
       userId: string;
       userName : string;
       userAvatarPath : string;
+      isFollowed : boolean = false;
+
+      
 
       constructor(fields : any) {
 
         this.userId = fields.userId;
         this.userName = fields.userName;
         this.userAvatarPath = fields.userAvatarPath || '/img/hangersbg.png';
+        this.isFollowed = fields.isFollowed
       }
     
       getUserId(){
@@ -938,8 +946,27 @@
       getUserAvatarPath(){
         return this.userAvatarPath;
       }
+
+      toggleFollow(){
+        if (this.isFollowed){
+          this.isFollowed = false;
+        }else{
+          this.isFollowed = true;
+        }
+      }
     
-      
-    
+    }
+
+    export class Complaint {
+  
+      objectId: string;
+      objectType : string;
+
+      constructor(fields : any) {
+
+        this.objectId = fields.objectId;
+        this.objectType = fields.objectType;
+
+      }
     
     }

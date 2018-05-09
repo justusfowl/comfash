@@ -15,22 +15,23 @@
   "ACCEPT_BUTTON" : "OK",
   "CANCEL_BUTTON": "Schließen",
 
-  "TAB1_TITLE": "Items",
-  "TAB2_TITLE": "Suche",
-  "TAB3_TITLE": "Einstellung",
+  "TAB1_TITLE": "MyRoom",
+  "TAB2_TITLE": "Stream",
+  "TAB3_TITLE": "Kaufen",
+  "TAB4_TITLE": "Einstellungen",
 
   "MAP_TITLE": "Karte",
 
-  "TUTORIAL_SLIDE1_TITLE": "Hallo Ionic Super Starter App",
-  "TUTORIAL_SLIDE1_DESCRIPTION": "Die <b>Ionic Super Starter App</b> ist eine umfangreiche Starter App mit vielen vorgefertigten Seiten und Best Practices.",
+  "TUTORIAL_SLIDE1_TITLE": "Willkommen bei Comfash",
+  "TUTORIAL_SLIDE1_DESCRIPTION": "<b>Comfash</b> bietet Dir Deine Modeplattform, wo Du Deine Outfits und Inspiration sammeln kannst.",
 
-  "TUTORIAL_SLIDE2_TITLE": "Wie soll man die Super Starter App verwenden",
-  "TUTORIAL_SLIDE2_DESCRIPTION": "Nutze und bearbeite die Funktionen und Seiten die du benötigst und lösche den Rest. Wähle aus einer Vielzahl an Layouts, wie Anmelden, Registrieren, Tabs und einer Tutorial Seite.",
+  "TUTORIAL_SLIDE2_TITLE": "Halte Outfits fest",
+  "TUTORIAL_SLIDE2_DESCRIPTION": "Lade Outfits hoch, bearbeite sie mit Filtern oder importiere Elemente von Deinem Pinterest Account.",
 
-  "TUTORIAL_SLIDE3_TITLE": "Los gehts",
-  "TUTORIAL_SLIDE3_DESCRIPTION": "Du brauchst Hilfe? Sieh dir das README File an um mehr zu erfahren.",
+  "TUTORIAL_SLIDE3_TITLE": "Vergleiche und stimme ab",
+  "TUTORIAL_SLIDE3_DESCRIPTION": "Vergleiche Outfits direkt nebeneinander, um direkt entscheiden zu können und helfe Deinen Freunden durch Abstimmungen.",
 
-  "TUTORIAL_CONTINUE_BUTTON": "Fortfahren",
+  "TUTORIAL_CONTINUE_BUTTON": "#StartYourStyle",
 
   "WELCOME_INTRO": "Der Startpunkt für Deine nächste tolle Ionic App",
 
@@ -52,14 +53,22 @@
   "SIGNUP_BUTTON": "Registrieren",
   "PLEASE_WAIT" : "Bitte warte...",
 
-  "LIST_MASTER_TITLE": "MyRoom",
+  "MY_ROOM_TITLE": "MyRoom",
+  "ROOM_TITLE": "Room",
 
   "BLANK_CARD_ADD_COLLECTION" : "Collektion hinzufügen",
 
+  "PRIVACY_1" : "Ich",
+  "PRIVACY_2" : "Freunde", 
+  "PRIVACY_3" : "Öffentlich",
+
+
   "COLLECTION_CREATE_TITLE": "Deine Collektion",
   "COLLECTIONTITLE" : "Titel der Collektion",
+  "COLLECTIONTITLE_REQUIRED" : "Bitte füge einen Title hinzu",
   "COLLECTIONDESCRIPTION" : "Beschreibung",
-  "PUBLIC": "Öffentlich",
+  "COLLECTION_INVITE": "Einladen",
+  "PUBLIC": "Öffentlichkeit",
 
   "NEW_OUTFIT" : "Outfit",
 
@@ -70,6 +79,9 @@
 
   "ALERT_DELETE_TITLE" : "Session löschen", 
   "ALERT_DELETE_MSG" : "Diese Session löschen?",
+
+  "ALERT_REPORT_ITEM_TITLE" : "Meldung",
+  "ALERT_REPORT_ITEM_MSG" : "Wollen Sie einen unangemessenen Beitrag melden?",
 
   "ITEM_CREATE_CHOOSE_IMAGE": "Artikel hinzufügen",
 
@@ -116,6 +128,8 @@
   "ACCEPT_TERMS_SUFFIX" : " zu",
   "TERMS" : "Nutzungsbedingungen",
   "WELCOME_SIGNUP" : "Willkommen bei Comfash - wir freuen uns, dass Du hier bist!",
+
+  "RECEIVE_COMPLAINT" : "Vielen Dank für Deine Meldung, wir werden sie in Kürze untersuchen.",
 
   "ERROR_400_USER_EXISTS" : "Es existiert bereits ein Konto mit dieser Email.",
   "ERROR_400_INVALID_PASSWORD" : "Bitte verwende ein starkes Passwort mit min. 8 Zeichen und einer Mischung aus Sonderzeichen, Buchstaben und Ziffern.",

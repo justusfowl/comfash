@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavParams, ViewController } from 'ionic-angular';
-import { Api, VoteHandlerService } from '../../providers/providers';
+import { VoteHandlerService } from '../../providers/providers';
  
 @IonicPage()
 @Component({

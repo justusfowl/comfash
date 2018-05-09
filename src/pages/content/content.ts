@@ -1,8 +1,13 @@
-import { Component, Sanitizer, AfterViewInit, ApplicationRef } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, PopoverController } from 'ionic-angular';
-import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { Component, Sanitizer, AfterViewInit } from '@angular/core';
+import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { Collection, Session, Comment, Vote } from '../../models/datamodel';
-import { Api, AuthService, ConfigService, UtilService, LocalSessionsService, VoteHandlerService } from '../../providers/providers';
+import { Api, 
+  AuthService, 
+  ConfigService, 
+  UtilService, 
+  LocalSessionsService, 
+  VoteHandlerService,
+  SettingHandlerService } from '../../providers/providers';
 import * as $ from 'jquery';
 
 window['$'] = window['jQuery'] = $;
@@ -13,10 +18,7 @@ window['$'] = window['jQuery'] = $;
 })
 @Component({
   selector: 'page-content',
-  templateUrl: 'content.html', 
-  providers: [
-    ScreenOrientation
-  ]
+  templateUrl: 'content.html'
 })
 export class ContentPage implements AfterViewInit {
 
@@ -49,18 +51,16 @@ export class ContentPage implements AfterViewInit {
 
   constructor(
     public navCtrl: NavController, 
-    private popoverCtrl: PopoverController, 
     navParams: NavParams, 
-    private screenOrientation: ScreenOrientation, 
     public modalCtrl: ModalController, 
     private api : Api, 
-    private appRef : ApplicationRef,
     public sanitizer : Sanitizer, 
     private auth : AuthService, 
     public config : ConfigService, 
     public util : UtilService, 
     private localSession: LocalSessionsService, 
-    private voteHdl : VoteHandlerService) {
+    private voteHdl : VoteHandlerService, 
+    public settingsHdl : SettingHandlerService) {
 
         this.compareItems.length = 0; 
 
@@ -69,7 +69,6 @@ export class ContentPage implements AfterViewInit {
 
         // get compare sessions muss auch über die URL möglich se
 
-        let collectionId = navParams.get('collectionId');
         let compareSessionIds = [];
 
         if (typeof(navParams.get('compareSessionIds')) == "string"){
@@ -110,6 +109,15 @@ export class ContentPage implements AfterViewInit {
         );
 
    }
+
+   ionViewWillEnter() {
+      this.auth.validateAuth(this.navCtrl);
+      this.util.toggleTabBarVisible();
+    }
+
+    ionViewWillLeave(){
+      this.util.toggleTabBarVisible();
+    }
 
 
    ngAfterViewInit(){
@@ -242,6 +250,19 @@ export class ContentPage implements AfterViewInit {
 
    }
 
+   showSettings(evt, comment, index){
+     let options = {
+        selectedSession : this.selectedSession,
+        comments : this.comments,
+        selectedIndex : index
+      }
+
+    this.settingsHdl.showSettings(evt, comment, 'comment', options);
+   }
+
+   
+
+
    
    addComment(){
     let session : Session = this.selectedSession; 
@@ -252,13 +273,16 @@ export class ContentPage implements AfterViewInit {
           commentText : this.commentText, 
           userId : this.auth.getUserId(),
           sessionId : session.getId(),
+          commentUserId : this.auth.getUserId(),
           commentUserName : this.auth.getUsername(), 
           commentUserAvatarPath : this.auth.getUserAvatarPath()
         });
 
         this.api.addCommentToSession(session.getCollectionId(), session.getId(), tmpItem).subscribe(
-          (data : any) => {
-
+          (data : any) => 
+          
+          {
+            tmpItem.commentId = data.commentId;
             this.comments.unshift(tmpItem);
             this.commentText = "";
   
@@ -513,17 +537,6 @@ export class ContentPage implements AfterViewInit {
 
     this.api.upsertVote(this.api.selectedCollection.getId() , session.getId(), vote);
 
-  }
-
-  getMyVoteIcon(session : Session){
-
-    try {
-      let myVote : Vote = session.myVote;
-      console.warn("hier noch richtige icons einsetzen!")
-      return 'thumbs-up';
-    }catch(err){
-      return 'thumbs-up';
-    }
   }
 
 

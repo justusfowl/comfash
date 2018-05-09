@@ -24,6 +24,8 @@ export class AuthService {
 
     public testDeviceId : string = "";
 
+    private expiresAt : number = 0;
+
     
 
     public auth0Config = {
@@ -81,7 +83,6 @@ export class AuthService {
                         this.isAuth = true;
                         console.log("FACEBOOK AUTHENTICATED ME");
 
-                        
                         const credentials = {
                             fb_access_token: res.authResponse.accessToken,
                             connection: 'facebook'
@@ -142,10 +143,6 @@ export class AuthService {
 
     handleAuthSuccess(authResult, resolve, reject){
         
-        console.log("THIS IS MY ACCESS TOKEN");
-        console.log(authResult.accessToken);
-
-        
         this.Auth0.client.userInfo(authResult.accessToken, (error, user) => {
             if (error){
                 console.log(JSON.stringify(error));
@@ -153,7 +150,6 @@ export class AuthService {
                 reject(error);
             }else{
                 
-                console.log(user);
                 authResult["id_token"] = authResult.idToken;
                 authResult["userId"] = user["https://app.comfash.com/cf_id"];
 
@@ -204,10 +200,12 @@ export class AuthService {
         
         this.id_token = data.id_token;
         this.accessToken = data.accessToken;
-        
+        let expiresAt = parseInt(JSON.stringify((data.expiresIn * 1000) + new Date().getTime()));
+
+        this.expiresAt = expiresAt;
 
         window.localStorage.setItem('userId', data.userId);
-        
+        window.localStorage.setItem('expiresAt', expiresAt.toString());
         window.localStorage.setItem('accessToken', data.accessToken);
         window.localStorage.setItem('id_token', data.id_token);
 
@@ -233,7 +231,6 @@ export class AuthService {
     }
 
     signUp(account){
-        let self = this;
 
         return new Promise<any>((resolve, reject) => {
         
@@ -251,7 +248,6 @@ export class AuthService {
                     return;
                 }else{
                     console.log("signed up");
-                    console.log(result);
                     resolve(result);
                 }
             })
@@ -264,8 +260,30 @@ export class AuthService {
     }
 
     getAuthStatus(){
+        let now = new Date().getTime();
+        let expiresAt = parseInt(window.localStorage.getItem('expiresAt'));
+        
+        this.expiresAt = expiresAt;
+
+        if (this.expiresAt > now ){
+            this.isAuth = true;
+        }else{
+            this.isAuth = false;
+        }
+
         return this.isAuth;
     }
+
+    validateAuth (navCtrl){
+        if (!this.getAuthStatus()){
+            navCtrl.setRoot('LoginPage');
+        }
+        
+    }
+
+
+
+    
 
     getUsername (){
         return window.localStorage.getItem('userName');

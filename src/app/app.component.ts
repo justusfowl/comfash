@@ -5,12 +5,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { Config, Nav, Platform } from 'ionic-angular';
 import { OneSignal } from '@ionic-native/onesignal';
 
-import { FirstRunPage, MainPage } from '../pages/pages';
-import { Settings, WebsocketService, UtilService, LocalSessionsService } from '../providers/providers';
+import { FirstRunPage, MainPage, TabsPage } from '../pages/pages';
+import { Settings, WebsocketService, UtilService } from '../providers/providers';
 
 import { Camera } from '@ionic-native/camera';
 
-import { AuthService, MsgService, Api, ConfigService } from '../providers/providers';
+import { AuthService, MsgService, Api } from '../providers/providers';
+
+import { Badge } from '@ionic-native/badge';
 
 @Component({
   templateUrl: "app.menu.html"
@@ -42,10 +44,9 @@ export class MyApp {
     private ws : WebsocketService, 
     public camera: Camera, 
     public api: Api, 
-    private cfg : ConfigService,
     private util: UtilService,
     public oneSignal : OneSignal, 
-    private localSessions : LocalSessionsService) {
+    private badge : Badge) {
 
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
@@ -57,37 +58,39 @@ export class MyApp {
     
     try{
       
-      this.oneSignal.startInit("56791b6b-28da-4dde-9ee0-6e4e057313d4");
+        this.oneSignal.startInit("56791b6b-28da-4dde-9ee0-6e4e057313d4");
 
-      this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.None);
-      this.oneSignal.handleNotificationReceived().subscribe((data: any) => {
+        this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.None);
+        this.oneSignal.handleNotificationReceived().subscribe((data: any) => {
 
-        let message = data.payload.body;
-        this.msg.toast(message);
+          let message = data.payload.body;
+          this.msg.toast(message);
 
-        this.msg.newMessages.push(message);
-        this.msg.updateMessages();
-        
+          this.msg.newMessages.push(message);
+          this.msg.updateMessages();
+
+          this.badge.increase(1);
+          
+        });
+
+      this.oneSignal.handleNotificationOpened().subscribe((data: any) => {
+
+        console.log(JSON.stringify(data));
+
+        let linkURLData = data.notification.payload.additionalData.linkUrl;
+        let targetPage = linkURLData.targetPage;
+        let params = linkURLData.params;
+
+        if (this.auth.getAuthStatus()){
+          this.nav.push(targetPage, params);
+        }else{
+          this.nav.setRoot("LoginPage");
+        }
+
+
       });
 
-    this.oneSignal.handleNotificationOpened().subscribe((data: any) => {
-
-      console.log(JSON.stringify(data));
-
-      let linkURLData = data.notification.payload.additionalData.linkUrl;
-      let targetPage = linkURLData.targetPage;
-      let params = linkURLData.params;
-
-      if (this.auth.getAuthStatus()){
-        this.nav.push(targetPage, params);
-      }else{
-        this.nav.setRoot("LoginPage");
-      }
-
-
-    });
-
-    this.oneSignal.endInit();
+      this.oneSignal.endInit();
 
     }
     catch(err){
@@ -102,7 +105,7 @@ export class MyApp {
 
       
       this.msg.initMsgService();
-      this.rootPage = MainPage;
+      this.rootPage =  TabsPage//MainPage;
 
 
     }else{

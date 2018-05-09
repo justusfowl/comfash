@@ -9,13 +9,7 @@
 
   <ion-buttons class="btn-header">
     <button ion-button icon-only clear (click)="navBack()">
-      <ion-icon name="arrow-back"></ion-icon>
-    </button>
-  </ion-buttons>
-
-  <ion-buttons class="btn-header right" *ngIf="isPreview">
-    <button ion-button icon-only clear (click)="acceptAndStore()" [disabled]="collectionId == '0'">
-      <ion-icon name="checkmark"></ion-icon>
+      <ion-icon class="icon" name="arrow-back"></ion-icon>
     </button>
   </ion-buttons>
 
@@ -26,7 +20,7 @@
 
   <div id="onAirCapture" hidden class="recordingIcon"></div>
 
-  <ion-select class="collection-list" [(ngModel)]="collectionId" *ngIf="isPreview">
+  <ion-select class="collection-list" [(ngModel)]="collectionId" >
     <ion-option value="0">{{ 'SELECT' | translate }}</ion-option>
     <ion-option *ngFor="let c of collectionList" [value]="c.collectionId" >#{{c.collectionTitle}}</ion-option>
   </ion-select>
@@ -38,42 +32,50 @@
   [src]="previewPicture"
   >
   
+<button id="btn-capture-picture" class="btn-footer-cam" (click)="takePicture()" *ngIf="!isPreview" >
+   <div class="inner"></div>
+</button>
+
+<button id="btn-effects" (click)="toggleEffects()" >
+  <ion-icon class="icon" name="color-wand"></ion-icon>
+  <div class="inner">Effekte</div>
+</button>
+
+<button id="btn-tags" (click)="enableTags()"  >
+  <ion-icon class="icon"  name="pricetags"></ion-icon>
+  <div class="inner">Produkte</div>
+</button>
+
+<button id="btn-save" ion-button icon-only clear (click)="acceptAndStore()" [disabled]="collectionId == '0'">
+  <ion-icon name="checkmark"></ion-icon>
+</button>
+
+
+<div id="preview-footer" [class.showEffects]="showEffects" *ngIf="isPreview">
+ 
+  <div *ngFor="let f of filters"  [class.selected]="f.name == filterSelected" [class]="'filterPreview filter-' + f.name" (click)="setFilter(f.name)" >
+  
+    <img [src]="previewPicture" >
+
+  </div>
+
+</div>
+
+<div id="tags-footer" [class.showTags]="showTags">
+
+    <div drag-item id="new-tag" class="purchase-tag">
+
+    </div>
+ 
+    <div *ngFor="let t of purchaseTags"  class="purchase-tag" >
+  
+      <img [src]="t.tagImage" >
+  
+    </div>
+  
+  </div>
+
 </ion-content>
 
-<ion-footer id="preview-footer" *ngIf="isPreview">
- 
-    <div *ngFor="let f of filters" [class.selected]="f.name == filterSelected" [class]="'filterPreview filter-' + f.name" (click)="setFilter(f.name)" >
-
-        <img [src]="previewPicture" >
-
-      </div>
-
-</ion-footer>
-
-<ion-footer id="footer" *ngIf="!isPreview">
-  <ion-toolbar>
-    <ion-row >
-
-      <ion-col col >
-          <div id="btn-take-picture" class="btn-footer-cam" (click)="switchCam()" >
-              <ion-icon name="ios-reverse-camera-outline"></ion-icon>
-          </div>
-      </ion-col>
-
-    <ion-col col >
-      <div id="btn-switch-cam" class="btn-footer-cam" (click)="takePicture()" >
-          <ion-icon name="ios-camera-outline"></ion-icon>
-      </div>
-      </ion-col>
-
-
-    <ion-col col *ngIf="isVideoCapture">
-        <div id="btn-capture" class="btn-footer-capture" (click)="startCountdown()" >
-            <ion-icon name="ios-videocam-outline"></ion-icon>
-        </div>
-    </ion-col>
-    </ion-row>
-  </ion-toolbar>
-</ion-footer>
 
 

@@ -25,18 +25,23 @@
     <ion-grid class="session-details" >
         <ion-row>
             <ion-col class="voting-btn" *ngIf="!context.flagIsTmp">
-                {{context.commentCnt}}
-                <ion-icon class="session-menu-btn right"  icon-left clear small
-                name="ios-chatbubbles-outline" 
-                (click)="hasCommentClicked(context)"></ion-icon>
-                
-                <div class="votes-stats">
-                    {{util.formatIntToPercent(context.voteAvg)}} / {{context.voteCnt}}
+                <div class="vert-center" >
+                    {{context.commentCnt}}
+                    <ion-icon class="session-menu-btn right"  icon-left clear small
+                    name="ios-chatbubbles-outline" 
+                    (click)="hasCommentClicked(context)"></ion-icon>
                 </div>
-                <ion-icon class="session-menu-btn right" [class.active]="context.myVote" ion-long-press 
-                [interval]="400" 
-                (click)="showReactions($event, context)"   icon-right clear small
-                name="ios-thumbs-up-outline" ></ion-icon>
+                
+
+                <div class=" vert-center votes-stats">
+                    {{util.formatIntToPercent(context.voteAvg)}} / {{context.voteCnt}}
+
+                    <ion-icon class="session-menu-btn right" [class.active]="context.myVote" ion-long-press 
+                    [interval]="400" 
+                    (click)="showReactions($event, context)"   icon-right clear small
+                    name="ios-thumbs-up-outline" ></ion-icon>
+                </div>
+                
 
             </ion-col>
         </ion-row>

@@ -11,25 +11,26 @@
   "LOGIN": "Sign in",
   "SIGNUP": "Sign up",
 
-  "TAB1_TITLE": "Items",
-  "TAB2_TITLE": "Search",
-  "TAB3_TITLE": "Settings",
+  "TAB1_TITLE": "MyRoom",
+  "TAB2_TITLE": "Stream",
+  "TAB3_TITLE": "Shopping",
+  "TAB4_TITLE": "Settings",
 
   "MAP_TITLE": "Map",
 
   "TUTORIAL_SKIP_BUTTON": "Skip",
   "TUTORIAL_CONTINUE_BUTTON": "Continue",
 
-  "TUTORIAL_SLIDE1_TITLE": "Welcome to the Ionic Super Starter",
-  "TUTORIAL_SLIDE1_DESCRIPTION": "The <b>Ionic Super Starter</b> is a fully-featured Ionic starter with many pre-built pages and best practices.",
+  "TUTORIAL_SLIDE1_TITLE": "Welcome to Comfash",
+  "TUTORIAL_SLIDE1_DESCRIPTION": "<b>Comfash</b> is your platform to collect your fashion and outfits and get inspired.",
 
-  "TUTORIAL_SLIDE2_TITLE": "How to use the Super Starter",
-  "TUTORIAL_SLIDE2_DESCRIPTION": "Assemble the various page types you want and remove the ones you don't. We've provided many common mobile app page layouts, like login and signup pages, tabs, and this tutorial page.",
+  "TUTORIAL_SLIDE2_TITLE": "Capture outfits",
+  "TUTORIAL_SLIDE2_DESCRIPTION": "Capture and upload outfits, edit them with filters or import existing pins from your Pinterest boards",
 
-  "TUTORIAL_SLIDE3_TITLE": "Getting Started",
-  "TUTORIAL_SLIDE3_DESCRIPTION": "Need help? Check out the Super Starter README for a full tutorial",
+  "TUTORIAL_SLIDE3_TITLE": "Compare and vote",
+  "TUTORIAL_SLIDE3_DESCRIPTION": "Compare outfits side-by-side to judge best what to buy and what to wear and support your friends decisions by voting",
 
-  "TUTORIAL_SLIDE4_TITLE": "Ready to Play?",
+  "TUTORIAL_SLIDE4_TITLE": "#StartYourStyle",
 
   "WELCOME_INTRO": "The starting point for your next great Ionic app",
 
@@ -52,13 +53,21 @@
   "SIGNUP_ERROR": "Unable to create account. Please check your account information and try again.",
   "SIGNUP_BUTTON": "Sign up",
 
-  "LIST_MASTER_TITLE": "MyRoom",
+  "MY_ROOM_TITLE": "MyRoom",
+  "ROOM_TITLE": "Room",
 
   "BLANK_CARD_ADD_COLLECTION" : "New Collection",
+  "PRIVACY_1" : "Me",
+  "PRIVACY_2" : "Friends", 
+  "PRIVACY_3" : "Public",
+
 
   "COLLECTION_CREATE_TITLE": "Your Collection",
   "COLLECTIONTITLE" : "Title of the collection",
+
+  "COLLECTIONTITLE_REQUIRED" : "Please add a title to the collection",
   "COLLECTIONDESCRIPTION" : "Description",
+  "COLLECTION_INVITE": "Invite",
   "PUBLIC": "Public",
 
   "NEW_OUTFIT" : "Outfit",
@@ -70,6 +79,9 @@
 
   "ALERT_DELETE_TITLE" : "Remove session", 
   "ALERT_DELETE_MSG" : "Remove this session?",
+
+  "ALERT_REPORT_ITEM_TITLE" : "Report",
+  "ALERT_REPORT_ITEM_MSG" : "Do you want to report an inappropriate post?",
 
 
   "ITEM_CREATE_CHOOSE_IMAGE": "Add Image",
@@ -130,7 +142,8 @@
   "TERMS" : "terms of service",
   "WELCOME_SIGNUP" : "Welcome to comfash - glad you are here!",
 
- 
+  "RECEIVE_COMPLAINT" : "Thank you for your report, we will be reviewing it shortly",
+  
  "ERROR_400_USER_EXISTS" : "We have already registered an account for this email.",
   "ERROR_400_INVALID_PASSWORD" : "Please use strong passphrases with a minimum of 8 characters and a combination of special characters, letters and numbers.",
   "UNIVERSAL_ERROR" : "Unfortunately, something went wrong - please try again."

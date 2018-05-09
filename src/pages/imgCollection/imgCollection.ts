@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
-import { PopoverController } from 'ionic-angular';
 import { Session, Collection } from '../../models/datamodel';
 
 import { Api, ConfigService, MsgService, AuthService, UtilService, LocalSessionsService, VoteHandlerService } from '../../providers/providers';
@@ -36,13 +35,16 @@ export class ImgCollectionPage implements OnInit{
     public msg : MsgService, 
     public auth: AuthService, 
     public util: UtilService, 
-    private popoverCtrl : PopoverController,
     private localSessions : LocalSessionsService, 
     private voteHdl : VoteHandlerService) {
     
 
 
  
+  }
+
+  ionViewWillEnter() {
+    this.auth.validateAuth(this.navCtrl)
   }
 
   /**
@@ -162,8 +164,9 @@ export class ImgCollectionPage implements OnInit{
 
   }
 
-  captureCameraPicture(sourceType){
+  captureCameraPicture(sourceType, fabButton){
     let collectionId = this.api.selectedCollection.getId(); 
+    fabButton.close();
 
     let resultAction = function (){
       let self = this;
@@ -213,7 +216,7 @@ export class ImgCollectionPage implements OnInit{
       }
     }
 
-    this.msg.presentConfirm(acceptHandler.bind(this))
+    this.msg.presentConfirm("ALERT_DELETE_MSG", "ALERT_DELETE_TITLE", acceptHandler.bind(this))
 
   }
 

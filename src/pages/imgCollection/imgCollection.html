@@ -28,6 +28,18 @@
     </ion-refresher-content>
   </ion-refresher>
   
+
+   
+  <ion-fab right bottom #fab1  *ngIf="auth.getUserId() == collectionUserId">
+    <button ion-fab mini><ion-icon name="add"></ion-icon></button>
+    <ion-fab-list side="top">
+      <button ion-fab (click)="captureCameraPicture(false, fab1)"><ion-icon name="ios-images-outline"></ion-icon></button>
+      <button ion-fab (click)="captureCameraPicture(true, fab1)"><ion-icon name="ios-camera-outline"></ion-icon></button>
+    </ion-fab-list>
+  </ion-fab>
+  
+
+
   <ion-grid>
     <ion-row>
       
@@ -63,34 +75,3 @@
 
 
 </ion-content>
-
-
-<ion-footer>
-  <ion-toolbar>
-    <ion-buttons>
-      <div class="footer-btns">
-          <button hidden class="footer-btns-button" ion-button icon-only (click)="sortSessionsByVotes()">
-            <ion-icon name="arrow-round-down" [hidden]="!sortDirection" ></ion-icon>
-            <ion-icon name="arrow-round-up" [hidden]="sortDirection"></ion-icon>
-            <ion-icon name="podium"></ion-icon>
-          </button>
-
-
-          <button ion-button icon-only (click)="captureCameraPicture(false)" *ngIf="auth.checkProfile(api.selectedCollection, 'owner')">
-            <ion-icon name="ios-images-outline"></ion-icon>
-          </button>
-
-          <button ion-button icon-only (click)="captureCameraPicture(true)" *ngIf="auth.checkProfile(api.selectedCollection, 'owner')">
-            <ion-icon name="ios-camera-outline"></ion-icon>
-          </button>
-
-          <button hidden ion-button icon-only (click)="addItem()" *ngIf="auth.checkProfile(api.selectedCollection, 'owner')">
-            <ion-icon name="ios-refresh-outline"></ion-icon>
-          </button>
-
-          
-        </div> 
-
-      </ion-buttons>
-  </ion-toolbar>
-</ion-footer>

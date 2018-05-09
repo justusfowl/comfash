@@ -9,6 +9,7 @@ import { Api } from '../api/api';
 
 import { WebsocketService } from './websocket';
 import { Message } from '../../models/datamodel';
+import { Badge } from '@ionic-native/badge';
 
 
 @Injectable()
@@ -25,7 +26,8 @@ export class MsgService implements OnInit {
         public toastCtrl: ToastController, 
         private api: Api, 
         private ws : WebsocketService, 
-        public translate: TranslateService) { 
+        public translate: TranslateService, 
+        private badge : Badge) { 
        
     }
 
@@ -36,13 +38,14 @@ export class MsgService implements OnInit {
 
     initMsgService(){
 
+        //this.badge.set(99);
+
         if (!this.ws.isConnected){
 
             this.ws.connect();
 
             this.ws.onNewMessage().subscribe( (msg : Message) => {
                 
-                console.log(msg);
                 this.toast(msg.getMessage());
 
                 this.newMessages.push(msg);
@@ -82,10 +85,10 @@ export class MsgService implements OnInit {
 
     }
 
-    presentConfirm(cbAccept) {
+    presentConfirm(msgKey, msgTitleKey, cbAccept) {
 
-        let title = this.translate.instant("ALERT_DELETE_TITLE");
-        let msg = this.translate.instant("ALERT_DELETE_MSG");
+        let title = this.translate.instant(msgTitleKey);
+        let msg = this.translate.instant(msgKey);
 
         let cancelTxt = this.translate.instant("CANCEL_BUTTON");
 
@@ -122,6 +125,10 @@ export class MsgService implements OnInit {
           });
           toast.present();
 
+    }
+
+    toastStdError(){
+        this.toast("UNIVERSAL_ERROR");
     }
     
     /**

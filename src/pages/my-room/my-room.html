@@ -1,42 +1,27 @@
 <ion-header>
 
   <ion-navbar class="nav-header">
-    <ion-buttons start>
+    <ion-buttons left class="left-button-group">
         <button ion-button icon-only menuToggle >
-          <ion-icon name="menu"></ion-icon>
+          <ion-icon name="person"></ion-icon>
         </button>
 
       </ion-buttons>
 
     <ion-title >
-      {{ 'LIST_MASTER_TITLE' | translate }}
+      {{roomTitle}}
     </ion-title>
-
     <ion-buttons end>
 
-      <button class="headerBtn" ion-button icon-only (click)="toNotification()" >
+      <button class="notification" ion-button icon-only (click)="toNotification()" >
         <div class="cnt-new-notifications"> {{msg.newMessages.length}}</div>   
           <ion-icon name="chatboxes" ></ion-icon>
       </button>
+
     </ion-buttons>
   </ion-navbar>
 
 </ion-header>
-
-<!--
-<button color="primary" class="cf-fab-btn left" (click)="addItem()" *ngIf="auth.getUserId() == roomUserId">
-    <ion-icon class="cf-fab-btn-icon" name="add"></ion-icon>
-</button>
--->
-
-<button color="primary" class="cf-fab-btn right" *ngIf="auth.getUserId() == roomUserId" (click)="takePictureToCollection()">
-    <ion-icon class="cf-fab-btn-icon" name="camera"></ion-icon>
-</button>
-<!--
-<button hidden color="primary" class="cf-fab-btn right-2" *ngIf="auth.getUserId() == roomUserId" [disabled]="api.getSelectedCollectionId().isSelected" (click)="captureToCollection()">
-    <ion-icon class="cf-fab-btn-icon" name="refresh-circle"></ion-icon>
-</button>
--->
 
 <ion-content (ionScroll)="onContentScroll($event)">
   
@@ -50,7 +35,14 @@
   </ion-refresher> 
 
  
-
+  <ion-fab top right edge #fab1  *ngIf="auth.getUserId() == roomUserId">
+    <button ion-fab mini (click)="clickMainFAB()"><ion-icon name="add"></ion-icon></button>
+    <ion-fab-list>
+      <button ion-fab (click)="captureCameraPicture(false, fab1)"><ion-icon name="ios-images-outline"></ion-icon></button>
+      <button ion-fab (click)="captureCameraPicture(true, fab1)"><ion-icon name="ios-camera-outline"></ion-icon></button>
+      <button ion-fab (click)="addItem(fab1)"><ion-icon name="ios-shirt-outline"></ion-icon></button>
+    </ion-fab-list>
+  </ion-fab>
 
 <!--
   <ion-fab class="fab-button left" *ngIf="auth.getUserId() == roomUserId">
@@ -77,15 +69,18 @@
         <div class="profile-avatar" 
         [style.backgroundImage]="'url(' + util.wrapHostBase(roomUserAvatarPath) + ')'">
         </div>
-      
-        
+  
 
         <div class="profile-user">
             <div>@{{roomUserName}}</div>
-            <button class="follow-btn" ion-button color="primary">Folgen</button>
+            <button *ngIf="auth.getUserId() != roomUserId" (click)="followUser()"
+            class="follow-btn" [class.isFollowed]="roomUser?.isFollowed" ion-button color="light-grey">
+            <ion-icon class="follow-icon" name="checkmark" *ngIf="roomUser?.isFollowed"></ion-icon> Folgen
+            </button>
         </div>
 
-        <button class="follow-btn-small" ion-button color="primary">Folgen</button>
+        <button *ngIf="auth.getUserId() != roomUserId" (click)="followUser()"
+        class="follow-btn-small" [class.isFollowed]="roomUser?.isFollowed" ion-button color="primary">Folgen</button>
 
         <div class="badge-container">
             <div class="badge">
@@ -122,7 +117,7 @@
             <ion-grid class="details-container">
               <ion-row class="session-tile-row" >
 
-                <ion-col>
+                <ion-col *ngIf="auth.getUserId() == roomUserId" >
                     <ion-icon name="more" class="session-tile-details-icon settings" (click)="itemSettings(item)" ></ion-icon>
                     <ion-icon name="unlock" class="session-tile-details-icon privacy" *ngIf="item.getPrivacyProtected()"></ion-icon>
                   <!-- <font class="session-tile-collection-title"> {{item.collectionTitle}} </font> -->

@@ -52,8 +52,7 @@ export class LocalSessionsService {
 
     initLocalSession(){
 
-        console.log("Initialize local sessions...")
-        let self = this;
+        console.log("Initialize local sessions...");
 
         return new Promise<any>((resolve, reject) => {
 
@@ -94,7 +93,6 @@ export class LocalSessionsService {
 
     captureCameraPicture(collectionId: number, navCtrl : any, callback?, flagIsCamera = true){
 
-        let self = this;
         let sourceType;
 
         if (flagIsCamera){

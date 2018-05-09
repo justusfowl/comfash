@@ -1,10 +1,8 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform, ViewController, Gesture, LoadingController, MenuController } from 'ionic-angular';
-import { Session, Collection } from '../../models/datamodel';
+import { Session, Collection, PurchaseTag } from '../../models/datamodel';
 import { CameraPreview, CameraPreviewOptions, CameraPreviewPictureOptions } from '@ionic-native/camera-preview';
-import { Api, ConfigService, LocalSessionsService } from '../../providers/providers';
-import { FileTransfer, FileUploadOptions } from '@ionic-native/file-transfer';
-import { AuthService } from '../../providers/providers'; 
+import { Api, ConfigService, LocalSessionsService, AuthService, UtilService } from '../../providers/providers';
 import { DomSanitizer } from '@angular/platform-browser';
 
 import { Camera } from '@ionic-native/camera';
@@ -24,6 +22,9 @@ export class CapturePage {
 
   isPreview : boolean = false;
   isVideoCapture : boolean = false; //feature toggle until 360° are possible
+
+  showEffects : boolean = false;
+  showTags : boolean = false;
 
   public filters = [
  
@@ -111,25 +112,25 @@ export class CapturePage {
 
   resultCallback : any;
 
+  purchaseTags : PurchaseTag[] = [];
+
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams, 
     platform: Platform, 
     public viewCtrl: ViewController,
     public api: Api, 
+    public auth: AuthService, 
     private cameraPreview: CameraPreview, 
     public camera: Camera,
     public menu: MenuController, 
-    private transfer: FileTransfer, 
+    public util : UtilService,
     public config : ConfigService, 
-    private auth: AuthService,
     private localSessions : LocalSessionsService, 
     private sanitizer:DomSanitizer,
     public loadingCtrl : LoadingController) {
 
       this.menu.enable(false,'mainmenu');
-
-      let userId = this.auth.getUserId();
 
       this.srcNav = navParams.get('srvNav'); 
       let navCollectionId = navParams.get('collectionId');
@@ -144,12 +145,7 @@ export class CapturePage {
 
       this.resultCallback = navParams.get('resultCallback');
 
-      platform.ready().then(() => {
       
-        this.startLiveCam();
-
-        
-      });
       
 
       if (imageData && imageData != undefined && imageData != null){
@@ -158,14 +154,32 @@ export class CapturePage {
         this.isPreview = true;
       }
 
+      platform.ready().then(() => {
+        
+        if (!this.isPreview){
+          this.startLiveCam();
+        }
+        
+        
+      });
+
       this.loadCollections();
 
   }
 
+  ionViewWillEnter() {
+    this.auth.validateAuth(this.navCtrl);
+    this.util.toggleTabBarVisible();
+  }
+
+
+  ionViewWillLeave(){
+    this.util.toggleTabBarVisible();
+  }
 
 
   public ngAfterViewInit(): void {
-
+    
     this.pressGesture = new Gesture(this.previewPictureRef.nativeElement);
   
     this.pressGesture.listen();
@@ -188,10 +202,7 @@ export class CapturePage {
 
   loadCollections(){
 
-    let userId = this.auth.getUserId();
-
-
-       this.api.myCollections().subscribe(
+    this.api.myCollections().subscribe(
       (data) => {
         
         try{
@@ -253,6 +264,29 @@ export class CapturePage {
       this.cameraPreview.setFlashMode(this.cameraPreview.FLASH_MODE.OFF);
 
   }
+
+  toggleEffects(){
+    this.showTags = false;
+
+    if (this.showEffects){
+      this.showEffects = false;
+      
+    }else{
+      this.showEffects = true;
+    }
+  }
+
+  enableTags (){
+    this.showEffects = false;
+    
+    if (this.showTags){
+      this.showTags = false;
+      
+    }else{
+      this.showTags = true;
+    }
+  }
+
 
   setFilter(filterName){
     console.log(filterName, " selected filter")

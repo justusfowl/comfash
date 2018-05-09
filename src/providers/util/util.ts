@@ -3,7 +3,6 @@
 import { Injectable } from '@angular/core';
 import { ConfigService } from '../config/config';
 import { DomSanitizer } from '@angular/platform-browser';
-import { TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 export class UtilService {
@@ -12,8 +11,7 @@ export class UtilService {
 
     constructor(
         private cfg : ConfigService, 
-        private sanitizer:DomSanitizer,
-        private translate: TranslateService
+        private sanitizer:DomSanitizer
     ) {
        
     }
@@ -49,6 +47,11 @@ export class UtilService {
         
     }
 
+    toggleTabBarVisible(){
+        let t = document.getElementsByClassName("tabbar")[0];
+        t.classList.toggle("visible");
+    }
+
     sanitizeStyle(value){ 
         return this.sanitizer.bypassSecurityTrustStyle(value);
     }
@@ -61,14 +64,6 @@ export class UtilService {
     sanitizeUrl(value){ 
         return this.sanitizer.bypassSecurityTrustUrl(value);
     }
-
-    formatDate(inputDateStr : string){
-        let inputDate = new Date(inputDateStr);
-
-        let day = inputDate.getDate();
-
-    }
-
 
     formatDateDiffToNow(inputDateStr: string){
 

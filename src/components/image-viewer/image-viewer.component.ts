@@ -2,16 +2,16 @@ import {
 	DomController,
 	NavController,
 	NavParams,
-	Transition,
+	//Transition,
 	Ion,
-	PanGesture,
-	Gesture,
+	//PanGesture,
+	//Gesture,
 	GestureController,
 	Config,
 	Platform,
-    Animation
+    //Animation
 } from 'ionic-angular';
-import { DIRECTION_HORIZONTAL, DIRECTION_VERTICAL } from 'ionic-angular/gestures/hammer';
+//import { DIRECTION_HORIZONTAL, DIRECTION_VERTICAL } from 'ionic-angular/gestures/hammer';
 import {
     AfterViewInit,
     Component,
@@ -43,9 +43,7 @@ import { ImageViewerEnter, ImageViewerLeave } from './image-viewer-transitions';
 		<div class="image-wrapper">
 			<div class="image" #imageContainer>
 				<img [class]="'filter-' + filterOption" [src]="imageUrl" tappable #image />
-			</div>
-
-			<div class="vote">test</div>
+			</div>s
 		</div>
 	`,
 	styles: [],

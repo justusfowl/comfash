@@ -12,4 +12,8 @@ page-settings {
         background-color : color($colors, primary, base);
     }
 
+    .toggle-icon::before{
+        background-color: grey !important;
+    }
+
 }

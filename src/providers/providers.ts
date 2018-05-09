@@ -4,6 +4,7 @@ import { MsgService } from './message/message';
 import { WebsocketService } from './message/websocket';
 import { AuthService } from './auth/auth';
 import { Settings } from './settings/settings';
+import { SettingHandlerService } from './settings/settinghandler';
 import { User } from './user/user';
 import { UtilService } from './util/util';
 import { LocalSessionsService } from './api/local.sessions';
@@ -17,6 +18,7 @@ export {
     WebsocketService,
     AuthService,
     Settings,
+    SettingHandlerService,
     User, 
     UtilService, 
     VoteHandlerService

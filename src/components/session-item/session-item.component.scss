@@ -63,4 +63,9 @@ session-item-image{
         background-repeat: no-repeat;
         background-position: center center;
     }
+
+    .vert-center{
+        display: flex; 
+        align-items: center;
+    }
 }

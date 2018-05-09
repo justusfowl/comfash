@@ -1,6 +1,6 @@
-import { Input, Component, ViewChild, HostListener, Output, EventEmitter } from '@angular/core';
-import { NavController, ViewController } from 'ionic-angular';
-import { Vote, Session } from '../../models/datamodel';
+import { Input, Component, ViewChild, Output, EventEmitter } from '@angular/core';
+import { NavController } from 'ionic-angular';
+import { Session } from '../../models/datamodel';
 import { Api, AuthService, UtilService, VoteHandlerService, LocalSessionsService } from '../../providers/providers';
 
 @Component({

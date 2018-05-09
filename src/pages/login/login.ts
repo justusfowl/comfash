@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IonicPage, NavController, ToastController, ModalController, MenuController } from 'ionic-angular';
 
-import { AuthService, MsgService, LocalSessionsService } from '../../providers/providers';
+import { AuthService, MsgService, LocalSessionsService, ConfigService } from '../../providers/providers';
 import { MainPage } from '../pages';
 
 import * as $ from 'jquery';
@@ -33,6 +33,7 @@ export class LoginPage {
     public modalCtrl: ModalController, 
     public menu: MenuController, 
     private msg: MsgService,
+    public config : ConfigService,
     private localSession : LocalSessionsService) {
 
     //this.menu.enable(false,'mainmenu');
@@ -45,7 +46,7 @@ export class LoginPage {
   
   ionViewWillEnter(){
 
-    if (this.auth.getToken()){
+    if (this.auth.getAuthStatus()){
       this.msg.initMsgService();
       this.navCtrl.setRoot(MainPage);
     }
@@ -63,10 +64,22 @@ export class LoginPage {
 
         // init local sessions ( creating user directory and loading sessions);
         this.localSession.initLocalSession();
+        
 
+        let isShown = this.config.tutorialShown;
+
+       if (isShown){
         this.navCtrl.setRoot(MainPage, {
           userId : this.auth.getUserId()
         });
+      } else{
+        this.navCtrl.setRoot("TutorialPage");
+      } 
+
+        
+       
+        
+
       },
       error => {
 

@@ -57,11 +57,23 @@ img{
     border: 0;
 }
 
+.tabbar.visible{
+    z-index: -1;
+    opacity: 0;
+}
+
 .sub-page-title{
     margin: 0; 
     padding: 0; 
     font-size: 9px; 
     color : color($colors, primary, base);
+}
+
+.left-button-group{
+    display: flex;
+}
+.left-button-group .notification{
+    order: 2;
 }
 
 .flag{
@@ -154,10 +166,6 @@ img{
       width: 48%;
   }
 
-  .footer-btns-button.left{
-
-  }
-
   .content, .content-ios{
     background-color: rgba(233,233,231,1);
     background-image: url('../assets/img/comfash-bg.png');
@@ -170,11 +178,18 @@ img{
     top: 3%; 
     left: 5px; 
     z-index: 9999;
+    color: white;
   }
 
   .btn-header.right {
       left: unset; 
       right: 5px;
+  }
+
+  .btn-header .icon{
+    color: white;
+    font-size: 40px;
+    text-shadow: 0 0 3px #797979;
   }
 
 
