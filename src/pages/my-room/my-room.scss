@@ -46,14 +46,15 @@ page-my-room {
 
     .profile-avatar{
         left: 12px;
-        bottom: -5px;
-        border-radius: 2px;
+        bottom: -8px;
+        border-radius: 100px;
         position: absolute;
         height: 100px;
-        width: 80px; 
+        width: 100px; 
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
+        border: 5px solid white;
     }
 
 

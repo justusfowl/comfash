@@ -74,6 +74,15 @@
 
   "SESSION_ADDED" : "Aufnahme hinzugefügt",
 
+
+  "RESOLVE_URL" : "Adresse auflösen", 
+  "TAG_URL" : "Tag-Adresse", 
+  "TAG_TITLE" : "Tag-Titel", 
+  "TAG_IMAGE" : "Vorschaubild", 
+  "TAG_SELLER" : "Shop",
+  
+  "TAG_HINT" : "Tippe anhaltend auf das Bild, um ein Tag hinzuzufügen",
+
   "BLANK_CARD_ADD_SESSION" : "Session hinzufügen",
   "BLANK_CARD_NO_SESSION_NO_OWNER" : " hat noch keine Session hinzugefügt.",
 

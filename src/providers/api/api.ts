@@ -371,6 +371,13 @@ getTrendStream(options){
   
 }
 
+resolveUrl(targetUrl){
+
+  return this.http.get(this.url + "/aux/resolveUrl" + '?targetUrl=' + targetUrl)
+
+}
+
+
 toggleFollow(followedId : string){
   return this.post("user/follow/" + followedId, {});
 }

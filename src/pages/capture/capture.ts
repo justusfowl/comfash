@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform, ViewController, Gesture, LoadingController, MenuController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Platform, ViewController, Gesture, LoadingController, MenuController, ModalController } from 'ionic-angular';
 import { Session, Collection, PurchaseTag } from '../../models/datamodel';
 import { CameraPreview, CameraPreviewOptions, CameraPreviewPictureOptions } from '@ionic-native/camera-preview';
 import { Api, ConfigService, LocalSessionsService, AuthService, UtilService } from '../../providers/providers';
@@ -25,6 +25,8 @@ export class CapturePage {
 
   showEffects : boolean = false;
   showTags : boolean = false;
+
+  tagPageIsOpen = false;
 
   public filters = [
  
@@ -122,6 +124,7 @@ export class CapturePage {
     public api: Api, 
     public auth: AuthService, 
     private cameraPreview: CameraPreview, 
+    public modalCtrl : ModalController,
     public camera: Camera,
     public menu: MenuController, 
     public util : UtilService,
@@ -174,7 +177,7 @@ export class CapturePage {
 
 
   ionViewWillLeave(){
-    this.util.toggleTabBarVisible();
+    //this.util.toggleTabBarVisible();
   }
 
 
@@ -227,6 +230,29 @@ export class CapturePage {
    
   }
 
+  previewImagePressed(event){
+
+
+    if (!this.tagPageIsOpen && event && this.showTags){
+      this.tagPageIsOpen = true;
+      this.createTag(event.center);
+      
+    }
+
+  }
+
+  createTag(coords){
+    let addModal = this.modalCtrl.create('TagCreatePage', {"coords": coords});
+
+    addModal.onDidDismiss((tag : PurchaseTag) => {
+      if (tag) {
+        this.purchaseTags.push(tag)
+      }
+      this.tagPageIsOpen = false;
+    });
+    
+    addModal.present();
+  }
 
 
   handleDoubleTap(){
@@ -427,6 +453,8 @@ export class CapturePage {
 
     this.navCtrl.pop();
 
+    this.util.toggleTabBarVisible();
+
    }
 
   acceptAndStore(){ 
@@ -447,6 +475,7 @@ export class CapturePage {
     let resultItem = {
       "collectionId" : this.collectionId,
       "filterOption" : this.filterSelected,
+      "newTags" : this.purchaseTags,
       "data" : this.imageData, 
       "mimeType" : "image/jpg"
     };

@@ -1,6 +1,6 @@
 @import "../../theme/variables";
 
-page-comment-create {
+page-tag-create {
 
   .main-cont{
     height: 100vh; 
@@ -50,7 +50,6 @@ page-comment-create {
   .content{
     background-color: $background-color;
     background-image: unset;
-    height: 60vh;
   }
 
   .item-toggle{
@@ -59,6 +58,26 @@ page-comment-create {
 
   .hidden{
     display: none;
+  }
+
+
+  .wide-btn{
+    width: 100%; 
+    height: 35px;
+  }
+
+  .preview-image{
+    margin-left: 25%; 
+    width: 50%; 
+    margin-top:20px;
+    max-height: 250px;
+  }
+
+  .preview-icon{
+    width: 100%; 
+    text-align: center; 
+    margin-top: 20px; 
+    font-size: 80px;
   }
 
 }

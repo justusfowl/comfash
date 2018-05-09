@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommentGridDirective } from './comment-grid/comment-grid';
-import { DragItemDirective } from './drag-item/drag-item';
+import { LongPressDirective } from './long-press/long-press';
 @NgModule({
 	declarations: [CommentGridDirective,
-    DragItemDirective],
+    LongPressDirective], 
 	imports: [],
 	exports: [CommentGridDirective,
-    DragItemDirective]
+    LongPressDirective]
 })
 export class DirectivesModule {}

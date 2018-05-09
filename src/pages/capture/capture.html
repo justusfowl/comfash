@@ -6,6 +6,7 @@
 
 <ion-content no-bounce >
 
+  
 
   <ion-buttons class="btn-header">
     <button ion-button icon-only clear (click)="navBack()">
@@ -30,18 +31,19 @@
   id="previewPicture"
   [class]="'filter-' + filterSelected" 
   [src]="previewPicture"
+  longPress [interval]="400" (onPressEnd)="previewImagePressed($event)" 
   >
   
 <button id="btn-capture-picture" class="btn-footer-cam" (click)="takePicture()" *ngIf="!isPreview" >
    <div class="inner"></div>
 </button>
 
-<button id="btn-effects" (click)="toggleEffects()" >
+<button id="btn-effects" (click)="toggleEffects()" *ngIf="isPreview">
   <ion-icon class="icon" name="color-wand"></ion-icon>
   <div class="inner">Effekte</div>
 </button>
 
-<button id="btn-tags" (click)="enableTags()"  >
+<button id="btn-tags" (click)="enableTags()" *ngIf="isPreview" >
   <ion-icon class="icon"  name="pricetags"></ion-icon>
   <div class="inner">Produkte</div>
 </button>
@@ -61,10 +63,10 @@
 
 </div>
 
-<div id="tags-footer" [class.showTags]="showTags">
+<div id="tags-footer" [class.showTags]="showTags" *ngIf="isPreview">
 
-    <div drag-item id="new-tag" class="purchase-tag">
-
+    <div drag-item id="new-tag" class="purchase-tag-hint" *ngIf="purchaseTags.length == 0">
+      {{ 'TAG_HINT' | translate }}}
     </div>
  
     <div *ngFor="let t of purchaseTags"  class="purchase-tag" >

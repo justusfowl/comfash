@@ -144,7 +144,8 @@ export class LocalSessionsService {
             sessionItemPath : data.src, //data_uri -> not base64 encoded!!!
             sessionItemType : data.sessionItemType, //corresponding mime-type to encode data_uri
             filterOption : data.filterOption,
-            flagIsTmp : true
+            flagIsTmp : true, 
+            tags : data.newTags
         });
 
         this.userLocalSessions.push(newSession);
@@ -297,6 +298,7 @@ export class LocalSessionsService {
               element["src"] = imageData;
               element["sessionItemType"] = contentType;
               element["filterOption"] = filterOption;
+              element["newTags"] = previewItem.newTags;
               
               // create temporary session item for display until uploaded
               let newSession = self.createTmpSession(element);
@@ -308,7 +310,8 @@ export class LocalSessionsService {
               let metaData = {
                   "filename" : fileName,
                   "mimeType" : contentType,
-                  "filterOption" : previewItem.filterOption
+                  "filterOption" : previewItem.filterOption,
+                  "newTags" : previewItem.newTags
               }
     
               self.setImageMetaData(fileName, metaData).then(res => {
@@ -480,7 +483,8 @@ export class LocalSessionsService {
             }
 
             let params = {
-                "filterOption" : localSession.filterOption
+                "filterOption" : localSession.filterOption, 
+                "newTags" : JSON.stringify(localSession.tags)
               }
         
             options.headers = headers;

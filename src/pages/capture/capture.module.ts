@@ -4,7 +4,7 @@ import { IonicPageModule } from 'ionic-angular';
 
 import { CapturePage } from './capture';
 
-import { DirectivesModule} from '../../directives/directives.module';
+import { DirectivesModule } from '../../directives/directives.module'
 
 
 @NgModule({

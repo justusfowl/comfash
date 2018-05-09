@@ -1,0 +1,79 @@
+
+  
+<ion-header>
+
+    <ion-navbar>
+      <ion-title>{{ 'COLLECTION_CREATE_TITLE' | translate }}</ion-title>
+      <ion-buttons start>
+        <button ion-button (click)="cancel()">
+          <span color="primary" showWhen="ios">
+            {{ 'CANCEL_BUTTON' | translate }}
+          </span>
+          <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+        </button>
+      </ion-buttons>
+      <ion-buttons end>
+        <button ion-button [disabled]="!isReadyToSave"  (click)="done()" strong>
+          <span color="primary" showWhen="ios">
+            {{ 'SAVE_BUTTON' | translate }}
+          </span>
+          <ion-icon name="md-checkmark" showWhen="core,android,windows"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-navbar>
+  
+  </ion-header>
+  
+  <ion-content>
+      <ion-icon class="preview-icon" name="pricetag" *ngIf="!hasResolved" ></ion-icon>
+      <img class="preview-image" [src]="previewItem?.tagImage" *ngIf="hasResolved">
+  
+      <form [formGroup]="purchaseTagForm" (ionChange)="previewTag(purchaseTagForm.value)">
+  
+        <ion-item class="form-item">
+          <ion-label floating>{{ 'TAG_URL' | translate }}</ion-label>
+  
+          <ion-input 
+          formControlName="tagUrl" 
+          name="tagUrl" 
+          type="text"
+          
+          ></ion-input>
+         
+        </ion-item>
+
+        <ion-item class="form-item" *ngIf="!hasResolved">
+            <button class="wide-btn" ion-button  (click)="resolveUrl()" strong>
+                <span color="primary" showWhen="ios">
+                  {{ 'RESOLVE_URL' | translate }}
+                </span>
+                <ion-icon name="md-checkmark" showWhen="core,android,windows"></ion-icon>
+              </button>
+        </ion-item>
+      
+        <ion-item class="form-item" *ngIf="hasResolved">
+          <ion-label floating>{{ 'TAG_TITLE' | translate }}</ion-label>
+          <ion-input  formControlName="tagTitle" name="tagTitle" type="text"></ion-input>
+        </ion-item>
+
+        <ion-item class="form-item" *ngIf="hasResolved">
+            <ion-label floating>{{ 'TAG_IMAGE' | translate }}</ion-label>
+            <ion-input  formControlName="tagImage" name="tagImage" type="text"></ion-input>
+          </ion-item>
+
+        <ion-item class="form-item" *ngIf="hasResolved">
+            <ion-label floating>{{ 'TAG_SELLER' | translate }}</ion-label>
+            <ion-input  formControlName="tagSeller" name="tagSeller" type="text"></ion-input>
+          </ion-item>
+
+          <ion-item class="form-item" *ngIf="hasResolved">
+              <ion-label floating>{{ 'TAG_BRAND' | translate }}</ion-label>
+              <ion-input  formControlName="tagBrand" name="tagBrand" type="text"></ion-input>
+            </ion-item>
+
+      
+      </form>
+  
+  </ion-content>
+  
+  

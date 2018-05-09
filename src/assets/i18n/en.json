@@ -74,6 +74,15 @@
 
   "SESSION_ADDED" : "Session added",
 
+  "RESOLVE_URL" : "Resolve address", 
+  "TAG_URL" : "Address", 
+  "TAG_TITLE" : "Title", 
+  "TAG_IMAGE" : "Preview", 
+  "TAG_SELLER" : "Shop",
+  "TAG_BRAND" : "Brand",
+
+  "TAG_HINT" : "Longtab onto the image to add tags",
+
   "BLANK_CARD_ADD_SESSION" : "Add session",
   "BLANK_CARD_NO_SESSION_NO_OWNER" : " has not added any session",
 
