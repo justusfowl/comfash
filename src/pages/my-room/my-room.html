@@ -101,7 +101,7 @@
       <ion-item *ngFor="let item of collections">
         <div class="session-tile" >
 
-            <ion-slides loop=true *ngIf="item.sessions.length > 0">
+            <ion-slides [loop]="item.sessions.length > 1" *ngIf="item.sessions.length > 0">
               <ion-slide *ngFor="let session of item.sessions">
                 <img  [class]="'filter-' + session.filterOption" [src]="util.wrapHostBase(session.getThumbnail())" (click)="openItem(item)" >
               </ion-slide>

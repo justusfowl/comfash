@@ -7,14 +7,19 @@ import { Injectable, Injector } from '@angular/core';
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 
 import { AuthService } from '../auth/auth';
+import { App, NavController } from 'ionic-angular';
 //import { MsgService } from '../message/message';
 
 @Injectable()
 export class AuthIntercept implements HttpInterceptor {
 
-  constructor( private inj: Injector) {
+  constructor( protected app: App, private inj: Injector) {
   }
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(
+    
+    req: HttpRequest<any>, 
+    next: HttpHandler,
+  ): Observable<HttpEvent<any>> {
 
     return next.handle(this.setAuthorizationHeader(req))
       .catch((event) => {
@@ -23,6 +28,10 @@ export class AuthIntercept implements HttpInterceptor {
           return this.catch401(event);
         }
       });
+  }
+
+  getNavCtrl() : NavController{
+    return this.app.getRootNav();
   }
 // Request Interceptor to append Authorization Header
   private setAuthorizationHeader(req: HttpRequest<any>): HttpRequest<any> {
@@ -47,6 +56,9 @@ export class AuthIntercept implements HttpInterceptor {
     // Check if we had 401 response
     if (error.status === 401) {
       // redirect to Login page for example
+      let navCtrl = this.getNavCtrl();
+
+      navCtrl.setRoot("LoginPage");
       return Observable.empty();
     }
     return Observable.throw(error);

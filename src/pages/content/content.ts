@@ -112,11 +112,11 @@ export class ContentPage implements AfterViewInit {
 
    ionViewWillEnter() {
       this.auth.validateAuth(this.navCtrl);
-      this.util.toggleTabBarVisible();
+      this.util.tabBarInvisible();
     }
 
     ionViewWillLeave(){
-      this.util.toggleTabBarVisible();
+      this.util.tabBarVisible();
     }
 
 

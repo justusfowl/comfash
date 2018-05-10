@@ -172,7 +172,7 @@ export class CapturePage {
 
   ionViewWillEnter() {
     this.auth.validateAuth(this.navCtrl);
-    this.util.toggleTabBarVisible();
+    this.util.tabBarInvisible();
   }
 
 
@@ -450,10 +450,9 @@ export class CapturePage {
   navBack(){
     console.log("navigating back");
     this.stopPreviewCam();
+    this.util.tabBarVisible();
 
     this.navCtrl.pop();
-
-    this.util.toggleTabBarVisible();
 
    }
 
@@ -470,6 +469,7 @@ export class CapturePage {
 
     setTimeout(function(){ 
       self.stopPreviewCam();
+      this.util.tabBarVisible();
     }, 1000);
     
     let resultItem = {

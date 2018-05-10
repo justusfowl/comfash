@@ -235,6 +235,11 @@ page-capture {
         object-fit: cover;
         object-position: center;
         z-index: 100;
+        visibility: hidden;
+    }
+
+    #previewPicture.isVisible{
+        visibility: unset;
     }
 
     @keyframes turnArrow{

@@ -81,7 +81,7 @@ export class AuthService {
                 .then(res => {
                     if(res.status === "connected") {
                         this.isAuth = true;
-                        console.log("FACEBOOK AUTHENTICATED ME");
+                        //console.log("FACEBOOK AUTHENTICATED ME");
 
                         const credentials = {
                             fb_access_token: res.authResponse.accessToken,
@@ -92,7 +92,7 @@ export class AuthService {
                         self.api.post("auth/f", credentials).subscribe(
                             (authResult : any) => {
                                 console.log("  i am here in the auth/f result");
-                                console.log(JSON.stringify(authResult));
+                                //console.log(JSON.stringify(authResult));
                                 authResult["accessToken"] = authResult.access_token;
 
                               resolve(this.handleAuthSuccess(authResult, resolve, reject));
@@ -134,7 +134,7 @@ export class AuthService {
                     return;
                 }else{
                     console.log("authenticated");
-                    console.log(authResult);
+                    //console.log(authResult);
                     self.handleAuthSuccess(authResult, resolve, reject);
                 }
             })

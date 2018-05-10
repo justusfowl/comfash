@@ -102,6 +102,7 @@ export class LocalSessionsService {
                 "collectionId" : collectionId, 
                 "resultCallback" : callback
               });
+              
 
         }else{
             sourceType = this.camera.PictureSourceType.PHOTOLIBRARY;

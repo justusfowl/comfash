@@ -47,10 +47,16 @@ export class UtilService {
         
     }
 
-    toggleTabBarVisible(){
-        let t = document.getElementsByClassName("tabbar")[0];
-        t.classList.toggle("visible");
+    tabBarVisible(){
+       let t = document.getElementsByClassName("tabbar")[0];
+       t.classList.remove("inVisible");
     }
+
+    tabBarInvisible(){
+        let t = document.getElementsByClassName("tabbar")[0];
+        t.classList.add("inVisible");
+    }
+    
 
     sanitizeStyle(value){ 
         return this.sanitizer.bypassSecurityTrustStyle(value);
