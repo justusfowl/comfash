@@ -1,0 +1,53 @@
+<!--
+  Generated template for the SearchPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+      <ion-searchbar 
+      [placeholder]="searchPlaceholder"
+      [(ngModel)]="searchTerm" 
+      (ionInput)="searchChanged($event)"
+      (ionClear)="searchClear($event)"></ion-searchbar>
+
+    <ion-buttons end>
+        <div id="load-container" *ngIf="isLoading">
+            <ion-spinner name="dots"></ion-spinner>
+        </div>
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <div class="search-wrapper">
+        <div class="result-item" *ngFor="let result of tmpSearchlist; let i = index;" >
+               
+            <div class="avatar" [style.backgroundImage]="'url(' + util.wrapHostBase(result.userAvatarPath) + ')'">
+            </div>
+
+            <link-username
+            [userName]="result.userName"
+            [userId]="result.userId"
+             ></link-username>
+
+
+        </div>
+    </div>
+    
+    <div id="search-bg">
+        <ion-icon name="glasses" *ngIf="tmpSearchlist?.length < 1"></ion-icon>
+        <div class="text" *ngIf="!hasRun">
+                {{ 'SEARCH_DEFAULT' | translate }}
+        </div>
+
+        <div class="text" *ngIf="hasRun && noResults">
+                {{ 'SEARCH_EMPTY' | translate }}
+        </div>
+    </div>
+            
+</ion-content>

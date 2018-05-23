@@ -2,6 +2,8 @@
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
 
+import { ENV } from '@app/env';
+
 import { Api } from '../api/api'
 import { OneSignal } from '@ionic-native/onesignal';
 
@@ -26,18 +28,14 @@ export class AuthService {
 
     private expiresAt : number = 0;
 
+    public isRefreshingToken : boolean = false;
+
+    public unAuthCounter : number = 0;
+
+
     
 
-    public auth0Config = {
-        clientID: 'IEFi9KoFw0QdQbtoXoCcD523MZ3OVULr',
-        clientId: 'IEFi9KoFw0QdQbtoXoCcD523MZ3OVULr',
-        domain: 'comfash.eu.auth0.com',
-        responseType: 'token id_token',
-        audience: 'https://comfash.eu.auth0.com/api/v2/',
-        redirectUri: 'https://comfash.com/',
-        scope: 'openid profile email', 
-        packageIdentifier : "com.comfash.mobile"
-      }
+    public auth0Config : any;
 
     private Auth0 : any;
 
@@ -46,13 +44,15 @@ export class AuthService {
         public oneSignal : OneSignal,
         private fb: Facebook) {
 
+        this.auth0Config = ENV.auth0Config;
+
         if (this.getToken()){
             this.isAuth = true;
         }
 
         this.Auth0 = new auth0.WebAuth({
-            clientID: 'IEFi9KoFw0QdQbtoXoCcD523MZ3OVULr',
-            domain: 'comfash.eu.auth0.com'
+            clientID: ENV.auth0Config.clientID,
+            domain: ENV.auth0Config.domain
           });
 
 
@@ -194,23 +194,31 @@ export class AuthService {
         return;
     }
 
+    setExpiresAt(expiresIn){
+        let expiresAt = parseInt(JSON.stringify((expiresIn * 1000) + new Date().getTime()));
+
+        this.expiresAt = expiresAt;
+
+        window.localStorage.setItem('expiresAt', expiresAt.toString());
+
+    }
+
     handleLoginSuccess(data){
 
         this.userId = data.userId; 
         
         this.id_token = data.id_token;
         this.accessToken = data.accessToken;
-        let expiresAt = parseInt(JSON.stringify((data.expiresIn * 1000) + new Date().getTime()));
 
-        this.expiresAt = expiresAt;
-
+        this.setExpiresAt(data.expiresIn);
+        
         window.localStorage.setItem('userId', data.userId);
-        window.localStorage.setItem('expiresAt', expiresAt.toString());
+        
         window.localStorage.setItem('accessToken', data.accessToken);
         window.localStorage.setItem('id_token', data.id_token);
+        window.localStorage.setItem('refreshToken', data.refreshToken);
 
         this.isAuth = true;
-
         
 
         try{  
@@ -274,6 +282,60 @@ export class AuthService {
         return this.isAuth;
     }
 
+
+    checkRefreshToken(){
+
+        this.unAuthCounter++;
+
+        if (!this.isRefreshingToken){
+
+            let nowWithPuffer = (new Date().getTime()) + 1000 * 60 * 60;
+            let expiresAt = parseInt(window.localStorage.getItem('expiresAt'));
+
+            if (expiresAt < nowWithPuffer ){
+
+                this.isRefreshingToken = true;
+                this.refreshToken();
+                return true;
+
+            }else{
+                console.log("already alright");
+                return false;
+            }
+
+        }else{
+            console.log("is refreshing");
+            return false;
+        }
+
+    }
+
+
+    refreshToken(){
+        let requestBody = {
+            "grant_type" : "refresh_token", 
+            "client_id" : this.auth0Config.clientId, 
+            "refresh_token" : this.getRefreshToken()
+        };
+
+
+        this.api.refreshToken(this.auth0Config.domain, requestBody ).subscribe( (resp : any) => {
+            console.log("successfully refreshed token");
+
+            this.setExpiresAt(resp.expires_in);
+            window.localStorage.setItem('accessToken', resp.accessToken);
+            window.localStorage.setItem('id_token', resp.id_token);
+
+            this.isRefreshingToken = false;
+
+            this.unAuthCounter = 0;
+        }, 
+        error => {
+            this.isRefreshingToken = false;
+            this.api.handleAPIError(error);
+        })
+    }
+
     validateAuth (navCtrl){
         if (!this.getAuthStatus()){
             navCtrl.setRoot('LoginPage');
@@ -283,7 +345,9 @@ export class AuthService {
 
 
 
-    
+    getRefreshToken(){
+        return window.localStorage.getItem('refreshToken');
+    }
 
     getUsername (){
         return window.localStorage.getItem('userName');
@@ -300,6 +364,7 @@ export class AuthService {
         // return this.token;
     }
 
+
     getUserAvatarPath () : string {
         return window.localStorage.getItem('avatar') || "";
     }
@@ -313,6 +378,8 @@ export class AuthService {
             this.api.handleAPIError(error);
         })
     }
+
+
 
 
 

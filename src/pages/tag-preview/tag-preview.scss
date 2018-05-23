@@ -1,0 +1,41 @@
+@import "../../theme/variables";
+
+.tag-preview-popover .popover-content{
+    max-width: 350px;
+}
+
+page-tag-preview {
+
+    .popover-content{
+        max-width: 400px;
+    }
+
+    .tag-body{
+        display: flex;
+    }
+
+    .tag-avatar{
+        margin: 5px;
+        height: 120px;
+        width: 70px;
+        object-fit: cover;
+    }
+
+    .tag-link{
+        margin: 5px;
+        color: color($colors, dark-text, base);
+        font-size: 25px;
+    }
+
+    .tag-text{
+        color: color($colors, dark-text, base);
+        margin: 5px;
+    }
+
+    .tag-list-item-detail{
+        margin-top: 5px;
+        color: grey;
+    }
+
+
+}

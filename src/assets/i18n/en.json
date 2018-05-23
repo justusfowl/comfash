@@ -13,8 +13,9 @@
 
   "TAB1_TITLE": "MyRoom",
   "TAB2_TITLE": "Stream",
-  "TAB3_TITLE": "Shopping",
+  "TAB3_TITLE": "Search",
   "TAB4_TITLE": "Settings",
+  "TAB5_TITLE": "Feedback",
 
   "MAP_TITLE": "Map",
 
@@ -56,7 +57,7 @@
   "MY_ROOM_TITLE": "MyRoom",
   "ROOM_TITLE": "Room",
 
-  "BLANK_CARD_ADD_COLLECTION" : "New Collection",
+  "BLANK_CARD_ADD_COLLECTION" : "Add a new collection to store your outfits",
   "PRIVACY_1" : "Me",
   "PRIVACY_2" : "Friends", 
   "PRIVACY_3" : "Public",
@@ -84,7 +85,7 @@
 
   "TAG_HINT" : "Longtab onto the image to add tags",
 
-  "BLANK_CARD_ADD_SESSION" : "Add session",
+  "BLANK_CARD_ADD_SESSION" : "Add an outfit",
   "BLANK_CARD_NO_SESSION_NO_OWNER" : " has not added any session",
 
   "ALERT_DELETE_TITLE" : "Remove session", 
@@ -111,11 +112,14 @@
   "CARDS_TITLE": "Social",
 
   "SEARCH_TITLE": "Search",
-  "SEARCH_PLACEHOLDER": "Search the items list, e.g. \"Donald Duck\"",
+  "SEARCH_PLACEHOLDER": "Search",
+  "SEARCH_EMPTY" : "No results",
+  "SEARCH_DEFAULT" : "Search comfash...",
 
   "FITTING_STREAM_TITLE" : "FittingStream", 
 
   "NOTIFICATIONS" : "Notifications", 
+  "EMPTY_NOTIFICATIONS" : "You have not received any notifications",
   "NEW_NOTIFICATION_FROM" : "New notification from: ",
 
   "COMMENT_CREATE_TITLE" : "Comment", 
@@ -129,6 +133,12 @@
   "COL_HAS_INVITED" : " asks for support of ",
   "HAS_REACTED_TO" : " reacts to ", 
   "HAS_VOTED" : " rates ", 
+
+
+  "FEEDBACK_MAIN" : "Help us making comfash even better",
+  "FEEDBACK_SCREENSHOT" : "Add a screenshot",
+  "FEEDBACK_RECEIVED" : "Thank you very much for your feedback!",
+  "FEEDBACK_SUBMIT" : "Submit",
 
   "01" : "jan",
   "02" : "feb",

@@ -1,5 +1,8 @@
 
-<div class="session-item-container" [style.width]="(100 / totalCnt) + 'vw'">
+<div class="session-item-container"
+[class.borderRight]="index+1<totalCnt"
+
+[style.width]="(100 / totalCnt) + 'vw'" >
     <img [class]="'session-item-item filter-' + context.filterOption" [src]="getItemSessionPath(itemSessionPath)">
     
     <ion-icon 
@@ -20,26 +23,36 @@
     *ngFor="let tag of context.tags"
     [style.top]="getPosInt(tag.yRatio) + '%'"
     [style.left]="getPosInt(tag.xRatio) + '%'"
+    (click)="previewTag($event, tag)"
     ></div>
 
     <ion-grid class="session-details" >
         <ion-row>
             <ion-col class="voting-btn" *ngIf="!context.flagIsTmp">
                 <div class="vert-center" >
-                    {{context.commentCnt}}
-                    <ion-icon class="session-menu-btn right"  icon-left clear small
-                    name="ios-chatbubbles-outline" 
-                    (click)="hasCommentClicked(context)"></ion-icon>
+
+                    <div>
+                            <ion-icon class="session-menu-btn right"  icon-left clear small
+                            name="ios-chatbubbles-outline" 
+                            (click)="hasCommentClicked(context)"></ion-icon>
+                            <p>{{context.commentCnt}}</p>
+                    </div>
+
                 </div>
                 
 
                 <div class=" vert-center votes-stats">
-                    {{util.formatIntToPercent(context.voteAvg)}} / {{context.voteCnt}}
+                    
+                    <div>
+                        <ion-icon class="session-menu-btn right" [class.active]="context.myVote" ion-long-press 
+                        [interval]="400" 
+                        (click)="showReactions($event, context)"   icon-right clear small
+                        [name]="voteHdl.getVoteIcon(context)" ></ion-icon>
+    
+                        <!--<p>{{util.formatIntToPercent(context.voteAvg)}} / {{context.voteCnt}}</p>-->
+                        <p>{{context.voteCnt}}</p>
+                    </div>
 
-                    <ion-icon class="session-menu-btn right" [class.active]="context.myVote" ion-long-press 
-                    [interval]="400" 
-                    (click)="showReactions($event, context)"   icon-right clear small
-                    name="ios-thumbs-up-outline" ></ion-icon>
                 </div>
                 
 

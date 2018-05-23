@@ -43,9 +43,14 @@ export class NotificationsPage {
 
     // mark message as read
 
-    message.setReadStatus(0);
-
-    this.api.markMessageRead(message.getId());
+    this.api.markMessageRead(message.getId(), false).subscribe(
+      (data : any) => {
+        message.setReadStatus(0);
+      },
+      error => {
+        this.api.handleAPIError(error);
+      }
+    )
 
     let linkURL = message.getLinkUrl();
 

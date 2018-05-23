@@ -5,18 +5,19 @@
         <button ion-button icon-only menuToggle >
           <ion-icon name="person"></ion-icon>
         </button>
-
-      </ion-buttons>
+        
+      </ion-buttons> 
 
     <ion-title >
-      {{roomTitle}}
+      comfash
     </ion-title>
     <ion-buttons end>
 
       <button class="notification" ion-button icon-only (click)="toNotification()" >
-        <div class="cnt-new-notifications"> {{msg.newMessages.length}}</div>   
-          <ion-icon name="chatboxes" ></ion-icon>
+        <div class="cnt-new-notifications" *ngIf="msg.newMessages.length > 0" > {{msg.newMessages.length}}</div>   
+          <ion-icon name="notifications" ></ion-icon>
       </button>
+
 
     </ion-buttons>
   </ion-navbar>
@@ -73,16 +74,17 @@
 
         <div class="profile-user">
             <div>@{{roomUserName}}</div>
-            <button *ngIf="auth.getUserId() != roomUserId" (click)="followUser()"
-            class="follow-btn" [class.isFollowed]="roomUser?.isFollowed" ion-button color="light-grey">
-            <ion-icon class="follow-icon" name="checkmark" *ngIf="roomUser?.isFollowed"></ion-icon> Folgen
-            </button>
         </div>
+
+        <button *ngIf="auth.getUserId() != roomUserId" (click)="followUser()"
+          class="follow-btn" [class.isFollowed]="roomUser?.isFollowed" ion-button color="light-grey">
+          <ion-icon class="follow-icon" name="checkmark" *ngIf="roomUser?.isFollowed"></ion-icon> Folgen
+        </button>
 
         <button *ngIf="auth.getUserId() != roomUserId" (click)="followUser()"
         class="follow-btn-small" [class.isFollowed]="roomUser?.isFollowed" ion-button color="primary">Folgen</button>
 
-        <div class="badge-container">
+        <div class="badge-container" hidden>
             <div class="badge">
                 <ion-icon name="bookmark"></ion-icon>
             </div>
@@ -102,14 +104,16 @@
         <div class="session-tile" >
 
             <ion-slides [loop]="item.sessions.length > 1" *ngIf="item.sessions.length > 0">
-              <ion-slide *ngFor="let session of item.sessions">
+              <ion-slide class="slide" *ngFor="let session of item.sessions">
+                <div class="slide-overlay" (click)="openItem(item)"></div>
                 <img  [class]="'filter-' + session.filterOption" [src]="util.wrapHostBase(session.getThumbnail())" (click)="openItem(item)" >
               </ion-slide>
             </ion-slides>
 
-            <img [src]="util.wrapHostBase(item.getThumbnail())" (click)="openItem(item)" >
+            <div class="slide-overlay" (click)="openItem(item)" *ngIf="item.sessions.length <= 0"></div>
+            <img [src]="util.wrapHostBase(item.getThumbnail())"  *ngIf="item.sessions.length <= 0" >
 
-          <div class="session-tile-details" [style.backgroundColor]="item.getPrimeColor() + 'e6'" >
+          <div class="session-tile-details">
             <div class="info"  (click)="openItem(item)">
               <p class="title center">#{{item.collectionTitle}}</p>
               <p class="date center">{{item.getDayCreated()}} {{item.getMonthCreated() | translate}} '{{item.getYearCreated()}} </p>
@@ -144,7 +148,7 @@
     </ion-item>
 
 
-    <div class="blank-card" (click)="addItem()" *ngIf="auth.getUserId() == roomUserId">
+    <div class="blank-card" (click)="addItem()" *ngIf="auth.getUserId() == roomUserId && collections?.length == 0">
         <ion-icon class="blank-card-add" name="add">
         </ion-icon>
         {{'BLANK_CARD_ADD_COLLECTION' | translate}}

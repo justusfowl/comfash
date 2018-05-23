@@ -34,26 +34,39 @@
       </ion-refresher-content>
     </ion-refresher>
 
-  <div ion-item *ngFor="let message of msg.myMessages" (click)="followMessageLink(message)" [class.unread]='message.isUnread == 1'>
+    <div class="empty-notifications" ion-item *ngIf="msg.myMessages < 1">
+        {{ 'EMPTY_NOTIFICATIONS' | translate }}
+    </div>
+
+
+  <div ion-item *ngFor="let message of msg.myMessages"  [class.unread]='message.isUnread == 1'>
     
     <ion-grid>
         <ion-row class="session-tile-header-row" >
-          <ion-col col-1 class="session-thumbnail">
+          <ion-col col-2 class="sender-thumbnail">
             <div class="sender-avatar-thumbnail" [style.backgroundImage]="'url(' + util.wrapHostBase(message.getSenderAvatar()) + ')'">
 
             </div>
           </ion-col>
 
-          <ion-col class="message-body"> 
-              @{{message.getAuthorName()}} {{ message.messageBody | translate }} #{{message.collectionTitle}}
-              <p class="message-details" >@{{message.senderName}}, {{util.formatDateDiffToNow(message.messageCreated)}}</p>
+          <ion-col class="message-body">
+
+              <link-username
+              [userName]="message.senderName"
+              [userId]="message.senderUserId"
+               ></link-username>
+
+              {{ message.messageBody | translate }} #{{message.collectionTitle}}
+              <p class="message-details" >{{util.formatDateDiffToNow(message.messageCreated)}}</p>
           </ion-col>
           <ion-col col-1 class="arrow-icon">
               <ion-icon name="arrow-forward"></ion-icon>
           </ion-col>
 
-          <ion-col col-1 class="session-thumbnail">
-            <div class="session-thumbnail" [style.backgroundImage]="'url(' + util.wrapHostBase(message.sessionThumbnailPath) + ')'">
+          <ion-col col-2 >
+            <div class="session-thumbnail" 
+            (click)="followMessageLink(message)"
+            [style.backgroundImage]="'url(' + util.wrapHostBase(message.sessionThumbnailPath) + ')'">
 
             </div>
           </ion-col>

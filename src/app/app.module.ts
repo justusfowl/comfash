@@ -45,6 +45,8 @@ import { Facebook } from '@ionic-native/facebook';
 
 import { Badge } from '@ionic-native/badge';
 
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
+
 
 //import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 //const config: SocketIoConfig = { url: 'http://192.168.178.142:9999', options: {} };
@@ -97,6 +99,7 @@ export function createTranslateLoader(http: HttpClient) {
     SplashScreen,
     StatusBar,
     Network,
+    ScreenOrientation,
     BackgroundFetch,
     // Keep this to enable Ionic's runtime error handling during development
     { provide: ErrorHandler, useClass: IonicErrorHandler }, 

@@ -18,6 +18,9 @@ export class SessionTileComponent {
     @Output()
     onSessionDeleteClick = new EventEmitter<any>();
 
+    @Output()
+    onVoteClick = new EventEmitter<any>();
+
     constructor(
         public navCtrl: NavController,
         public util : UtilService, 
@@ -28,7 +31,7 @@ export class SessionTileComponent {
     ) {
     }
 
-    getItemSessionPath(session : Session){
+    getItemSessionPath(session : Session, isLarge = false){
         if (this.session.flagIsTmp){
             try{
                 let resource = session.sessionItemPath;
@@ -42,7 +45,12 @@ export class SessionTileComponent {
                 return null;
               }
         }else{
-            return this.util.wrapHostBase(session.sessionItemPath);
+            if (isLarge){
+                return this.util.wrapHostBase(session.sessionItemPath);
+            }else{
+                return this.util.wrapHostBase(session.sessionThumbnailPath);
+            }
+            
         }
         
     }
@@ -77,6 +85,39 @@ export class SessionTileComponent {
         console.log("delete clicked in imgcollection")
 
         this.onSessionDeleteClick.emit(session);
+    }
+
+    emitVoteType(voteType: number){
+        this.onVoteClick.emit(voteType)
+    }
+
+    showReactions(ev: any, session: any){
+
+        this.voteHdl.showReactions(ev, session, this.emitVoteType.bind(this));
+        /*
+        let hasVote = false;
+        
+        if (session.myVote){
+          hasVote = true;
+        }
+     
+        let reactions = this.popoverCtrl.create('ReactionsPage', {
+          "hasVote" : hasVote
+        }, {
+            cssClass : "custom-reactions-popover"
+          });
+    
+        reactions.onDidDismiss((voteType : number) => {
+            console.log(voteType)
+            this.onVoteClick.emit(voteType)
+        });
+    
+        reactions.present({
+            ev: ev
+        });
+
+        */
+    
     }
 
 }

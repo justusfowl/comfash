@@ -36,7 +36,7 @@ export class MyApp {
     private translate: TranslateService, 
     platform: Platform, 
     settings: Settings, 
-    private config: Config, 
+    public config: Config, 
     private statusBar: StatusBar, 
     private splashScreen: SplashScreen, 
     private msg : MsgService, 
@@ -52,9 +52,7 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
-      this.splashScreen.hide();
-
-      
+      this.hideSplashScreen();      
     
     try{
       
@@ -105,7 +103,7 @@ export class MyApp {
 
       
       this.msg.initMsgService();
-      this.rootPage =  TabsPage//MainPage;
+      this.rootPage = TabsPage //MainPage;
 
 
     }else{
@@ -118,55 +116,17 @@ export class MyApp {
 
   }
 
-  /*
-  // Define settings for iOS
-  var iosSettings = {};
-  iosSettings["kOSSettingsKeyAutoPrompt"] = true;
-  iosSettings["kOSSettingsKeyInAppLaunchURL"] = false;
+  ionViewDidEnter(){
+    
+  }
 
-
-  // Initialise plugin with OneSignal service
-  this.signal.startInit("56791b6b-28da-4dde-9ee0-6e4e057313d4").iOSSettings(iosSettings);
-
-
-  // Control how OneSignal notifications will be shown when
-  // one is received while your app is in focus
-  this.signal.inFocusDisplaying(this.signal.OSInFocusDisplayOption.InAppAlert);
-
-
-  // Retrieve the OneSignal user id and the device token
-  this.signal.getIds()
-  .then((ids) =>
-  {
-    console.log('getIds: ' + JSON.stringify(ids));
-  });
-
-
-  // When a push notification is received handle
-  // how the application will respond
-  this.signal.handleNotificationReceived()
-  .subscribe((msg) =>
-  {
-    // Log data received from the push notification service
-    console.log('Notification received');
-    console.dir(msg);
-  });
-
-
-  // When a push notification is opened by the user
-  // handle how the application will respond
-  this.signal.handleNotificationOpened()
-  .subscribe((msg) =>
-  {
-    // Log data received from the push notification service
-    console.log('Notification opened');
-    console.dir(msg);
-  });
-
-
-  // End plugin initialisation
-  this.signal.endInit();
-  */
+  hideSplashScreen() {
+    if (this.splashScreen) {
+      setTimeout(() => {
+        this.splashScreen.hide();
+      }, 500);
+    }
+   }
 
   initTranslate() {
     // Set the default language for translation strings, and the current language.
@@ -192,6 +152,10 @@ export class MyApp {
     this.translate.get(['BACK_BUTTON_TEXT']).subscribe(values => {
       this.config.set('ios', 'backButtonText', values.BACK_BUTTON_TEXT);
     });
+  }
+
+  giveFeedback(){
+    this.nav.push("FeedbackPage");
   }
 
   openPage(page) {
@@ -236,7 +200,7 @@ export class MyApp {
 
 
       }, (err) => {
-        alert('Unable to take photo');
+        console.log('Unable to take photo');
       })
     } else {
       console.log("click?"!);

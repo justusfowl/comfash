@@ -7,7 +7,7 @@
     </ion-title>
     <ion-buttons end>
 
-        <button ion-button icon-only (click)="compareItems()">
+        <button ion-button icon-only (click)="compareItems()" *ngIf="api.compareSessionIds.length > 0">
           <ion-icon name="git-compare"></ion-icon>
         </button>
         
@@ -49,7 +49,11 @@
           [session]="session"
           [index]="i"
           (onSessionDeleteClick)="onDeleteClick($event)"
+          (onVoteClick)="onVoteClick($event, session)"
+          [style]="getSessionTileStyle(i)"
           >
+
+          
           
         </session-tile>
 

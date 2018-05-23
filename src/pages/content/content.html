@@ -16,16 +16,16 @@
           [height]="height"
           [totalCnt]="compareItems.length" 
           [index]="i"
-          (onCommentClick)="onCommentClick($event)"
+          (onCommentClick)="onCommentClick($event, i)"
           (onVoteClick)="onVoteClick($event, session)"
-          (onTagsClick)="onPurchaseTagsClick(session)"
           (onSessionRemoveClick)="onSessionRemoveClick(session, i)"
+          [class.selectedSession]="i == selectedIndex" 
           >
           
         </session-item>
       </ion-row>
-
-      <ion-list id="tag-list" class="tag-list" [class.active]="showsTags">
+<!--
+   <ion-list id="tag-list" class="tag-list" [class.active]="showsTags">
           <div class="tag-list-item" *ngFor="let tag of tags;">
               <div class="tag-body">
                 <img class="tag-avatar" [src]="tag.tagImage">
@@ -39,6 +39,8 @@
               </div>
           </div>
         </ion-list>
+-->
+     
 
       <ion-list id="comment-list" class="comment-list" [class.active]="showsComments">
         <div class="comment-add-container">

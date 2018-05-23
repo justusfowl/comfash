@@ -14,6 +14,7 @@
     </button>
   </ion-buttons>
 
+
   <div class="ar-arrow-box" *ngIf="!isPreview && isVideoCapture">
       <!-- <ion-icon class="ar-icon" name="ios-refresh-circle-outline"></ion-icon>-->
       <i class="fas fa-sync ar-icon" ></i> 
@@ -21,37 +22,67 @@
 
   <div id="onAirCapture" hidden class="recordingIcon"></div>
 
-  <ion-select class="collection-list" [(ngModel)]="collectionId" >
+  <ion-select class="collection-list" [(ngModel)]="collectionId" *ngIf="isPreview" >
     <ion-option value="0">{{ 'SELECT' | translate }}</ion-option>
     <ion-option *ngFor="let c of collectionList" [value]="c.collectionId" >#{{c.collectionTitle}}</ion-option>
   </ion-select>
 
   <img 
   #previewPictureRef 
-  [class.isVisible]="isPreview"
   id="previewPicture"
-  [class]="'filter-' + filterSelected" 
+  [class]="getPreviewClasses(true)"
   [src]="previewPicture"
   longPress [interval]="400" (onPressEnd)="previewImagePressed($event)" 
   >
+
+  <video id="previewVideo" [class]="getPreviewClasses(false)" 
+  class="video-background" preload="auto" autoplay playsinline webkit-playsinline  
+   type="video/mp4"></video>
+
+  <div #liveOverlay id="live-overlay" *ngIf="!isPreview">
+
+  </div>
+
+  <div *ngFor="let t of purchaseTags; let i = index; " class="small-purchase-tag"
+  [class.showTags]="showTags"
+  [style.top]="t.yRatio * 100 + '%'"
+  [style.left]="t.xRatio * 100 + '%'" (click)="smallTagClicked(i)" ></div>
+
   
-<button id="btn-capture-picture" class="btn-footer-cam" (click)="takePicture()" *ngIf="!isPreview" >
+<button id="btn-capture-picture" class="btn-footer-cam" (click)="capture()" *ngIf="!isPreview" >
    <div class="inner"></div>
 </button>
 
-<button id="btn-effects" (click)="toggleEffects()" *ngIf="isPreview">
-  <ion-icon class="icon" name="color-wand"></ion-icon>
+<button id="btn-effects" [class.selected]="showEffects" (click)="toggleEffects()" *ngIf="isPreview">
+  <ion-icon class="icon"  name="color-wand"></ion-icon>
   <div class="inner">Effekte</div>
 </button>
 
-<button id="btn-tags" (click)="enableTags()" *ngIf="isPreview" >
+<button id="btn-tags" [class.selected]="showTags" (click)="enableTags()" *ngIf="isPreview" >
   <ion-icon class="icon"  name="pricetags"></ion-icon>
   <div class="inner">Produkte</div>
 </button>
 
-<button id="btn-save" ion-button icon-only clear (click)="acceptAndStore()" [disabled]="collectionId == '0'">
+<button id="btn-save" ion-button icon-only clear (click)="acceptAndStore()" *ngIf="isPreview" [disabled]="collectionId == '0'">
   <ion-icon name="checkmark"></ion-icon>
 </button>
+
+
+<div class="capture-button" *ngIf="!isPreview">
+  
+  <ion-icon 
+  [class.isSelected]="captureTypePic"
+  class="icon" 
+  name="camera" 
+  (click)="setCaptureType(true)"></ion-icon>
+
+  <ion-icon 
+  [class.isSelected]="!captureTypePic"
+  class="icon" 
+  name="videocam" 
+  (click)="setCaptureType(false)"></ion-icon>
+
+</div>
 
 
 <div id="preview-footer" [class.showEffects]="showEffects" *ngIf="isPreview">
@@ -67,10 +98,12 @@
 <div id="tags-footer" [class.showTags]="showTags" *ngIf="isPreview">
 
     <div drag-item id="new-tag" class="purchase-tag-hint" *ngIf="purchaseTags.length == 0">
-      {{ 'TAG_HINT' | translate }}}
+      {{ 'TAG_HINT' | translate }}
     </div>
  
-    <div *ngFor="let t of purchaseTags"  class="purchase-tag" >
+    <div *ngFor="let t of purchaseTags; let i = index; "  
+    class="purchase-tag" [class.selected]="i == tagIndexSelected"
+    (click)="editTag(t, i)" >
   
       <img [src]="t.tagImage" >
   

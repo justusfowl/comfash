@@ -4,8 +4,13 @@ import { Session, Collection, PurchaseTag } from '../../models/datamodel';
 import { CameraPreview, CameraPreviewOptions, CameraPreviewPictureOptions } from '@ionic-native/camera-preview';
 import { Api, ConfigService, LocalSessionsService, AuthService, UtilService } from '../../providers/providers';
 import { DomSanitizer } from '@angular/platform-browser';
-
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { Camera } from '@ionic-native/camera';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
+
+declare var window : any;
+
+import * as Hammer from 'hammerjs';
 
 
 @IonicPage({
@@ -18,6 +23,7 @@ import { Camera } from '@ionic-native/camera';
 })
 export class CapturePage {
   @ViewChild('previewPictureRef') previewPictureRef: ElementRef;
+  @ViewChild('liveOverlay') liveOverlay: ElementRef;
   private pressGesture: Gesture;
 
   isPreview : boolean = false;
@@ -110,11 +116,21 @@ export class CapturePage {
   previewPicture : any;
   imageData : any;
 
+  previewVideo : any; 
+  videoData : any;
+  videoLocalPath : any;
+
   collectionList : any;
 
   resultCallback : any;
 
-  purchaseTags : PurchaseTag[] = [];
+  purchaseTags : any = [];
+  tagIndexSelected : number;
+
+  captureTypePic : boolean = true;
+
+
+  private hammer : any = Hammer;
 
   constructor(
     public navCtrl: NavController, 
@@ -131,7 +147,9 @@ export class CapturePage {
     public config : ConfigService, 
     private localSessions : LocalSessionsService, 
     private sanitizer:DomSanitizer,
-    public loadingCtrl : LoadingController) {
+    public loadingCtrl : LoadingController, 
+    private transfer: FileTransfer,
+    private screenOrientation : ScreenOrientation) {
 
       this.menu.enable(false,'mainmenu');
 
@@ -148,13 +166,12 @@ export class CapturePage {
 
       this.resultCallback = navParams.get('resultCallback');
 
-      
-      
 
       if (imageData && imageData != undefined && imageData != null){
         this.imageData = imageData;
         this.previewPicture = 'data:image/jpeg;base64,' + imageData;
         this.isPreview = true;
+        console.log("image data here")
       }
 
       platform.ready().then(() => {
@@ -171,6 +188,8 @@ export class CapturePage {
   }
 
   ionViewWillEnter() {
+    this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
+
     this.auth.validateAuth(this.navCtrl);
     this.util.tabBarInvisible();
   }
@@ -178,28 +197,57 @@ export class CapturePage {
 
   ionViewWillLeave(){
     //this.util.toggleTabBarVisible();
+    this.screenOrientation.unlock();
   }
 
 
   public ngAfterViewInit(): void {
-    
-    this.pressGesture = new Gesture(this.previewPictureRef.nativeElement);
-  
-    this.pressGesture.listen();
 
-    let self = this;
-    
-    this.pressGesture.on('doubletap', (e:Event) => {
+    if(!this.isPreview){
+
+      this.pressGesture = new Gesture(this.liveOverlay.nativeElement);
   
-      console.log(e.type);
-      self.handleDoubleTap();
+      this.pressGesture.listen();
+  
+      let self = this;
       
-    });
+      this.pressGesture.on('doubletap', (e:Event) => {
+    
+        console.log(e.type);
+        self.handleDoubleTap();
+        
+      });
+
+
+      let previewVideo = document.getElementById("previewVideo");
+
+      const instance = new Hammer(previewVideo);
+
+      instance.get("pan").set({direction: this.hammer.DIRECTION_ALL, threshold : 0})  ;
+      
+      instance.on("panmove", this.panmove.bind(this));
+
+    }
   
+  }
+
+  panmove(ev){
+
+    let video = document.getElementById("previewVideo") as any;
+
+    let prc = ev.center.x / (window.innerWidth * 0.9);
+
+    video.currentTime = prc * video.duration;
+    
   }
   
   public ngOnDestroy(): void {
-    this.pressGesture.destroy();
+    try{
+      this.pressGesture.destroy();
+    }catch(err){
+      console.log("no gesture to destroy")
+    }
+    
     this.menu.enable(true,'mainmenu');
   }
 
@@ -235,7 +283,25 @@ export class CapturePage {
 
     if (!this.tagPageIsOpen && event && this.showTags){
       this.tagPageIsOpen = true;
-      this.createTag(event.center);
+
+      let img = document.getElementById("previewPicture")
+
+      let imgInfo = this.getImgSizeInfo(img);
+      
+      let resultingCoords = {
+        "x" : event.center.x - (imgInfo.left),
+        "y" : event.center.y , 
+
+        "xRatio" : (event.center.x - (imgInfo.left )) / imgInfo.width,
+        "yRatio" : (event.center.y) / imgInfo.height
+      }
+
+      console.log("event");
+      console.log(event);
+      console.log("resultingCoords");
+      console.log(resultingCoords)
+
+      this.createTag(resultingCoords);
       
     }
 
@@ -254,6 +320,34 @@ export class CapturePage {
     addModal.present();
   }
 
+  editTag(tag : PurchaseTag, index){
+
+    console.log("HAAA")
+
+    let self = this;
+
+    let addModal = this.modalCtrl.create('TagCreatePage', {"tag": tag});
+
+    addModal.onDidDismiss((tagModified) => {
+
+      if (tagModified) {
+
+        if (tagModified.delete){
+          self.purchaseTags.splice(index, 1)
+        }else{
+          let newTag = new PurchaseTag(tagModified);
+          self.purchaseTags[index] = newTag
+        }
+
+      } 
+      self.tagPageIsOpen = false;
+
+    });
+    
+    addModal.present();
+  }
+
+
 
   handleDoubleTap(){
 
@@ -263,6 +357,14 @@ export class CapturePage {
     }else{
       this.switchCam();
     }
+  }
+
+  smallTagClicked(index){
+    if (!this.showTags){
+      this.enableTags();
+    }
+    
+    this.tagIndexSelected = index;
   }
 
 
@@ -317,13 +419,43 @@ export class CapturePage {
   setFilter(filterName){
     console.log(filterName, " selected filter")
     this.filterSelected = filterName;
+  } 
+
+  getPreviewClasses(isPic){
+    let classes = "";
+    if (this.isPreview){
+      if (isPic && this.captureTypePic){
+        classes += "isVisible "
+      }
+
+      if (!isPic && !this.captureTypePic){
+        classes += "isVisible "
+      }
+      
+    }
+    classes += 'filter-' + this.filterSelected
+
+    return classes;
+  }
+
+  setCaptureType(isPic){
+    this.captureTypePic = isPic;
+  }
+
+  capture(){
+
+    if (this.captureTypePic){
+      this.takePicture();
+    }else{
+      this.startCapture();
+    }
+
   }
 
   takePicture(){
 
-
-
     this.cameraPreview.takePicture(this.pictureOpts).then(
+
       data => {
         this.isPreview = true;
         this.previewPicture = 'data:image/jpeg;base64,' + data;
@@ -332,15 +464,43 @@ export class CapturePage {
         }else{
           this.imageData = data;
         }
-        
       }
     ).catch(error =>{
       console.log("error");
       console.log(error);
     });
 
-    //this.localSessions.captureCameraPicture(this.collectionId);
 
+  }
+
+  getRenderedSize(contains, cWidth, cHeight, width, height, pos){
+    var oRatio = width / height,
+        cRatio = cWidth / cHeight;
+    return function() {
+      if (contains ? (oRatio > cRatio) : (oRatio < cRatio)) {
+        this.width = cWidth;
+        this.height = cWidth / oRatio;
+      } else {
+        this.width = cHeight * oRatio;
+        this.height = cHeight;
+      }      
+      this.left = (cWidth - this.width)*(pos/100);
+      this.right = this.width + this.left;
+      return this;
+    }.call({});
+  }
+  
+  getImgSizeInfo(img) {
+    var pos = getComputedStyle(img).getPropertyValue('object-position').split(' ');
+
+    let imgInfo = this.getRenderedSize(true,
+      img.width,
+      img.height,
+      img.naturalWidth,
+      img.naturalHeight,
+      parseInt(pos[0]));
+
+    return imgInfo ;
   }
 
   stopPreviewCam(){
@@ -360,14 +520,11 @@ export class CapturePage {
   setUIRecording(isRecording: boolean){
 
     let onAirIcon = document.getElementById("onAirCapture");
-    let footer = document.getElementById("footer");
 
     if (isRecording){
       onAirIcon.hidden = false;
-      footer.hidden = true;
     }else{
       onAirIcon.hidden = true;
-      footer.hidden = false;
     }
   }
  
@@ -433,57 +590,156 @@ export class CapturePage {
 
       comp.setUIRecording(false);
 
+      let loading = comp.loadingCtrl.create({
+        content: 'Please wait...'
+      });
+    
+      loading.present();
+
+
       setTimeout(function(){
         //comp.upload(filePath);
-        console.log("here you go, the filepath for uploading:", filePath)
-      }, 100);
+        console.log("here you go, the filepath for uploading:", filePath);
+
+        comp.videoLocalPath = filePath; 
+        let filename = filePath.substring(filePath.lastIndexOf("/")+1, filePath.length);
+
+        console.log(filename);
+
+        comp.localSessions.readVidAsData(filename).then(
+          data => {
+            comp.isPreview = true;
+
+            let video = document.getElementById("previewVideo") as any;
+            video.src = data;
+            
+            video.oncanplay = function (){
+              
+              video.play();
+
+              loading.dismiss();
+
+            }
+
+          }
+        ).catch(error =>{
+          console.log("error");
+          console.log(JSON.stringify(error));
+
+          loading.dismiss();
+          comp.isPreview = false;
+          comp.startLiveCam();
+        })
+
+      }, 500);
 
     }, function (err){
       console.log("error for capturing:")
       console.log(JSON.stringify(err));
+      comp.isPreview = false;
+      comp.startLiveCam();
       return err;
     })
     
 
   }
 
+    upload() {
+
+
+      let loading = this.loadingCtrl.create({
+        content: 'Please wait...'
+      });
+    
+      loading.present();
+
+      let fileData = this.videoLocalPath;
+
+      var comp = this;
+  
+      let options: FileUploadOptions = {
+        fileKey: 'file',
+        fileName: 'testfile.mp4', 
+         mimeType : 'video/mp4'
+      }
+
+      let headers = {
+        "Authorization" : "Bearer " + this.auth.getToken()
+      }
+  
+      options.headers = headers; 
+   
+      var fileTransfer = this.transfer.create(); 
+  
+      let endpoint = this.config.getAPIBase() + '/' + "imgcollection/" + this.collectionId + "/session"
+      console.log(endpoint);
+  
+      fileTransfer.upload(fileData, endpoint , options)
+      .then((data) => {
+        console.log(data)
+        console.log("SUCCESS");
+
+        loading.dismiss();
+        comp.navBack();
+        
+   
+      }, (err) => {
+       console.log(err)
+       loading.dismiss();
+       alert("Something went wrong, please try again")
+       console.log("ERROR")
+      })
+      
+   
+    }
+
+
   navBack(){
-    console.log("navigating back");
     this.stopPreviewCam();
     this.util.tabBarVisible();
-
     this.navCtrl.pop();
-
    }
 
   acceptAndStore(){ 
 
     let self = this;
 
-    let loading = this.loadingCtrl.create({
-      content: 'Please wait...'
-    });
-  
-    loading.present();
+
+    this.util.tabBarVisible();
 
 
     setTimeout(function(){ 
       self.stopPreviewCam();
-      this.util.tabBarVisible();
+      
     }, 1000);
-    
-    let resultItem = {
-      "collectionId" : this.collectionId,
-      "filterOption" : this.filterSelected,
-      "newTags" : this.purchaseTags,
-      "data" : this.imageData, 
-      "mimeType" : "image/jpg"
-    };
 
-    this.localSessions.storeImage(resultItem).then(res => {
-      this.navCtrl.pop();
-      loading.dismiss();
-    });
+    if (this.captureTypePic){
+
+
+      let loading = this.loadingCtrl.create({
+        content: 'Please wait...'
+      });
+    
+      loading.present();
+
+      
+      let resultItem = {
+        "collectionId" : this.collectionId,
+        "filterOption" : this.filterSelected,
+        "newTags" : this.purchaseTags,
+        "data" : this.imageData, 
+        "mimeType" : "image/jpg"
+      };
+  
+      this.localSessions.storeImage(resultItem).then(res => {
+        this.navCtrl.pop();
+        loading.dismiss();
+      });
+    }else{
+      this.upload();
+    }
+    
+    
     
     
   }

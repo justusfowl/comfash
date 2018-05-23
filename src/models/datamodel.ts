@@ -339,6 +339,10 @@
       this.myVote = vote;
       this.hasVote = true;
     }
+
+    setVoteAvg(newAvg){
+      this.voteAvg = parseInt(newAvg)
+    }
   
     removeMyVote(){
       delete this.myVote;
@@ -400,8 +404,11 @@
       }
     }
   
-    getSessionItemPath(isPic = true){
+    getSessionItemPath(){
+
+      return this.sessionItemPath;
       
+      /*
       if (isPic){
         if (this.sessionItemType.indexOf("video") > -1){
           return this.getThumbnail();
@@ -411,6 +418,7 @@
       }else{
         return this.sessionItemPath;
       }
+      */
       
     }
   
@@ -705,6 +713,7 @@
       messageId: number;
       isUnread : boolean;
       senderName : string;
+      senderUserId : string;
       senderAvatarPath : string;
       receiverName : string;
       messageBody : string;
@@ -719,6 +728,7 @@
         this.messageId = fields.messageId;
         this.isUnread = fields.isUnread;
         this.receiverName = fields.receiverName;
+        this.senderUserId = fields.senderUserId;
         this.senderName = fields.senderName;
         this.senderAvatarPath = fields.senderAvatarPath;
         this.messageBody = fields.messageBody; 
@@ -734,6 +744,10 @@
   
       getAuthorName(){
         return this.senderName;
+      }
+
+      getAuthorUserId(){
+        return this.senderUserId;
       }
   
       getMessage() : string{
@@ -781,6 +795,7 @@
       itemCreator : string; 
       itemCreatorAvatarPath : string; 
 
+      sessionItemType: string; 
       sessionItemPath : string; 
       sessionThumbnailPath : string;
       sessionCreated : Date;
@@ -818,6 +833,7 @@
         // referred session
         this.sessionId = fields.sessionId;
         this.sessionItemPath = fields.sessionItemPath; 
+        this.sessionItemType = fields.sessionItemType;
         this.sessionThumbnailPath = fields.sessionThumbnailPath  || '/img/hangersbg.png';
         this.sessionCreated = new Date(fields.sessionCreated);
         this.primeColor = fields.primeColor;
@@ -908,6 +924,10 @@
         this.voteCnt++;
         this.myVote = vote;
       }
+
+      setVoteAvg(newAvg){
+        this.voteAvg = parseInt(newAvg)
+      }
     
       removeMyVote(){
         delete this.myVote;
@@ -932,7 +952,7 @@
         this.userId = fields.userId;
         this.userName = fields.userName;
         this.userAvatarPath = fields.userAvatarPath || '/img/hangersbg.png';
-        this.isFollowed = fields.isFollowed
+        this.isFollowed = fields.isFollowed || false;
       }
     
       getUserId(){

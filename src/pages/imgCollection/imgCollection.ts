@@ -150,10 +150,6 @@ export class ImgCollectionPage implements OnInit{
 
   }
 
-
-
-
-
   addItem() {
     
     this.navCtrl.push('CapturePage', {
@@ -220,11 +216,123 @@ export class ImgCollectionPage implements OnInit{
 
   }
 
-  showReactions(ev: any, session: any){
+  onVoteClick(voteType: number, session: Session){
+      this.voteHdl.handleVoteClicked(voteType, session);
+  }
 
-    this.voteHdl.showReactions(ev, session);
+  protected isOdd(num){
+    return num % 2;
+  }
+  protected isThreeDivide(num){
+    return !(num % 3);
+  }
 
-}
+  getSessionTileStyle(index){
+    let totalCnt = this.collection.sessions.length; 
+    let viewWidth = window.innerWidth;
+
+    let styleStr = "";
+
+    let rowCnt; 
+
+    if (totalCnt > 1){
+      if (viewWidth <= 400){
+        rowCnt = 2;
+        
+        if (index +1 < totalCnt){
+          if (!this.isOdd(index)){
+            styleStr = this.addBorderToStyleStr(styleStr, "right");
+            if (index + 2 < totalCnt){
+              styleStr = this.addBorderToStyleStr(styleStr, "bottom");
+            }
+          }else{
+            styleStr = this.addBorderToStyleStr(styleStr, "left");
+            if (index + 1 < totalCnt){
+              styleStr = this.addBorderToStyleStr(styleStr, "bottom");
+            }
+          }
+        }else{
+          if (this.isOdd(totalCnt)){
+            styleStr += "width: 100%;"
+          }
+          
+        }
+
+
+        if (index >= rowCnt){
+          styleStr = this.addBorderToStyleStr(styleStr, "top");
+        }
+  
+      }else{
+        rowCnt = 3;
+
+        if ((index + 1 < totalCnt || index + 2 < totalCnt)){
+
+          
+
+           // check if image is the left
+          if (this.isThreeDivide(index) || index == 0){
+
+
+            styleStr = this.addBorderToStyleStr(styleStr, "right");
+
+            if (index + 3 < totalCnt){
+              styleStr = this.addBorderToStyleStr(styleStr, "bottom");
+            }
+
+           // check if the image is the right one
+          }else if (this.isThreeDivide(index+1)){
+
+            styleStr = this.addBorderToStyleStr(styleStr, "left");
+
+            if (index + 1 < totalCnt){
+              styleStr = this.addBorderToStyleStr(styleStr, "bottom");
+            }
+
+             // check if image is the middle one
+          }else if (this.isThreeDivide(index+2)){
+
+            styleStr = this.addBorderToStyleStr(styleStr, "left");
+            styleStr = this.addBorderToStyleStr(styleStr, "right");
+
+            if (index + 2 < totalCnt){
+              styleStr = this.addBorderToStyleStr(styleStr, "bottom");
+            }
+          }
+
+        }else{
+          if (!this.isThreeDivide(totalCnt)){
+            if (!this.isOdd(totalCnt)){
+              // for last pic if i
+              styleStr += "width: 50%;"
+            }else{
+              // for last pic if i
+              styleStr += "width: 100%;"
+            }
+          }
+
+          
+        }
+
+        // add top if it is in row greater than one
+        if (index >= rowCnt){
+          styleStr = this.addBorderToStyleStr(styleStr, "top");
+        }
+  
+      }
+    }
+
+
+    return this.util.sanitizeStyle(styleStr);
+
+
+
+  }
+
+  addBorderToStyleStr(inputStr, location){
+    return inputStr += " border-"+ location + ": 1px solid white;";
+  }
+
 
   sortSessionsByVotes(){
 

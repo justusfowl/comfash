@@ -1,0 +1,104 @@
+@import "../../theme/variables";
+
+
+page-search {
+
+  #search-bg{
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100vw; 
+    height: 90vh;
+    display: flex; 
+    align-content: center;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 1;
+    position: absolute;
+  }
+
+  #search-bg .icon{
+      width: 100%; 
+      text-align: center;
+      color: #aaaaaa7d;
+      font-size: 40px;
+  }
+
+  #search-bg .text{
+      width: 100%; 
+      text-align: center;
+      color: #aaaaaa7d;
+      font-size: 15px;
+  }
+
+
+  .search-wrapper{
+    z-index: 2;
+    position: relative;
+  }
+
+  .search-list{
+    margin-bottom: 200px;
+    margin-left: 16px;
+    margin-right: 16px;
+  }
+
+  .search-list ion-label{
+    margin: 0;
+  }
+
+  .result-item{
+    display: flex; 
+    align-items: center;
+    color: $background-color;
+    margin-bottom: 10px;
+    padding-bottom: 10px; 
+    border-bottom: 1px solid #ffffff7d;
+  }
+
+  .result-item .avatar{
+    display: inline-flex;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 40px; 
+    width: 40px; 
+    border-radius: 25px;
+    margin-right: 20px;
+    overflow: hidden;
+    
+  }
+
+   .avatar .icon{
+     width: 100%; 
+     margin: 0; 
+     padding-top: 10px; 
+     text-align: center;
+   }
+
+  .error-msg{
+    padding-left: 16px;
+    font-size: 10px; 
+    color: color($colors, primary, base);
+
+  }
+
+  .search-list .item-block,
+  .search-list .item-inner,
+  {
+    border: unset !important;
+    border-bottom: unset; 
+  }
+
+  .search-list .item{
+    margin-bottom: 10px;
+  }
+
+  link-username a{
+      color: $background-color !important;
+      font-size: 16px; 
+      font-weight: 100;
+
+  }
+
+}

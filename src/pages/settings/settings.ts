@@ -18,6 +18,7 @@ import { ConfigService, LocalSessionsService, AuthService } from '../../provider
 export class SettingsPage {
 
   public now : any = new Date().getTime();
+  public displayDevDetails : boolean = false;
 
   constructor(
     public navCtrl: NavController, 
@@ -33,6 +34,27 @@ export class SettingsPage {
 
   deleteLocalUserData(){ 
     this.localSessions.deleteLocalSessions();
+  }
+
+  toggleFeedback(){
+    var button = document.getElementById("feedback-btn") as any;
+
+    if (this.config.enableFeedback){
+      
+      button.style.display = "";
+
+    }else{
+      button.style.display = "none";
+
+    }
+  }
+
+  toggleDisplayDev(){
+    if (this.displayDevDetails){
+      this.displayDevDetails = false;
+    }else{
+      this.displayDevDetails = true;
+    }
   }
 
 }

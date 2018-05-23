@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { IonicPage, NavController, ToastController, ViewController } from 'ionic-angular';
-import { User, MsgService, AuthService } from '../../providers/providers';
+import { User, MsgService, AuthService, LocalSessionsService, ConfigService } from '../../providers/providers';
+
+import { MainPage } from '../pages';
+
 
 @IonicPage()
 @Component({
@@ -21,6 +24,7 @@ export class SignupPage {
 
   // Our translated text strings
   private signupErrorString: string;
+  private loginErrorString : string;
 
   constructor(
     public viewCtrl: ViewController, 
@@ -29,10 +33,16 @@ export class SignupPage {
     public toastCtrl: ToastController,
     public translateService: TranslateService, 
     public auth : AuthService, 
-    private msg : MsgService) {
+    private msg : MsgService, 
+    public localSession: LocalSessionsService,
+    public config: ConfigService) {
 
     this.translateService.get('SIGNUP_ERROR').subscribe((value) => {
       this.signupErrorString = value;
+    })
+
+    this.translateService.get('LOGIN_ERROR').subscribe((value) => {
+      this.loginErrorString = value;
     })
   }
 
@@ -41,28 +51,43 @@ export class SignupPage {
     this.auth.signUp(this.account)
     .then((data : any) => {
       this.viewCtrl.dismiss();
-      this.msg.alert("WELCOME_SIGNUP")
+      this.msg.alert("WELCOME_SIGNUP");
+
+      this.auth.login(this.account.userId, this.account.password).then(
+        (data) => {
+  
+          // init messanging service and connect to sockets
+          this.msg.initMsgService();
+  
+          // init local sessions ( creating user directory and loading sessions);
+          this.localSession.initLocalSession();
+          
+  
+          let isShown = this.config.tutorialShown;
+  
+         if (isShown){
+          this.navCtrl.setRoot(MainPage, {
+            userId : this.auth.getUserId()
+          });
+        } else{
+          this.navCtrl.setRoot("TutorialPage");
+        } 
+  
+        },
+        error => {
+  
+          let toast = this.toastCtrl.create({
+            message: this.loginErrorString,
+            duration: 1000,
+            position: 'top'
+          });
+          toast.present();
+        }
+      )
+
+
     }).catch(e => this.handleSignupError(e));
 
-    /*
-    // Attempt to login in through our User service
-    this.api.post('auth/register', this.account).subscribe((resp) => {
-      this.viewCtrl.dismiss();
-      this.msg.alert('Welcome to comfash - glad you are here!')
-    }, (err) => {
-
-      //this.navCtrl.push(MainPage);
-
-      // Unable to sign up
-      let toast = this.toastCtrl.create({
-        message: this.signupErrorString,
-        duration: 3000,
-        position: 'top'
-      });
-      toast.present();
-    });
-
-    */
   }
 
   handleSignupError(error){

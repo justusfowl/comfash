@@ -5,19 +5,27 @@
 activity-item{
     // session-tile is configured in app.scss
 
+    vid-icon{
+        font-size: 10px;
+        margin-right: 0 !important;
+    }
+
     .session-img{
-        height: 100vh; 
-        width: 100vw; 
-        top: 0; 
-        left: 0; 
+        height: 65vh; 
+        width: 90vw; 
         object-fit: cover; 
         object-position: center;
+        padding-top: 80px;
     }
 
     .session-tile-details{
         bottom: unset; 
         top: 0;
         background-color: rgba(color($colors, very-dark, base), 0.95)
+    }
+
+    .session-tile-details .title{
+        margin: 5px;
     }
 
     .activity-item-details{
@@ -38,7 +46,7 @@ activity-item{
 
     .creator-profile-avatar{
         padding: 5px;
-        border-radius: 2px;
+        border-radius: 50px;
         height: 50px;
         width: 50px; 
         background-position: center;
@@ -47,9 +55,9 @@ activity-item{
     }
 
     .colOwner-profile-avatar{
-        border-radius: 2px;
-        height: 20px;
-        width: 20px; 
+        border-radius: 25px;
+        height: 30px;
+        width: 30px; 
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
@@ -64,6 +72,7 @@ activity-item{
     .session-tile-info-container{
         margin-left: 10px;
         max-width: 75vw;
+        padding-top: 10px;
     }
 
     .session-tile-info.left{
@@ -72,6 +81,7 @@ activity-item{
 
     .colOwner{
         font-weight: 100;
+        margin-top: 5px;
     }
 
     .session-tile-info p{
@@ -83,7 +93,7 @@ activity-item{
         font-family: Roboto; 
         font-weight: 100;
         font-size: 15px;
-        color: $text-color;
+        color: $background-color;
         margin-bottom: 5px;
     }
 
@@ -91,11 +101,20 @@ activity-item{
         font-family: Roboto; 
         font-weight: 100;
         font-size: 10px;
-        color: $text-color;
+        color: $background-color;
     }
 
-    .link-username,
+
     .link-collection{
+        color: white;
+    }
+
+    .link-username{
+        color: color($colors, primary, base);
+        font-weight: 400;
+    }
+
+    .colOwner .link-username{
         color: white;
     }
 

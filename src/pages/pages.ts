@@ -8,7 +8,8 @@ export const MainPage = 'TabsPage';
 // The initial root pages for our tabs (remove if not using tabs)
 export const Tab1Root = 'MyRoomPage';
 export const Tab2Root = 'FittingStreamPage';
-export const Tab3Root = 'SettingsPage';
+export const Tab3Root = 'SearchPage';
 export const Tab4Root = 'SettingsPage';
+export const Tab5Root = 'FeedbackPage';
 
 export const TabsPage = 'TabsPage';

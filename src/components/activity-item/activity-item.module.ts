@@ -12,6 +12,10 @@ import { LinkUsernameModule } from "../link-username/link-username.module";
 import { LinkCollectionModule } from '../link-collection/link-collection.module';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { IonicImageViewerModule, ImageViewerComponent } from '../image-viewer/ionic-image-viewer';
+
+import { VidIconModule } from '../vid-icon/vid-icon.module';
+
 
 @NgModule({
   declarations: [
@@ -25,7 +29,9 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule.forChild(),
     LongPressModule, 
     LinkUsernameModule,
-    LinkCollectionModule
+    LinkCollectionModule,
+    IonicImageViewerModule,
+    VidIconModule
    ],
   exports: [
     DynamicActivityItemComponent, 
@@ -36,7 +42,8 @@ import { TranslateModule } from '@ngx-translate/core';
   entryComponents:[
     VoteSessionItemComponentActivity,
     CommentSessionItemComponentActivity,
-    SessionItemComponentUnknown
-  ]
+    SessionItemComponentUnknown,
+    ImageViewerComponent
+    ]
 })
 export class DynamicActivityItemModule {}

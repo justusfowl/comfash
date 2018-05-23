@@ -8,6 +8,8 @@ import { IonicPageModule } from 'ionic-angular';
 
 import { IonicImageViewerModule, ImageViewerComponent } from '../image-viewer/ionic-image-viewer';
 
+import { VidIconModule } from '../vid-icon/vid-icon.module';
+
 @NgModule({
   declarations: [
     SessionTileComponent
@@ -15,7 +17,8 @@ import { IonicImageViewerModule, ImageViewerComponent } from '../image-viewer/io
    imports : [
     IonicPageModule.forChild(SessionTileComponent),
     LongPressModule,
-    IonicImageViewerModule
+    IonicImageViewerModule,
+    VidIconModule
    ],
   exports: [
     SessionTileComponent

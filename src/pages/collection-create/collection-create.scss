@@ -51,6 +51,10 @@ page-collection-create {
     margin-bottom: 20px;
   }
 
+  .form-item p{
+    color: white;
+  }
+
   .content{
     background-color: $background-color !important;
     background-image: unset; 
@@ -71,12 +75,24 @@ page-collection-create {
   }
 
   .selected-user{
-    display: inline-block; 
+    display: flex; 
     margin: 4px; 
     background-color:  color($colors, light, base);
     padding: 4px; 
     border-radius: 4px;
     font-size: 12px; 
+    align-items: center;
+  }
+
+  .selected-user img{
+    height: 20px; 
+    width: 20px; 
+    border-radius: 20px;
+    margin-right: 5px;
+  }
+
+  .selected-user .icon{
+    margin-left: 5px;
   }
 
   .search-list{
@@ -89,11 +105,49 @@ page-collection-create {
     margin: 0;
   }
 
+  .result-item{
+    display: flex; 
+    align-items: center;
+  }
+
+  .result-item .avatar{
+    display: inline-flex;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 40px; 
+    width: 40px; 
+    border-radius: 25px;
+    margin-right: 20px;
+    overflow: hidden;
+
+  }
+
+   .avatar .icon{
+     width: 100%; 
+     margin: 0; 
+     padding-top: 10px; 
+     background-color: rgba(color($colors, primary, base), 0.7); 
+     text-align: center;
+   }
+
   .error-msg{
     padding-left: 16px;
     font-size: 10px; 
     color: color($colors, primary, base);
 
   }
+
+  .search-list .item-block,
+  .search-list .item-inner,
+  {
+    border: unset !important;
+    border-bottom: unset; 
+  }
+
+  .search-list .item{
+    margin-bottom: 10px;
+  }
+
 
 }

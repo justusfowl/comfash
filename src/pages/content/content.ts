@@ -8,9 +8,13 @@ import { Api,
   LocalSessionsService, 
   VoteHandlerService,
   SettingHandlerService } from '../../providers/providers';
+
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import * as Hammer from 'hammerjs';
 import * as $ from 'jquery';
 
 window['$'] = window['jQuery'] = $;
+
 
 @IonicPage({
   segment: "content/:collectionId/:compareSessionIds", 
@@ -49,6 +53,8 @@ export class ContentPage implements AfterViewInit {
   selectedIndex : number = -1; 
   collection : Collection;
 
+  private hammer : any = Hammer;
+
   constructor(
     public navCtrl: NavController, 
     navParams: NavParams, 
@@ -60,7 +66,8 @@ export class ContentPage implements AfterViewInit {
     public util : UtilService, 
     private localSession: LocalSessionsService, 
     private voteHdl : VoteHandlerService, 
-    public settingsHdl : SettingHandlerService) {
+    public settingsHdl : SettingHandlerService, 
+    private screenOrientation : ScreenOrientation) {
 
         this.compareItems.length = 0; 
 
@@ -102,6 +109,8 @@ export class ContentPage implements AfterViewInit {
               this.compareItems.push(s);
             });
 
+            this.setScreenOrientation();
+
           },
           error => {
             this.api.handleAPIError(error);
@@ -119,39 +128,59 @@ export class ContentPage implements AfterViewInit {
       this.util.tabBarVisible();
     }
 
+    setScreenOrientation(){
+      if (this.compareItems.length > 2){
+        this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.LANDSCAPE);
+      }else{
+        this.screenOrientation.unlock();
+      }
+    }
+
+    panmove(ev){
+      
+      let prc = ev.center.x / (window.innerWidth * 0.9);
+      this.slide(prc)
+    }
 
    ngAfterViewInit(){
+
+    let compareRow = document.getElementById("row-compare-items");
+
+    const instance = new Hammer(compareRow);
+
+    instance.get("pan").set({direction: this.hammer.DIRECTION_ALL, threshold : 0})  ;
     
-      /*
-      $('#row-compare-items').bind('touchmove', function (evt : any) {
-        console.log(evt);
-        var currentY = evt.originalEvent.touches[0].clientY;
-      });
-      */
+    instance.on("panmove", this.panmove.bind(this));
 
-      setTimeout(function(){ 
-        let videos : any = $('video.video-background');
+    setTimeout(function(){
+      const videos : any = document.getElementsByTagName("video");
 
-        for (var i=0; i<videos.length; i++){
-          videos[i].pause()
-        }
-      }, 1500);
+      for (var i = 0; i<videos.length; i++){
+        let element = videos[i];
+        element.pause()
+      }
+
+    },1000);
+
    }
 
-   toggleCommentShow(session, forceClose = false){
+   toggleCommentShow(session, index, forceClose = false){
 
       if (this.selectedSession["sessionId"] != session.getId() && !forceClose){
         this.showsComments = true;
         this.height = "70";
+        this.selectedIndex = index;
         return;
       }
 
       if (this.showsComments || forceClose){
         this.showsComments = false;
         this.height = "100";
+        this.selectedIndex = -1;
       }else{
           this.showsComments = true;
           this.height = "70";
+          this.selectedIndex = index;
       }
 
    }
@@ -174,22 +203,6 @@ export class ContentPage implements AfterViewInit {
 
   }
 
-  goToTagSite(url){
-    window.open(url, '_system', 'location=yes')
-  }
-
-   onPurchaseTagsClick(session : Session){
-     console.log(session.tags);
-
-    this.toggleCommentShow(session, true);
-    this.toggleTagsShow(session);
-
-    this.selectedSession = session;
-
-    this.tags = session.tags;
-
-   }
-
    onSessionRemoveClick(session : Session, index : number){
 
     console.log("i am in the content.jsremove function");
@@ -209,6 +222,8 @@ export class ContentPage implements AfterViewInit {
       this.selectedSession = this.compareItems[0];
     }
 
+    this.setScreenOrientation();
+
 
   }
 
@@ -216,12 +231,10 @@ export class ContentPage implements AfterViewInit {
       this.voteHdl.handleVoteClicked(voteType, session);
    }
 
-   onCommentClick(session : Session){
-
-    console.log("comment got clicked", session);
+   onCommentClick(session : Session, index: number){
 
     this.toggleTagsShow(session, true);
-    this.toggleCommentShow(session);
+    this.toggleCommentShow(session, index);
     
     
     if (this.showsComments){
@@ -350,29 +363,6 @@ export class ContentPage implements AfterViewInit {
    }
    */
 
-  scaleToFill() {
-
-    try{
-
-        let videoTag : any = $('video.video-background')[0];
-
-        var $video = $(videoTag),
-            videoRatio = videoTag.videoWidth / videoTag.videoHeight,
-            tagRatio = $video.width() / $video.height(),
-            val;
-
-        if (videoRatio < tagRatio) {
-            val = tagRatio / videoRatio * 1.02;
-        } else if (tagRatio < videoRatio) {
-            val = videoRatio / tagRatio * 1.02;
-        }
-
-      return 'scale(' + parseFloat(val) + ')';
-
-    }catch(err){
-      return 'scale(1)'
-    }
-}
 
   /*
   getImgComment(session: Session){
@@ -525,19 +515,6 @@ export class ContentPage implements AfterViewInit {
     }
   }
 
-  voteChange(voteType, session){
-
-    let vote = new Vote({
-      sessionId : session.getId(), 
-      userId : this.auth.getUserId(), 
-      voteType : voteType
-    }); 
-
-    session.myVote = vote;
-
-    this.api.upsertVote(this.api.selectedCollection.getId() , session.getId(), vote);
-
-  }
 
 
   checkIfMyVoteIsActive(session : Session){
@@ -553,17 +530,18 @@ export class ContentPage implements AfterViewInit {
     }
   }
 
-  slide(event){
+  slide(prc){
     let comp = this;
     const videos : any = document.getElementsByTagName("video");
     for (var i = 0; i<videos.length; i++){
       let element = videos[i];
-      element.currentTime = (comp.prcSessionItem / 100) * element.duration;
+      element.currentTime = prc * element.duration;
     }
   }
 
    navBack(){
       this.navCtrl.pop();
+      this.screenOrientation.unlock();
    }
 
 }

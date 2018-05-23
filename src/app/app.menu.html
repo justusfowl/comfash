@@ -22,12 +22,16 @@
 
         
             <ion-list>
-
-            <button class="menu-item" menuClose ion-item (click)="doLogout()" [hidden]="!auth.getAuthStatus()">
-            {{ 'LOGOUT' | translate }}
-            </button>
+                <button class="menu-item" menuClose ion-item (click)="doLogout()" [hidden]="!auth.getAuthStatus()">
+                {{ 'LOGOUT' | translate }}
+                </button>
             </ion-list>
         </ion-content>
 
     </ion-menu>
+
+    <button id="feedback-btn" (click)="giveFeedback()">
+        <ion-icon name="paper-plane"></ion-icon>
+    </button>
+
 <ion-nav #content [root]="rootPage"></ion-nav>

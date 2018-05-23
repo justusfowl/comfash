@@ -13,7 +13,7 @@ page-my-room {
     .profile-area{
         
         position: relative;
-        height: 120px;
+        height: 65px;
         width: 100vw;
         margin-bottom:20px;
         //transition: 0.5s ease;
@@ -46,7 +46,7 @@ page-my-room {
 
     .profile-avatar{
         left: 12px;
-        bottom: -8px;
+        bottom: -40px;
         border-radius: 100px;
         position: absolute;
         height: 100px;
@@ -55,6 +55,8 @@ page-my-room {
         background-repeat: no-repeat;
         background-size: cover;
         border: 5px solid white;
+        background-color: white;
+        background-image: url("../assets/img/hangersbg.png");
     }
 
 
@@ -62,7 +64,11 @@ page-my-room {
         height: 30px; 
         margin-top: 8px;
         font-family: Roboto;
-        font-size:16px;
+        font-size:12px;
+        position: absolute;
+        bottom: -18px; 
+        right: 15px;
+        border-radius: 15px;
     }
 
     .follow-btn-small{
@@ -106,7 +112,7 @@ page-my-room {
         font-size: 20px;
         font-weight: 100;
         left: 120px;
-        top: 50px;
+        bottom: 5px;
         position: absolute;
         color : color($colors, dark-text, base);
     }
@@ -169,7 +175,11 @@ page-my-room {
     }
 
     .collection-list{
-        margin-top: 130px;
+        margin-top: 85px;
+    }
+
+    .collection-list .item{
+        margin-bottom: 10px;
     }
 
     .swiper-slide img{
@@ -196,6 +206,24 @@ page-my-room {
 
     .local-item{
         color: red;
+    }
+
+    .slide{
+        position: relative;
+    }
+
+    .slide img{
+        z-index: 1;
+    }
+
+    .slide-overlay{
+        position: absolute; 
+        top: 0; 
+        left: 0;
+        height: 100%; 
+        width: 100%; 
+        background-color: rgba(0,0,0,0.3);
+        z-index: 2;
     }
 
 

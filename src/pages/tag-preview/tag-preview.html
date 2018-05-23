@@ -1,0 +1,16 @@
+<ion-content no-sroll no-bounce>
+ 
+    <div class="tag-list-item">
+        <div class="tag-body">
+          <img class="tag-avatar" [src]="myTag.tagImage">
+          <div class="tag-text">
+              {{myTag.tagTitle}}
+              <div class="tag-list-item-detail">
+                {{myTag.tagSeller}}
+              </div>
+          </div>
+          <ion-icon class="tag-link" name="link" (click)="openUrl()"></ion-icon>
+        </div>
+        
+    </div>
+</ion-content>

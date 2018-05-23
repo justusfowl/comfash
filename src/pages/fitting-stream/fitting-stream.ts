@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { IonicPage, NavController, Content, LoadingController} from 'ionic-angular';
+import { IonicPage, NavController, Content} from 'ionic-angular';
 import { Api, ConfigService, UtilService, MsgService, VoteHandlerService, AuthService } from '../../providers/providers';
 import { TranslateService } from '@ngx-translate/core';
 import { TrendItem, Session } from '../../models/datamodel';
@@ -16,9 +16,6 @@ export class FittingStreamPage {
 
   @ViewChild(Content)
   content : Content;
-
-  @ViewChild("loaderContainer")
-  loader : ElementRef;
 
   streamOptions = {
     limit : 3, 
@@ -46,8 +43,7 @@ export class FittingStreamPage {
     public config: ConfigService,
     public auth : AuthService,
     public util : UtilService, 
-    private voteHdl : VoteHandlerService, 
-    public loadingCtrl : LoadingController,
+    private voteHdl : VoteHandlerService,
     public msg: MsgService) {
 
     
@@ -83,23 +79,18 @@ export class FittingStreamPage {
     };
   }
 
-  toggleLoad(){
-    const container = this.loader.nativeElement;
-    container.classList.toggle("active");
-  }
 
 
   getTrendStream (refresher? : any, reloadBeginning = false){
 
-    let comp = this;
-
-    if (reloadBeginning){
-      comp.toggleLoad();
-    }
-    
+    let comp = this;  
 
     console.log("calling the api with the following options:")
     console.log(this.streamOptions);
+
+    if (reloadBeginning){
+      this.resetStreamOptions();
+    }
 
     this.api.getTrendStream(this.streamOptions).subscribe(
       (trendStream : Array<TrendItem>) => {
@@ -115,11 +106,11 @@ export class FittingStreamPage {
 
             });
 
-            comp.toggleLoad();
-
           }else{
             comp.api.streamItems = comp.api.streamItems.concat(trendStream.map(element => new TrendItem(element)));
           }
+
+          console.log(comp.api.streamItems)
           
           if (refresher){
             refresher.complete();

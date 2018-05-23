@@ -1,3 +1,9 @@
+
+
+.custom-reactions-popover .popover-content{
+    max-width: 260px;
+}
+
 page-reactions {
  
     ion-content {
@@ -37,7 +43,7 @@ page-reactions {
 
     .unvote-icon{
         padding-left: 15px;
-    }
+    } 
 
     .reaction-icon{
         color: darkgrey;

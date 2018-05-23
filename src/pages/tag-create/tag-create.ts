@@ -22,6 +22,8 @@ export class TagCreatePage {
 
   myCoords : any;
 
+  canDelete : boolean = false;
+
   constructor(
     params: NavParams,
     public navCtrl: NavController, 
@@ -31,18 +33,43 @@ export class TagCreatePage {
     private loadingCtrl : LoadingController) {
 
     let coords = params.get('coords');
+    let tag = params.get('tag');
 
-    this.myCoords = coords;
+    if (coords){
+      this.myCoords = coords;
 
 
+      this.purchaseTagForm = formBuilder.group({
+        tagTitle : ['', Validators.required],
+        tagUrl: ['', Validators.required],
+        tagImage: ['', Validators.required],
+        tagSeller: ['', Validators.required],
+        tagBrand: [''],
+      });
 
-    this.purchaseTagForm = formBuilder.group({
-      tagTitle : ['', Validators.required],
-      tagUrl: ['', Validators.required],
-      tagImage: ['', Validators.required],
-      tagSeller: ['', Validators.required],
-      tagBrand: [''],
-    });
+    }else if (tag){
+
+      this.hasResolved = true;
+      this.isReadyToSave = true;
+
+      this.previewItem = tag;
+
+      this.canDelete = true;
+
+      this.purchaseTagForm = formBuilder.group({
+        tagTitle : [tag.tagTitle, Validators.required],
+        tagUrl: [tag.tagUrl, Validators.required],
+        tagImage: [tag.tagImage, Validators.required],
+        tagSeller: [tag.tagSeller, Validators.required],
+        tagBrand: [tag.tagBrand],
+      });
+      this.myCoords = {
+        xRatio : tag.xRatio, 
+        yRatio : tag.yRatio
+      };
+
+    }
+
 
     // Watch the form for changes, and
     this.purchaseTagForm.valueChanges.subscribe((v) => {
@@ -87,7 +114,6 @@ export class TagCreatePage {
   }
 
   previewTag(values){
-    console.log(values);
     this.previewItem = values;
   }
 
@@ -106,11 +132,17 @@ export class TagCreatePage {
     if (!this.purchaseTagForm.valid) { return; }
     let tag = new PurchaseTag(this.purchaseTagForm.value);
 
-    let xRatio = this.myCoords.x / 100;
-    let yRatio = this.myCoords.y / 100;
-    tag.xRatio = xRatio; 
-    tag.yRatio = yRatio;
+    tag.xRatio = this.myCoords.xRatio;
+    tag.yRatio = this.myCoords.yRatio;
 
     this.viewCtrl.dismiss(tag);
+  }
+
+  remove(){
+    let response = {
+      delete : true
+    };
+
+    this.viewCtrl.dismiss(response);
   }
 }

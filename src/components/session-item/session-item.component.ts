@@ -5,7 +5,7 @@ import {
   } from '@angular/core';
 
 import { PopoverController } from 'ionic-angular';
-import { Api, AuthService, UtilService } from '../../providers/providers';
+import { Api, AuthService, UtilService, VoteHandlerService } from '../../providers/providers';
 
   @Component({
     selector: 'session-item',
@@ -161,12 +161,13 @@ import { Api, AuthService, UtilService } from '../../providers/providers';
     showsComments : boolean = false;
     
   }
+
   
   @Component({
-    selector: 'session-item-image',
-    templateUrl: './session-item.image.html'
+    selector: 'session-item-video',
+    templateUrl: './session-item.video.html'
   })
-  export class SessionItemComponentImage extends DynamicSessionItem {
+  export class SessionItemComponentVideo extends DynamicSessionItem {
   
     
 
@@ -175,16 +176,22 @@ import { Api, AuthService, UtilService } from '../../providers/providers';
         public util : UtilService, 
         public popoverCtrl : PopoverController, 
         public auth : AuthService, 
-        public api : Api
+        public api : Api, 
+        public voteHdl : VoteHandlerService
     ) {
 
         super();
 
     }
+    
 
     getPosInt(position){
         try{
-            return parseInt((parseFloat(position)*100).toFixed(0));
+            if (parseInt((parseFloat(position)*100).toFixed(0)) > 90){
+                return 80;
+            }else{
+                return parseInt((parseFloat(position)*100).toFixed(0))
+            }
         }catch(err){
             return 50;
         }
@@ -218,8 +225,103 @@ import { Api, AuthService, UtilService } from '../../providers/providers';
         }
     }
 
+    emitVoteType(voteType: number){
+        this.onVoteClick.emit(voteType)
+    }
+
     showReactions(ev: any, session: any){
 
+        this.voteHdl.showReactions(ev, session, this.emitVoteType.bind(this));
+ 
+    }
+
+    previewTag(ev, tag){
+
+     
+        let tagPreview = this.popoverCtrl.create('TagPreviewPage', {
+          "tag" : tag
+        }, {
+            cssClass : "tag-preview-popover"
+        });
+    
+        tagPreview.present({
+            ev: ev
+        });
+
+    }
+
+    
+  }
+
+  @Component({
+    selector: 'session-item-image',
+    templateUrl: './session-item.image.html'
+  })
+  export class SessionItemComponentImage extends DynamicSessionItem {
+  
+    
+
+
+    constructor(
+        public util : UtilService, 
+        public popoverCtrl : PopoverController, 
+        public auth : AuthService, 
+        public api : Api, 
+        public voteHdl : VoteHandlerService
+    ) {
+
+        super();
+
+    }
+
+    getPosInt(position){
+        try{
+            if (parseInt((parseFloat(position)*100).toFixed(0)) > 90){
+                return 80;
+            }else{
+                return parseInt((parseFloat(position)*100).toFixed(0))
+            }
+        }catch(err){
+            return 50;
+        }
+        
+    }
+
+    hasSessionCloseClicked(context){
+        console.log("HERE")
+        this.onSessionRemoveClick.emit(context)
+    }
+
+    hasTagsClicked(context){
+        this.onTagsClick.emit(context);
+    }
+
+    hasCommentClicked(context){
+        if (this.showsComments){
+            this.showsComments = false;
+        }else{
+            this.showsComments = true;
+        }
+        this.onCommentClick.emit(context);
+    }
+
+    getItemSessionPath(itemSessionPath){
+
+        if (this.flagIsTmp){
+            return this.util.sanitizeResource(this.itemSessionPath);
+        }else{
+            return this.util.wrapHostBase(this.itemSessionPath);
+        }
+    }
+
+    emitVoteType(voteType: number){
+        this.onVoteClick.emit(voteType)
+    }
+
+    showReactions(ev: any, session: any){
+
+        this.voteHdl.showReactions(ev, session, this.emitVoteType.bind(this));
+        /*
         let hasVote = false;
         
         if (session.myVote){
@@ -228,7 +330,9 @@ import { Api, AuthService, UtilService } from '../../providers/providers';
      
         let reactions = this.popoverCtrl.create('ReactionsPage', {
           "hasVote" : hasVote
-        });
+        }, {
+            cssClass : "custom-reactions-popover"
+          });
     
         reactions.onDidDismiss((voteType : number) => {
             console.log(voteType)
@@ -238,23 +342,32 @@ import { Api, AuthService, UtilService } from '../../providers/providers';
         reactions.present({
             ev: ev
         });
+
+        */
     
+    }
+
+    previewTag(ev, tag){
+
+     
+        let tagPreview = this.popoverCtrl.create('TagPreviewPage', {
+          "tag" : tag
+        }, {
+            cssClass : "tag-preview-popover"
+        });
+    
+        tagPreview.present({
+            ev: ev
+        });
+
     }
 
     
   }
   
-  @Component({
-    selector: 'session-item-video',
-    templateUrl: './session-item.video.html'
-  })
-  export class SessionItemComponentVideo extends DynamicSessionItem {
-  
-    constructor() {
-      super();
-  }
-    
-  }
+
+
+
   @Component({
     selector: 'unknown-component',
     template: `<div style="position: absolute; top: 20%; color: red;">Unknown component</div>`

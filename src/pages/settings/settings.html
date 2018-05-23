@@ -30,23 +30,26 @@
   </ion-list-header>
 
     <ion-list>
+
         <ion-item>
-          <ion-label>Autoplay FittingStream</ion-label>
+          <ion-label>Feedback in Menu</ion-label>
           <ion-toggle secondary
-            [(ngModel)]='config.autoPlayStream'
+            (ionChange)="toggleFeedback()"
+            [(ngModel)]='config.enableFeedback'
             ></ion-toggle>
         </ion-item>
 
 
       </ion-list>
 
-      <ion-list-header>
-    
+      <ion-list-header (click)="toggleDisplayDev()" >
+          <ion-icon name="arrow-forward" *ngIf="!displayDevDetails"></ion-icon>
+          <ion-icon name="arrow-down" *ngIf="displayDevDetails"></ion-icon>
         Dev settings
         
       </ion-list-header>
     
-      <ion-list>
+      <ion-list *ngIf="displayDevDetails">
 
       <ion-item>
         <ion-label>Appversion: {{config.getAppVersion()}}</ion-label>

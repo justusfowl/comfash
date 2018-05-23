@@ -14,6 +14,11 @@ page-content{
         padding:0 !important;
     }
 
+    .scroll-content,
+    .fixed-content{
+        margin: 0 !important;
+    }
+
     .loading-icon-box{
         position: fixed; 
 
@@ -45,16 +50,24 @@ page-content{
 
     #row-compare-items{
         display: flex;
+        transition: height 0.5s ease-in-out;
     }
 
     session-item {
         display: inline-flex;
+        transition: 0.5s ease-in-out;
+        border-bottom: 0;
+    }
+
+    session-item.selectedSession{
+        border-bottom: 5px solid color($colors, primary, base);
     }
 
     .session-item-item{
         height: 100%;
         width: 100%;
         object-fit: cover;
+        object-position: 50% 20%;
     }
 
     .comment-add-container{
@@ -73,6 +86,10 @@ page-content{
         font-size: 30px;
         color: grey;
         padding: 10px;
+    }
+
+    #comment-list{
+        border-top : 3px solid color($colors, primary, base);
     }
 
     #comment-list, 

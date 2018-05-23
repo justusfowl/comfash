@@ -51,9 +51,10 @@ page-imgCollection {
     .photo-tile-details{
         position: absolute;
         width: 100%; 
-        background-color: color($colors, text, base);
+        //background-color: color($colors, text, base);
         bottom: 0px;
         padding: 5px;
+        background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(67, 77, 83, 0.85) 100%)
     }
 
     .photo-tile-info{
@@ -66,12 +67,14 @@ page-imgCollection {
     }
 
     .cntFigure{
-        color: color($colors, dark, base);
-        font-size: 10px;
+        color: white;//color: color($colors, dark, base);
+        font-size: 16px;
+        padding-left: 5px;
     }
 
     .photo-tile-details-icon{
-        color: color($colors, dark, base);
+        color: white;//color($colors, dark, base);
+        font-size: 24px;
     }
 
     .photo-tile-details-icon.vote.active{

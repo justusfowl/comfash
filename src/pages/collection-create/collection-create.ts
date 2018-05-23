@@ -2,10 +2,10 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Camera } from '@ionic-native/camera';
 import { IonicPage, NavController, ViewController, NavParams, Content } from 'ionic-angular';
 
-import { Api, AuthService } from '../../providers/providers';
+import { Api, AuthService, UtilService } from '../../providers/providers';
 
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { Collection } from '../../models/datamodel';
+import { Collection, User } from '../../models/datamodel';
 import { TranslateService } from '@ngx-translate/core';
 
 
@@ -47,6 +47,8 @@ export class CollectionCreatePage {
 
   isValid : boolean = false;
 
+  invitePlaceholder : string = "";
+
 
   constructor(
     params: NavParams,
@@ -54,7 +56,8 @@ export class CollectionCreatePage {
     public viewCtrl: ViewController, 
     private formBuilder: FormBuilder,
     public camera: Camera, 
-    public api: Api, 
+    public api: Api,
+    public util: UtilService,
     public auth: AuthService, 
     private translate : TranslateService
   ) {
@@ -85,8 +88,6 @@ export class CollectionCreatePage {
               this.collectionForm = newFormGroup
               console.log(newFormGroup)
               this.sharedWithUsers = data.sharedWithUsers;
-
-              console.log("data here")
     
             }
             catch(err){
@@ -100,7 +101,7 @@ export class CollectionCreatePage {
         )
     }
 
-    translate.get(['PRIVACY_1', 'PRIVACY_2', 'PRIVACY_3']).subscribe(values => {
+    translate.get(['PRIVACY_1', 'PRIVACY_2', 'PRIVACY_3', 'COLLECTION_INVITE']).subscribe(values => {
 
       this.privacyOptions.push({
         option: values['PRIVACY_1'], 
@@ -117,6 +118,7 @@ export class CollectionCreatePage {
         value : 3
       });
 
+      this.invitePlaceholder = values['COLLECTION_INVITE'];
 
     });
 
@@ -177,11 +179,23 @@ export class CollectionCreatePage {
 
     if (userSearch.length >= 3){
       this.api.getUser(userSearch).subscribe(
-        (data) => {
+        (data : any) => {
+
+
+
           
           try{
-  
-            this.tmpSearchlist = data;
+
+            let outData = data.map(function(item){
+
+              let friend = new User(item);
+    
+              return friend;
+    
+            }); 
+
+            console.log(outData);
+            this.tmpSearchlist = outData;
             this.scrollToList();
             
           }

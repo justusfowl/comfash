@@ -1,9 +1,12 @@
 
-<div [id]="'activity-item_' + index" class="session-tile" [style.backgroundImage]="'url(' + util.wrapHostBase(context.sessionItemPath) + ')'">
 
-      <div class="session-tile-details" >
+
+
+<div [id]="'activity-item_' + index" class="session-tile">
+
+      <div class="activity-header" >
        
-        <ion-grid class="details-container">
+        <ion-grid >
           <ion-row class="session-tile-row" >
 
                 <div class="creator-profile-avatar" 
@@ -30,6 +33,12 @@
         </ion-grid>
             
       </div>
+
+      <img class="session-img"
+
+      [src]="util.wrapHostBase(context.sessionThumbnailPath)"
+      [imageViewer]="util.wrapHostBase(context.sessionItemPath)"
+      >
 
 
       <div class="session-tile-details activity-item-details" >

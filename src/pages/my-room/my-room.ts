@@ -46,7 +46,7 @@ export class MyRoomPage {
   }
 
   ionViewWillEnter() {
-    this.auth.validateAuth(this.navCtrl)
+    
   }
 
   clickMainFAB() {
@@ -65,19 +65,19 @@ export class MyRoomPage {
     };
 
     this.localSessions.captureCameraPicture(collectionId, this.navCtrl, resultAction.bind(this), sourceType);
+    
   }
-
 
   /**
    * The view loaded, let's query our items for the list
    */
-  ionViewDidLoad() { 
+  ionViewDidEnter() { 
+
 
     this.localSessions.onLocalSessionAdded.subscribe(value => {
       self.loadRoom();
     });
 
-    
     this.menu.enable(true,'mainmenu');
 
     let userId = this.navParams.get('userId');
@@ -102,6 +102,7 @@ export class MyRoomPage {
   }
 
   loadRoom(refresher? : any){
+
     let userId = this.roomUserId;
 
     this.api.loadRoom(userId).subscribe(
@@ -116,7 +117,6 @@ export class MyRoomPage {
 
         }); 
 
-
         this.collections = outData;
 
         if (refresher){
@@ -126,6 +126,11 @@ export class MyRoomPage {
       },
       error => {
         this.api.handleAPIError(error);
+
+        if (refresher){
+          refresher.complete();
+        }
+        
       }
     );
 
@@ -166,8 +171,12 @@ export class MyRoomPage {
    * Prompt the user to add a new item. This shows our ItemCreatePage in a
    * modal and then adds the new item to our data source if the user created one.
    */
-  addItem(fabButton) {
-    fabButton.close();
+  addItem(fabButton?) {
+    
+    if (fabButton){
+      fabButton.close();
+    }
+    
     let addModal = this.modalCtrl.create('CollectionCreatePage');
     addModal.onDidDismiss(collection => {
       if (collection) {

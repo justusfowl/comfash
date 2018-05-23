@@ -7,8 +7,8 @@ import { Injectable, Injector } from '@angular/core';
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 
 import { AuthService } from '../auth/auth';
+import { MsgService } from '../message/message';
 import { App, NavController } from 'ionic-angular';
-//import { MsgService } from '../message/message';
 
 @Injectable()
 export class AuthIntercept implements HttpInterceptor {
@@ -34,21 +34,25 @@ export class AuthIntercept implements HttpInterceptor {
     return this.app.getRootNav();
   }
 // Request Interceptor to append Authorization Header
-  private setAuthorizationHeader(req: HttpRequest<any>): HttpRequest<any> {
+  private setAuthorizationHeader(req: HttpRequest<any>) : HttpRequest<any>  {
     // Make a clone of the request then append the Authorization Header
     // Other way of writing :
     // return req.clone({headers: req.headers.set('Authorization', this.authService.token )});
     const auth = this.inj.get(AuthService);
-    
+    const now = Date.now();
+
     let token;
+
+
     if (typeof(auth.getToken()) != 'string'){
-       token = '';
-       console.log("API Call without token")
+      token = '';
+      console.log("API Call without token")
     }else{
-       token = auth.getToken();
+      token = auth.getToken();
     }
 
     return req.clone({ setHeaders: { 'Authorization' : "Bearer " + token } });
+    
 
   }
   // Response Interceptor
@@ -56,10 +60,25 @@ export class AuthIntercept implements HttpInterceptor {
     // Check if we had 401 response
     if (error.status === 401) {
       // redirect to Login page for example
-      let navCtrl = this.getNavCtrl();
+      const auth = this.inj.get(AuthService);
+      const msg = this.inj.get(MsgService)
 
-      navCtrl.setRoot("LoginPage");
-      return Observable.empty();
+      if (auth.unAuthCounter > 5){
+        let navCtrl = this.getNavCtrl();
+
+        navCtrl.setRoot("LoginPage");
+
+      }else{
+
+        let shouldRefresh = auth.checkRefreshToken();
+
+        console.log(shouldRefresh);
+
+        msg.toast("UNIVERSAL_ERROR", 2000)
+
+      }
+
+      return Observable.throw(error);
     }
     return Observable.throw(error);
   }

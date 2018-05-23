@@ -61,20 +61,27 @@
     </form>
 
   <ion-item class="form-item" [hidden]="privSelected == '1' || privSelected == '3'">
-    <p>{{ 'COLLECTION_INVITE' | translate }}</p>
     <div class="selected-users-container">
         <div class="selected-user" *ngFor="let friend of sharedWithUsers; let i = index;" (click)="removeFriend(friend, i)" >
+            <img [src]="util.wrapHostBase(friend.userAvatarPath)" > 
             {{friend.userName}}
             <ion-icon name='close-circle'></ion-icon>
         </div>
     </div>
-    <ion-searchbar [(ngModel)]="searchTerm" (ionInput)="searchChanged($event)"></ion-searchbar>
+    <ion-searchbar 
+    [placeholder]="invitePlaceholder"
+    [(ngModel)]="searchTerm" 
+    (ionInput)="searchChanged($event)"></ion-searchbar>
   </ion-item>
       
   <ion-list #searchList class="search-list"  [hidden]="privSelected == '1' || privSelected == '3'" >
       <ion-item *ngFor="let result of tmpSearchlist; let i = index;">
-          <div (click)="toggleFriend(result)" >
-              <ion-icon name="checkmark" [hidden]="getIfCheckedHidden(result)" item-right></ion-icon>
+          <div class="result-item" (click)="toggleFriend(result)" >
+             
+              <div class="avatar" [style.backgroundImage]="'url(' + util.wrapHostBase(result.userAvatarPath) + ')'">
+                  <ion-icon name="checkmark" [hidden]="getIfCheckedHidden(result)" item-right></ion-icon>
+              </div>
+
               @{{result.userName}}
           </div>
       </ion-item>

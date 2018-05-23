@@ -1,0 +1,66 @@
+@import "../../theme/variables";
+
+page-feedback {
+
+    .item{
+        background-color: transparent;
+        color: $background-color;
+
+    }
+
+     .toggle-inner{
+        background-color : color($colors, primary, base);
+    }
+
+    .toggle-icon::before{
+        background-color: grey !important;
+    }
+
+    .submitBtn{
+        width: 100%; 
+    }
+
+    .screenshot-image{
+        max-height: 400px; 
+        width: 100%;
+        object-fit: cover; 
+        object-position: center;
+    }
+
+    .img-container{
+        position: relative;
+    }
+
+    .img-container .remove-icon{
+        position: absolute; 
+        top: 25px; 
+        right: 25px; 
+        font-size: 45px;
+        color: white;
+    }
+    .screenShotBtn{
+        background-color: unset;
+        height: 150px !important; 
+        border: 2px dotted #9a9a9a;
+        width: 98%; 
+
+    }
+
+    .screenShotBtn.activated .icon{
+        color: white !important;
+    }
+
+    .screenShotBtn .icon{
+        font-size: 50px;
+        color: #9a9a9a;
+    }
+
+    #load-container{
+        display: none;
+    }
+
+    #load-container.active{
+        display: unset;
+    }
+}
+

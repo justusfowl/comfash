@@ -17,8 +17,9 @@
 
   "TAB1_TITLE": "MyRoom",
   "TAB2_TITLE": "Stream",
-  "TAB3_TITLE": "Kaufen",
+  "TAB3_TITLE": "Suchen",
   "TAB4_TITLE": "Einstellungen",
+  "TAB5_TITLE": "Feedback",
 
   "MAP_TITLE": "Karte",
 
@@ -56,7 +57,7 @@
   "MY_ROOM_TITLE": "MyRoom",
   "ROOM_TITLE": "Room",
 
-  "BLANK_CARD_ADD_COLLECTION" : "Collektion hinzufügen",
+  "BLANK_CARD_ADD_COLLECTION" : "Füge eine Kollektion hinzu, um Outfits zu speichern",
 
   "PRIVACY_1" : "Ich",
   "PRIVACY_2" : "Freunde", 
@@ -83,7 +84,7 @@
   
   "TAG_HINT" : "Tippe anhaltend auf das Bild, um ein Tag hinzuzufügen",
 
-  "BLANK_CARD_ADD_SESSION" : "Session hinzufügen",
+  "BLANK_CARD_ADD_SESSION" : "Füge ein Outfit hinzu",
   "BLANK_CARD_NO_SESSION_NO_OWNER" : " hat noch keine Session hinzugefügt.",
 
   "ALERT_DELETE_TITLE" : "Session löschen", 
@@ -97,11 +98,14 @@
   "CARDS_TITLE": "Social",
 
   "SEARCH_TITLE": "Suche",
-  "SEARCH_PLACEHOLDER": "Suche in der Artikel-Liste, z.B. \"Donald Duck\"",
+  "SEARCH_PLACEHOLDER": "Suche",
+  "SEARCH_EMPTY" : "Keine Ergebnisse",
+  "SEARCH_DEFAULT" : "Durchsuche comfash...",
 
   "FITTING_STREAM_TITLE" : "FittingStream", 
 
   "NOTIFICATIONS" : "Benachrichtigungen", 
+  "EMPTY_NOTIFICATIONS" : "Du hast noch keine Benachrichtungen erhalten",
   "NEW_NOTIFICATION_FROM" : "Neue Nachricht von: ",
 
   "COMMENT_CREATE_TITLE" : "Kommentar", 
@@ -116,6 +120,11 @@
   "COL_HAS_INVITED" : " bittet um Unterstützung bei ",
   "HAS_REACTED_TO" : " reagiert auf ", 
   "HAS_VOTED" : " bewertet ein Outfit ",
+
+  "FEEDBACK_MAIN" : "Hilf uns comfash weiter zu verbessern",
+  "FEEDBACK_SCREENSHOT" : "Füge einen Screenshot hinzu",
+  "FEEDBACK_RECEIVED" : "Vielen Dank für Deine Unterstützung!",
+  "FEEDBACK_SUBMIT" : "Abschicken",
 
   "01" : "jan",
   "02" : "feb",

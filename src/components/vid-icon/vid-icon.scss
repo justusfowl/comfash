@@ -1,0 +1,21 @@
+vid-icon {
+
+    display: inline-block;
+    margin-left: 5px; 
+    margin-right: 5px;
+
+    .vid-icon, 
+    .vid-icon .sub, 
+    .vid-icon .icon{
+        width: 100%;
+        text-align: center;
+    }
+
+    .vid-icon .sub{
+        font-size: 8px;
+    }
+
+    .vid-icon .icon{
+        font-size: 14px;
+    }
+}

@@ -6,24 +6,28 @@
         
       <div id="vote_{{index}}" class="flag-vote flag " [hidden]="!session.voteCnt" [class.highly-rated]="session.getIsHighlyRated()">
           <div class="flag-vote-figure" [class.highly-rated]="session.getIsHighlyRated()">{{util.formatIntToPercent(session.voteAvg)}}</div>
-          <ion-icon name="thumbs-up" class="photo-tile-details-icon flag-vote-icon" >
+          <ion-icon name="thumbs-up" class="flag-vote-icon" >
           </ion-icon>
       </div>
+ 
+     
 
       <img class="session-item-item"  
-        [class]="'filter-' + session.filterOption"
-        imageViewer 
+        [class]="'filter-' + session.filterOption" 
         [filterOption]="session.filterOption"
-       [src]="getItemSessionPath(session)">
+        [imageViewer]="getItemSessionPath(session, true)"
+        [src]="getItemSessionPath(session)">
 
       <div class="photo-tile-details" >
         <ion-grid>
           <ion-row>
-            <ion-col>
+            <ion-col col-4>
                   <ion-icon name="trash" *ngIf="auth.checkProfile(session, 'owner')" 
                     class="photo-tile-details-icon session-delete" 
                     (click)="deleteSession(session)" >
                   </ion-icon>
+
+                  <vid-icon [type]="session.sessionItemType"></vid-icon>
                     
                   </ion-col>
 
@@ -31,16 +35,26 @@
 
               <div class="photo-tile-info">
                   <font class="cntFigure" >
-                      {{session.getNoVotes()}}
+                      {{session.voteCnt}}
                     </font>
-                  <ion-icon class="photo-tile-details-icon vote" [class.active]="session.hasVote"  
-                   icon-right clear small
-                  [name]="voteHdl.getVoteIcon(session)" ></ion-icon>
 
+                    <!--
+                      <ion-icon class="photo-tile-details-icon vote" [class.active]="session.hasVote"  
+                      icon-right clear small
+                      [name]="voteHdl.getVoteIcon(session)" ></ion-icon>
+                      -->
+
+                  <ion-icon class="photo-tile-details-icon vote" [class.active]="session.myVote" ion-long-press 
+                      [interval]="400" 
+                      (click)="showReactions($event, session)"   icon-right clear small
+                      [name]="voteHdl.getVoteIcon(session)" ></ion-icon>
+<!--
                   <font class="cntFigure">
                       {{session.getNoComments()}}
                   </font>
                   <ion-icon name="ios-text-outline" class="photo-tile-details-icon"></ion-icon>
+-->
+
               </div>
             </ion-col>
           </ion-row>

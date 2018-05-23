@@ -161,29 +161,6 @@ import { Api, AuthService, UtilService, VoteHandlerService } from '../../provide
 
         this.voteHdl.showReactions(ev, session, this.emitVoteType.bind(this));
 
-        /*
-
-        let hasVote = false;
-        
-        if (session.myVote){
-          hasVote = true;
-        }
-     
-        let reactions = this.popoverCtrl.create('ReactionsPage', {
-          "hasVote" : hasVote
-        });
-    
-        reactions.onDidDismiss((voteType : number) => {
-
-                this.onVoteClick.emit(voteType);
-
-        });
-    
-        reactions.present({
-            ev: ev
-        });
-
-        */
     
     }
 
@@ -220,27 +197,6 @@ import { Api, AuthService, UtilService, VoteHandlerService } from '../../provide
 
     showReactions(ev: any, session: any){
         this.voteHdl.showReactions(ev, session, this.emitVoteType.bind(this));
-        /*
-        let hasVote = false;
-        
-        if (session.myVote){
-          hasVote = true;
-        }
-     
-        let reactions = this.popoverCtrl.create('ReactionsPage', {
-          "hasVote" : hasVote
-        });
-    
-        reactions.onDidDismiss((voteType : number) => {
-
-                this.onVoteClick.emit(voteType);
-            
-        });
-    
-        reactions.present({
-            ev: ev
-        });
-        */
     }
 
     testClick(event){

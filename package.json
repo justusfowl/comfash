@@ -41,6 +41,7 @@
     "@ionic/storage": "2.1.3",
     "@ngx-translate/core": "8.0.0",
     "@ngx-translate/http-loader": "^2.0.0",
+    "@types/hammerjs": "^2.0.35",
     "@types/socket.io-client": "^1.4.32",
     "auth0-js": "^9.5.0",
     "backgroundvideo": "git+https://github.com/jamesla/backgroundvideo.git",

@@ -11,6 +11,11 @@
           </span>
           <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
         </button>
+
+        <button ion-button (click)="remove()" *ngIf="canDelete">
+          <ion-icon name="trash"></ion-icon>
+        </button>
+
       </ion-buttons>
       <ion-buttons end>
         <button ion-button [disabled]="!isReadyToSave"  (click)="done()" strong>

@@ -76,10 +76,6 @@ export class LoginPage {
         this.navCtrl.setRoot("TutorialPage");
       } 
 
-        
-       
-        
-
       },
       error => {
 

@@ -203,6 +203,13 @@ export class LocalSessionsService {
         return this.file.readAsDataURL(targetDir, filename)
     }
 
+    readVidAsData(filename){
+        let targetDir = this.file.dataDirectory;
+        console.log("targetDir");
+        console.log(targetDir)
+        return this.file.readAsDataURL(targetDir, filename)
+    }
+
     loadLocalSessionArray(collectionIds : number[]){
         let self = this;
         return new Promise<any>((resolve, reject) => {

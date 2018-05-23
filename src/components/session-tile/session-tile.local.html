@@ -17,8 +17,10 @@
           <ion-grid>
             <ion-row>
               <ion-col>
-                      <ion-icon name="trash" *ngIf="auth.checkProfile(session, 'owner')" class="photo-tile-details-icon session-delete" (click)="deleteSession(session)" ></ion-icon>
-              
+                    <ion-icon name="trash" *ngIf="auth.checkProfile(session, 'owner')" class="photo-tile-details-icon session-delete" (click)="deleteSession(session)" ></ion-icon>
+                   
+                    <vid-icon [type]="session.sessionItemType"></vid-icon>
+                  
                 </ion-col>
               <ion-col>
   

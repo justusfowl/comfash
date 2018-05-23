@@ -1,0 +1,65 @@
+
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>feedback</ion-title>
+
+    <ion-buttons end>
+        <div #loaderContainer id="load-container" >
+            <ion-spinner name="dots"></ion-spinner>
+        </div>
+      </ion-buttons>
+
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+
+
+    <button class="submitBtn" ion-button [disabled]="getSubmitDisabled()" (click)="submitFeedback()">
+        {{ 'FEEDBACK_SUBMIT' | translate }}
+    </button>
+
+    <ion-list-header>
+    
+        {{ 'FEEDBACK_MAIN' | translate }}
+        
+    </ion-list-header>
+    
+
+    <ion-list>
+
+      <ion-item>
+          <ion-textarea [(ngModel)]="feedbackText" placeholder="Feedbacktext"></ion-textarea>
+      </ion-item>
+    </ion-list>
+
+
+    <ion-list-header (click)="getScreenshot()">
+    
+        {{ 'FEEDBACK_SCREENSHOT' | translate }}
+
+        <ion-icon *ngIf="isPreview" name="ios-images-outline"></ion-icon>
+
+      </ion-list-header>
+    <ion-list>
+
+      
+    <ion-item *ngIf="!isPreview">
+        <button class="screenShotBtn" ion-button (click)="getScreenshot()">
+          <ion-icon name="ios-images-outline"></ion-icon>
+        </button>
+    </ion-item>
+  
+    <ion-item class="img-container" *ngIf="isPreview">
+        <ion-icon class="remove-icon" name="close-circle" (click)="removeScreenshot()"></ion-icon>
+        <img class="screenshot-image" [src]="screenshotPreview">
+    </ion-item>
+    
+    
+    </ion-list>
+
+
+
+</ion-content>

@@ -19,7 +19,7 @@ export class ConfigService {
     private apiBase : string = "/api/v";
     private apiProtocol : string = 'https';
 
-    public autoPlayStream : boolean = false;
+    public enableFeedback : boolean = true;
 
     private environment : string;
 

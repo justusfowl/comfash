@@ -9,11 +9,6 @@
 
     <ion-title>{{ 'FITTING_STREAM_TITLE' | translate }}</ion-title>
 
-    <ion-buttons end>
-      <div #loaderContainer id="load-container" >
-          <ion-spinner name="dots"></ion-spinner>
-      </div>
-    </ion-buttons>
 
   </ion-navbar>
 
@@ -25,19 +20,22 @@
 
 <ion-content id="fitting-stream-container" >
 
-  <div ion-fixed class="dot-container">
-    <div class="dot" 
-    [class.isVisible]="visibleIndex == i"
-    *ngFor="let item of api.streamItems; let i = index;"
-    (click)="setVisibleItem(i)">
+  <div ion-fixed id="timeline">
 
-    </div>
   </div>
 
-  <div ion-fixed id="activity-box" class="activity-box" swipeAll (swipeup)="swipeUp($event)" (swipedown)="swipeDown($event)" >
-      <activity-item
-      class="act-item"
-      [class.isVisible]="visibleIndex == i"
+      <ion-refresher (ionRefresh)="getTrendStream($event, true)">
+          <ion-refresher-content
+          pullingIcon="arrow-dropdown"
+          pullingText="Update stream"
+          refreshingSpinner="circles"
+          refreshingText="Refreshing...">
+        </ion-refresher-content>
+      </ion-refresher>
+
+  <div id="activity-container">
+    <activity-item 
+      class="act-item isVisible"
       [index]="i"
       [type]="item.itemType"
       [context]="item"
@@ -47,7 +45,10 @@
 
     </activity-item>
   </div>
-   
+    
+    <ion-infinite-scroll (ionInfinite)="infiniteScroll($event)">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
     
 </ion-content>
 

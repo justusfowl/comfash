@@ -37,6 +37,8 @@ export class VoteHandlerService {
         let reactions = this.popoverCtrl.create('ReactionsPage', {
           "hasVote" : hasVote,
           "myVoteType" : myVoteType
+        }, {
+          cssClass : "custom-reactions-popover"
         });
 
         reactions.onDidDismiss((voteType : number) => {
@@ -90,7 +92,7 @@ export class VoteHandlerService {
                 session.setMyVote(vote);
               }
               
-              this.api.upsertVote(session.getCollectionId(), session.getId(), vote);
+              this.api.upsertVote(session.getCollectionId(), session, vote);
           }
       
         }else{

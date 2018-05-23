@@ -11,6 +11,7 @@ import { ConfigService } from '../config/config';
  */
 @Injectable()
 export class Api { 
+
   url: string;
 
   public collections : any = [];
@@ -283,36 +284,18 @@ export class Api {
     return this.http.get(this.url + "/user/messages");
   }
 
-  markMessageRead(messageId){
+  markMessageRead(messageId, status){
 
-    let body = {};
-    this.http.put(this.url + "/user/messages/"+messageId, body);
+    let body = {
+      isUnread : status
+    };
+
+    return this.http.put(this.url + "/user/messages/"+messageId, body);
   }
 
   registerDevice(id : any){
     return this.http.post(this.url + "/user/push/registerDevice", id);
   }
-
-
-  /*
-  uploadImgStr(collectionId : Number, sessionId : Number, image: Image, imgSequenceNumber : Number){
-    
-    this.post("imgcollection/" + collectionId + "/session/" + sessionId, image).subscribe(
-      (data) => {
-          if (image.order == imgSequenceNumber){
-
-            this.loadCollection(collectionId, true);
-          }
-      },
-      error => {
-        console.log("error");
-        console.log(error)
-      }
-    )
-
-  }
-
-  */
 
 addCommentToSession(collectionId : Number, sessionId : Number, comment: Comment){ 
   return this.post("imgcollection/" + collectionId + "/session/" + sessionId + "/comment", comment);
@@ -326,10 +309,10 @@ getCommentsForSession(session : Session){
   return this.http.get(this.url + "/imgcollection/" + session.getCollectionId() + "/session/" + session.getId() + "/comment")
 }
 
-upsertVote(collectionId : number, sessionId: number, vote : Vote){
-  this.post("imgcollection/" + collectionId + "/session/" + sessionId + "/vote", vote).subscribe(
-    (data) => {
-        console.log(data)
+upsertVote(collectionId : number, session: Session, vote : Vote){
+  this.post("imgcollection/" + collectionId + "/session/" + session.getId() + "/vote", vote).subscribe(
+    (data : any) => {
+        session.setVoteAvg(data.voteAvg);
     },
     error => {
       this.handleAPIError(error);
@@ -339,11 +322,8 @@ upsertVote(collectionId : number, sessionId: number, vote : Vote){
 }
 
 deleteVote(collectionId : number, sessionId: number){
-
-  return this.http.delete(this.url + "/imgcollection/" + collectionId + "/session/" + sessionId + "/vote");
-
+  return this.http.delete(this.url + "/imgcollection/" + collectionId + "/session/" + sessionId + "/vote")
 }
-
 
 upsertUserAvatar(avatar : any){
   return this.post("user/avatar", avatar);
@@ -376,7 +356,7 @@ resolveUrl(targetUrl){
   return this.http.get(this.url + "/aux/resolveUrl" + '?targetUrl=' + targetUrl)
 
 }
-
+ 
 
 toggleFollow(followedId : string){
   return this.post("user/follow/" + followedId, {});
@@ -390,36 +370,22 @@ postAuth(endpoint: string, body: any, reqOpts?: any) {
   return this.http.post(endpoint, body, reqOpts);
 }
 
+postFeedback(feedbackObj : any){
+  return this.post("feedback", feedbackObj);
+}
+
 
 reportComplaint(complaintObject){
   return this.post("compliance/complaint", complaintObject);
 
 }
-  
-  // ### BASIC FUNCTIONS ###
-/*
-  get(endpoint: string, params?: any, reqOpts?: any) {
 
-    let options = this.prepareReqOpts(reqOpts, params);
 
-    return this.http.get(this.url + '/' + endpoint, options);
+  refreshToken(domain, body){
 
+    return this.http.post("https://" + domain + "/oauth/token", body, {headers : {"content-type" : "application/json"}});
   }
 
-  
-
-  put(endpoint: string, body: any, reqOpts?: any) {
-    return this.http.put(this.url + '/' + endpoint, body, reqOpts);
-  }
-
-  delete(endpoint: string, reqOpts?: any) {
-    return this.http.delete(this.url + '/' + endpoint, reqOpts);
-  }
-
-  patch(endpoint: string, body: any, reqOpts?: any) {
-    return this.http.put(this.url + '/' + endpoint, body, reqOpts);
-  }
-*/
 
   handleAPIError(error){
 
@@ -430,7 +396,7 @@ reportComplaint(complaintObject){
 
     switch (errorCode) {
         case 401:
-          alert("Unauthorized");
+          console.log("Unauthorized");
             break;
     }
   }
